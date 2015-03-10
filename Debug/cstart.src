@@ -1,0 +1,2065 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc1912a -H sfr/regtc1797.sfr -c99 --dep-file=.cstart.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=cstart.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o cstart.src ..\\cstart.c"
+	.compiler_name		"ctc"
+	.name	"cstart"
+
+	
+$TC131
+	.sdecl	'.zrodata.cstart.__const_02840284',data,rom
+	.sect	'.zrodata.cstart.__const_02840284'
+	.align	2
+__const_02840284:	.type	object
+	.size	__const_02840284,4
+	.word	42205828
+	.sdecl	'.zrodata.cstart.__const_a1000a51',data,rom
+	.sect	'.zrodata.cstart.__const_a1000a51'
+	.align	2
+__const_a1000a51:	.type	object
+	.size	__const_a1000a51,4
+	.word	-1593832879
+	.sdecl	'.zrodata.cstart.__const_82000a53',data,rom
+	.sect	'.zrodata.cstart.__const_82000a53'
+	.align	2
+__const_82000a53:	.type	object
+	.size	__const_82000a53,4
+	.word	-2113926573
+	
+	.sdecl	'.text.libc.reset',code,cluster('_START')
+	.sect	'.text.libc.reset'
+	.align	2
+	
+	.global	_START
+
+; ..\cstart.c	     1  /**************************************************************************
+; ..\cstart.c	     2  **                                                                        *
+; ..\cstart.c	     3  **  FILE        :  cstart.c                                               *
+; ..\cstart.c	     4  **                                                                        *
+; ..\cstart.c	     5  **  DESCRIPTION :                                                         *
+; ..\cstart.c	     6  **      The system startup code initializes the processor's registers     *
+; ..\cstart.c	     7  **      and the application C variables.                                  *
+; ..\cstart.c	     8  **                                                                        *
+; ..\cstart.c	     9  **  Copyright 1996-2009 Altium BV                                         *
+; ..\cstart.c	    10  **                                                                        *
+; ..\cstart.c	    11  **************************************************************************/
+; ..\cstart.c	    12  
+; ..\cstart.c	    13  #include "cstart.h"                             /* include configuration */
+; ..\cstart.c	    14  
+; ..\cstart.c	    15  #include <stdlib.h>
+; ..\cstart.c	    16  #include <stdbool.h>
+; ..\cstart.c	    17  
+; ..\cstart.c	    18  #ifdef __CPU__
+; ..\cstart.c	    19  #include __SFRFILE__(__CPU__)
+; ..\cstart.c	    20  #endif
+; ..\cstart.c	    21  
+; ..\cstart.c	    22  #pragma weak   exit
+; ..\cstart.c	    23  #pragma extern _Exit
+; ..\cstart.c	    24  #pragma profiling off                           /* prevent profiling information on cstart */
+; ..\cstart.c	    25  //#pragma optimize abcefgIKlpoRsy               /* preset optimizations */
+; ..\cstart.c	    26  #pragma tradeoff 4                              /* preset tradeoff level (for size) */
+; ..\cstart.c	    27  #pragma runtime BCM                             /* disable runtime error checking for cstart */
+; ..\cstart.c	    28  #pragma nomisrac                                /* disable MISRA-C checking */
+; ..\cstart.c	    29  
+; ..\cstart.c	    30  #if __USE_ARGC_ARGV
+; ..\cstart.c	    31  static char argcv[__ARGCV_BUFSIZE];
+; ..\cstart.c	    32  extern int _argcv( const char *, size_t );
+; ..\cstart.c	    33  #else
+; ..\cstart.c	    34  static char *argcv[1] = { NULL };
+; ..\cstart.c	    35  #endif
+; ..\cstart.c	    36  
+; ..\cstart.c	    37  /* linker definitions */
+; ..\cstart.c	    38  extern __far void _lc_ue_ustack[];      /* user stack end */
+; ..\cstart.c	    39  extern __far void _lc_ue_istack[];      /* interrupt stack end */
+; ..\cstart.c	    40  extern __far void _lc_u_int_tab[];      /* interrupt table */
+; ..\cstart.c	    41  extern __far void _lc_u_trap_tab[];     /* trap table */
+; ..\cstart.c	    42  extern __far void _SMALL_DATA_[];       /* centre of A0 addressable area */
+; ..\cstart.c	    43  extern __far void _LITERAL_DATA_[];     /* centre of A1 addressable area */
+; ..\cstart.c	    44  extern __far void _A8_DATA_[];          /* centre of A8 addressable area */
+; ..\cstart.c	    45  extern __far void _A9_DATA_[];          /* centre of A9 addressable area */
+; ..\cstart.c	    46  
+; ..\cstart.c	    47  /* external functions */
+; ..\cstart.c	    48  extern void _c_init(void);              /* C initialization function */
+; ..\cstart.c	    49  extern void _call_init(void);           /* call a user function before main() */
+; ..\cstart.c	    50  extern void _endinit(void);             /* call a user function with protection switched off */
+; ..\cstart.c	    51  
+; ..\cstart.c	    52  /* library references */
+; ..\cstart.c	    53  #pragma extern main
+; ..\cstart.c	    54  extern int main( int argc, char *argv[] );
+; ..\cstart.c	    55  
+; ..\cstart.c	    56  /* prototype */
+; ..\cstart.c	    57  extern void inline _endinit_clear(void);
+; ..\cstart.c	    58  extern void inline _endinit_set  (void);
+; ..\cstart.c	    59  
+; ..\cstart.c	    60  #if __PROF_ENABLE__
+; ..\cstart.c	    61  extern void __prof_init( void );
+; ..\cstart.c	    62  #endif
+; ..\cstart.c	    63  
+; ..\cstart.c	    64  /*********************************************************************************
+; ..\cstart.c	    65   * _reset() - reset vector
+; ..\cstart.c	    66   *********************************************************************************/
+; ..\cstart.c	    67  #pragma section code libc.reset
+; ..\cstart.c	    68  
+; ..\cstart.c	    69  void _START( void )
+; Function _START
+.L6:
+_START:	.type	func
+
+; ..\cstart.c	    70  {
+; ..\cstart.c	    71          /* temporarily switch off the workaround for si-bug cpu_tc065,
+; ..\cstart.c	    72             this can safely be done, since this function is not called
+; ..\cstart.c	    73             normally anyhow
+; ..\cstart.c	    74          */
+; ..\cstart.c	    75          __asm(".if\t@DEF('__CPU_TC065__')\n$CPU_TC065\tOFF\n\t.endif" );
+	.if	@DEF('__CPU_TC065__')
+$CPU_TC065	OFF
+	.endif
+.L151:
+
+; ..\cstart.c	    76  
+; ..\cstart.c	    77          __asm("j\t__init_sp");
+	j	__init_sp
+.L152:
+
+; ..\cstart.c	    78  
+; ..\cstart.c	    79          __asm(".if\t@DEF('__CPU_TC065__')\n$CPU_TC065\tON\n\t.endif" );
+	.if	@DEF('__CPU_TC065__')
+$CPU_TC065	ON
+	.endif
+.L153:
+
+; ..\cstart.c	    80  
+; ..\cstart.c	    81          /*
+; ..\cstart.c	    82           * Set default Boot Configuration Value
+; ..\cstart.c	    83           */
+; ..\cstart.c	    84  #ifndef __EBU_BOOTCFG_VALUE
+; ..\cstart.c	    85  #  define __EBU_BOOTCFG_VALUE  0x800C
+; ..\cstart.c	    86  #endif
+; ..\cstart.c	    87  
+; ..\cstart.c	    88          /*
+; ..\cstart.c	    89           * Set address for the Boot Configuration Value
+; ..\cstart.c	    90           * to 'Boot memory Offset Address + alignment'
+; ..\cstart.c	    91           */
+; ..\cstart.c	    92  #if     !(__EBU_BOOTCFG_VALUE & 0x1)
+; ..\cstart.c	    93          /*
+; ..\cstart.c	    94           * Address Alignment is off
+; ..\cstart.c	    95           */
+; ..\cstart.c	    96          __asm(".align\t4");
+	.align	4
+.L154:
+
+; ..\cstart.c	    97  #else
+; ..\cstart.c	    98          /*
+; ..\cstart.c	    99           * Address Alignment is on and 16 bit wide memory
+; ..\cstart.c	   100           */
+; ..\cstart.c	   101  #if     ( !(__EBU_BOOTCFG_VALUE & 0x8000) )
+; ..\cstart.c	   102          __asm(".align\t8");
+; ..\cstart.c	   103  #else
+; ..\cstart.c	   104          /*
+; ..\cstart.c	   105           * Address Alignment is on and 32 bit wide memory
+; ..\cstart.c	   106           */
+; ..\cstart.c	   107          __asm(".align\t16");
+; ..\cstart.c	   108  #endif
+; ..\cstart.c	   109  #endif
+; ..\cstart.c	   110          __asm(".word\t%0"::"i"(__EBU_BOOTCFG_VALUE));
+	.word	#32780
+.L155:
+
+; ..\cstart.c	   111  
+; ..\cstart.c	   112          /* add a nop if necessary to avoid a warning by the assembler
+; ..\cstart.c	   113             actually this code will never be reached
+; ..\cstart.c	   114          */
+; ..\cstart.c	   115          __asm(".if\t@DEF('__CPU_TC048__')\n\tnop\n\t.endif" );
+	.if	@DEF('__CPU_TC048__')
+	nop
+	.endif
+.L156:
+
+; ..\cstart.c	   116  }
+	ret
+.L58:
+	
+___START_function_end:
+	.size	_START,___START_function_end-_START
+.L33:
+	; End of function
+	
+	.sdecl	'.text.libc',code,cluster('__init_sp')
+	.sect	'.text.libc'
+	.align	2
+	
+	.global	__init_sp
+
+; ..\cstart.c	   117  
+; ..\cstart.c	   118  /*********************************************************************************
+; ..\cstart.c	   119   * _cstart() - initialize stackpointer
+; ..\cstart.c	   120   *********************************************************************************/
+; ..\cstart.c	   121  #pragma section code libc
+; ..\cstart.c	   122  
+; ..\cstart.c	   123  void __init_sp( void )
+; Function __init_sp
+.L8:
+__init_sp:	.type	func
+
+; ..\cstart.c	   124  {
+; ..\cstart.c	   125          /* The initialization of the stackpointer is done in a seperate function,
+; ..\cstart.c	   126             because it must be executed in a function which has no stack use.
+; ..\cstart.c	   127  
+; ..\cstart.c	   128             When a function uses a stack it will be updated at the start of the
+; ..\cstart.c	   129             function. In this function, however, the stackpointer has an irrelevant
+; ..\cstart.c	   130             value at the start of the function. A starting value for the stackpointer
+; ..\cstart.c	   131             is determined and written in this function. The update to the
+; ..\cstart.c	   132             stackpointer at the start of the function would therefore be undone.
+; ..\cstart.c	   133           */
+; ..\cstart.c	   134  
+; ..\cstart.c	   135          /*
+; ..\cstart.c	   136           * CPU_TC.033 workaround:
+; ..\cstart.c	   137           * The stack pointers are aligned to quad-word boundary to workaround these
+; ..\cstart.c	   138           * functional problems (TC112_COR16 is an alias for CPU_TC.033).
+; ..\cstart.c	   139           * Also the C compiler workaround for the appropriate CPU function problem
+; ..\cstart.c	   140           * need to be enabled with --silicon-bug=cpu-tc033, to align circular
+; ..\cstart.c	   141           * buffers on a quad-word boundary and to size all stack frames to an integral
+; ..\cstart.c	   142           * number of quad-words.
+; ..\cstart.c	   143           */
+; ..\cstart.c	   144  #if      __CPU_TC033_INITIAL__
+; ..\cstart.c	   145  # define STACK_ALIGN    0xfffffff0
+; ..\cstart.c	   146  #else
+; ..\cstart.c	   147  # define STACK_ALIGN    0xfffffff8
+; ..\cstart.c	   148  #endif
+; ..\cstart.c	   149  
+; ..\cstart.c	   150          /*
+; ..\cstart.c	   151           * Load user stack pointer.
+; ..\cstart.c	   152           * Disable this if not started from RESET vector. (E.g.
+; ..\cstart.c	   153           * ROM monitors require to keep in control of vectors)
+; ..\cstart.c	   154           */
+; ..\cstart.c	   155  #if  __USP_INIT
+; ..\cstart.c	   156          unsigned int sp = (unsigned int)(_lc_ue_ustack) & STACK_ALIGN;
+	movh.a	a15,#@his(_lc_ue_ustack)
+	lea	a15,[a15]@los(_lc_ue_ustack)
+	mov.d	d15,a15
+.L161:
+	insert	d15,d15,#0,#0,#3
+.L162:
+
+; ..\cstart.c	   157          __asm("mov.a\tsp,%0"::"d"(sp));
+	mov.a	sp,d15
+.L163:
+
+; ..\cstart.c	   158  #endif
+; ..\cstart.c	   159          /* This is a jump absolute, to allow jumping to segment 0x8 (cacheable area),
+; ..\cstart.c	   160           * in case everything is located in segment 0x8.
+; ..\cstart.c	   161           */
+; ..\cstart.c	   162          __asm("ja\t_start");
+	ja	_start
+.L164:
+
+; ..\cstart.c	   163  }
+	ret
+.L59:
+	
+____init_sp_function_end:
+	.size	__init_sp,____init_sp_function_end-__init_sp
+.L38:
+	; End of function
+	
+	.sdecl	'.text.libc',code,cluster('_start')
+	.sect	'.text.libc'
+	.align	2
+	
+	.global	_start
+
+; ..\cstart.c	   164  
+; ..\cstart.c	   165  /*********************************************************************************
+; ..\cstart.c	   166   * _cstart() - startup code
+; ..\cstart.c	   167   *********************************************************************************/
+; ..\cstart.c	   168  
+; ..\cstart.c	   169  void _start( void )
+; Function _start
+.L10:
+_start:	.type	func
+	sub.a	a10,#8
+.L97:
+
+; ..\cstart.c	   170  {
+; ..\cstart.c	   171          /* Do a dsync before changing any of the csfr values, thus any previous
+; ..\cstart.c	   172           * background state gets flushed first. Required for applications that jump
+; ..\cstart.c	   173           * to the reset address.
+; ..\cstart.c	   174           */
+; ..\cstart.c	   175          __dsync();
+	dsync
+.L169:
+
+; ..\cstart.c	   176  
+; ..\cstart.c	   177          /* Set the PSW to its reset value in case of a warm start */
+; ..\cstart.c	   178  #if __USER_STACK
+; ..\cstart.c	   179          __mtcr(PSW, 0x00000980);        /* clear PSW.IS */
+	mov	d15,#2432
+.L170:
+	mtcr	#65028,d15
+	isync
+.L61:
+
+; ..\cstart.c	   180  #else
+; ..\cstart.c	   181          __mtcr(PSW, 0x00000b80);
+; ..\cstart.c	   182  #endif
+; ..\cstart.c	   183  
+; ..\cstart.c	   184          /* Set the PCXI to its reset value in case of a warm start */
+; ..\cstart.c	   185          unsigned int pcxi = __mfcr(PCXI);
+	mfcr	d15,#65024
+.L171:
+
+; ..\cstart.c	   186          pcxi &= 0xfff0;
+	mov.u	d0,#65520
+.L98:
+	and	d15,d0
+.L172:
+
+; ..\cstart.c	   187          __mtcr(PCXI, pcxi);
+	mtcr	#65024,d15
+	isync
+.L64:
+
+; ..\cstart.c	   188  
+; ..\cstart.c	   189          /*
+; ..\cstart.c	   190           * Clear the ENDINIT bit in the WDT_CON0 register in order
+; ..\cstart.c	   191           * to disable the write-protection for registers protected
+; ..\cstart.c	   192           * via the EndInit feature (for example: WDT_CON1).
+; ..\cstart.c	   193           */
+; ..\cstart.c	   194          _endinit_clear();
+; ..\cstart.c	   195  
+; ..\cstart.c	   196          /*
+; ..\cstart.c	   197           * Disable the Watchdog if requested. Watchdog is enabled by default.
+; ..\cstart.c	   198           */
+; ..\cstart.c	   199  #if __WATCHDOG_DISABLE
+; ..\cstart.c	   200          WDT_CON1.U |= 0x8;
+; ..\cstart.c	   201  #endif
+; ..\cstart.c	   202  
+; ..\cstart.c	   203          /*
+; ..\cstart.c	   204           * PMI_TC.003 workaround:
+; ..\cstart.c	   205           * The TLB-A and TLB-B mappings are set to a page size of 16KB.
+; ..\cstart.c	   206           */
+; ..\cstart.c	   207  #if __PMI_TC003_INITIAL__  && defined MMU_CON
+; ..\cstart.c	   208          unsigned int mmu_con = __mfcr(MMU_CON);
+; ..\cstart.c	   209          mmu_con &= 0xffffffe1;      /* clear SZA and SZB */
+; ..\cstart.c	   210          mmu_con |= 0x00000014;      /* set SZA=SZB=16k   */
+; ..\cstart.c	   211          __mtcr(MMU_CON, mmu_con);
+; ..\cstart.c	   212  #endif
+; ..\cstart.c	   213  
+; ..\cstart.c	   214          /*
+; ..\cstart.c	   215           * Load Base Address of Trap Vector Table.
+; ..\cstart.c	   216           * Disable this if not started from RESET vector. (E.g.
+; ..\cstart.c	   217           * ROM monitors require to keep in control of vectors)
+; ..\cstart.c	   218           */
+; ..\cstart.c	   219  #if __BTV_INIT
+; ..\cstart.c	   220          __mtcr(BTV,  (unsigned int)_lc_u_trap_tab);
+; ..\cstart.c	   221  #endif
+; ..\cstart.c	   222  
+; ..\cstart.c	   223          /*
+; ..\cstart.c	   224           * Load Base Address of Interrupt Vector Table.
+; ..\cstart.c	   225           * Disable this if not started from RESET vector. (E.g.
+; ..\cstart.c	   226           * ROM monitors require to keep in control of vectors)
+; ..\cstart.c	   227           */
+; ..\cstart.c	   228  #if __BIV_INIT
+; ..\cstart.c	   229          __mtcr(BIV, (unsigned int)(_lc_u_int_tab));
+; ..\cstart.c	   230  #endif
+; ..\cstart.c	   231  
+; ..\cstart.c	   232          /*
+; ..\cstart.c	   233           * Load interupt stack pointer.
+; ..\cstart.c	   234           * Disable this if not started from RESET vector. (E.g.
+; ..\cstart.c	   235           * ROM monitors require to keep in control of vectors)
+; ..\cstart.c	   236           */
+; ..\cstart.c	   237  #if __ISP_INIT
+; ..\cstart.c	   238          unsigned int isp = (unsigned int)(_lc_ue_istack) & STACK_ALIGN;
+; ..\cstart.c	   239          __mtcr(ISP, isp);
+; ..\cstart.c	   240  #endif
+; ..\cstart.c	   241  
+; ..\cstart.c	   242          /*
+; ..\cstart.c	   243           * PMU/PMI configuration.
+; ..\cstart.c	   244           */
+; ..\cstart.c	   245  #if defined PMI_CON0 && defined __PMI_CON0_VALUE
+; ..\cstart.c	   246          if(__PMI_CON0_INIT)  PMI_CON0.U = __PMI_CON0_VALUE;
+; ..\cstart.c	   247  #endif
+; ..\cstart.c	   248  #if defined PMI_CON1 && defined __PMI_CON1_VALUE
+; ..\cstart.c	   249          if(__PMI_CON1_INIT)  PMI_CON1.U = __PMI_CON1_VALUE;
+; ..\cstart.c	   250  #endif
+; ..\cstart.c	   251  #if defined PMI_CON2 && defined __PMI_CON2_VALUE && (defined _REGTC1334_H || defined _REGTC1337_H || defined _REGTC1367_H || defined _REGTC1387_H || defined _REGTC1782_H || defined _REGTC1783_H || defined _REGTC1784_H || defined _REGTC1797_H || defined _REGTC1197_H || defined _REGTC1734_H || defined _REGTC1767_H || defined _REGTC1736_H || defined _REGTC1732_H || defined _REGTC1738_H || defined _REGTC1167_H || defined _REGTC1735_H)
+; ..\cstart.c	   252          if(__PMI_CON2_INIT)  PMI_CON2.U = __PMI_CON2_VALUE;
+; ..\cstart.c	   253  #endif
+; ..\cstart.c	   254  
+; ..\cstart.c	   255  #if defined PMU_EIFCON && defined __PMU_EIFCON_VALUE
+; ..\cstart.c	   256          if(__PMU_EIFCON_INIT)  PMU_EIFCON.U = __PMU_EIFCON_VALUE;
+; ..\cstart.c	   257  #endif
+; ..\cstart.c	   258  
+; ..\cstart.c	   259          /*
+; ..\cstart.c	   260           * Data cache control (Reset 0H).
+; ..\cstart.c	   261           * CPU_TC013 workaround:
+; ..\cstart.c	   262           * The 16KB D-Cache is enabled to workaround
+; ..\cstart.c	   263           * the CPU_TC013 functional problem.
+; ..\cstart.c	   264           * NOTE: Setting the D-Cache size must be done at the
+; ..\cstart.c	   265           *       very beginning of the startup code.
+; ..\cstart.c	   266           */
+; ..\cstart.c	   267  #if defined  DMU_CON
+; ..\cstart.c	   268  #  if __CPU_TC013_INITIAL__
+; ..\cstart.c	   269          DMU_CON.U = 0x1;
+; ..\cstart.c	   270  #  elif defined _REGTC1765_H
+; ..\cstart.c	   271          DMU_CON.U = 0xCA;
+; ..\cstart.c	   272  #  endif
+; ..\cstart.c	   273  #endif
+; ..\cstart.c	   274  
+; ..\cstart.c	   275          /*
+; ..\cstart.c	   276           * Bus configuration EBU_CLC within endinit.
+; ..\cstart.c	   277           */
+; ..\cstart.c	   278  #  if defined EBU_CLC && defined __EBU_CLC_VALUE
+; ..\cstart.c	   279          if(__EBU_CLC_INIT)  EBU_CLC.U = __EBU_CLC_VALUE;
+; ..\cstart.c	   280  #  endif
+; ..\cstart.c	   281  
+; ..\cstart.c	   282          /*
+; ..\cstart.c	   283           * Set the ENDINIT bit in the WDT_CON0 register again
+; ..\cstart.c	   284           * to enable the write-protection and to prevent a time-out.
+; ..\cstart.c	   285           */
+; ..\cstart.c	   286          _endinit_set();
+; ..\cstart.c	   287  
+; ..\cstart.c	   288          /*
+; ..\cstart.c	   289           * Initialize Bus configuration registers:
+; ..\cstart.c	   290           * Set register-values according to define's created by the GUI
+; ..\cstart.c	   291           *
+; ..\cstart.c	   292           * The recommended sequence of setting registers is as follows:
+; ..\cstart.c	   293           * 1.EBUCON
+; ..\cstart.c	   294           * 2.All other EBU registers except SDRAM specific registers
+; ..\cstart.c	   295           * 3.SDRMCON0
+; ..\cstart.c	   296           * 4.SDRMMOD0
+; ..\cstart.c	   297           * 5.SDRMREF0
+; ..\cstart.c	   298           * 6.SDRMCON1
+; ..\cstart.c	   299           * 7.SDRMMOD1
+; ..\cstart.c	   300           * 8.SDRMREF1
+; ..\cstart.c	   301           */
+; ..\cstart.c	   302  #if defined EBU_CON && defined __EBU_CON_VALUE
+; ..\cstart.c	   303          if(__EBU_CON_INIT)  EBU_CON.U = __EBU_CON_VALUE;
+; ..\cstart.c	   304  #endif
+; ..\cstart.c	   305  #if defined EBU_ADDRSEL0 && defined __EBU_ADDRSEL0_VALUE
+; ..\cstart.c	   306          if(__EBU_ADDRSEL0_INIT)  EBU_ADDRSEL0.U = __EBU_ADDRSEL0_VALUE;
+; ..\cstart.c	   307  #endif
+; ..\cstart.c	   308  #if defined EBU_ADDRSEL1 && defined __EBU_ADDRSEL1_VALUE
+; ..\cstart.c	   309          if(__EBU_ADDRSEL1_INIT)  EBU_ADDRSEL1.U = __EBU_ADDRSEL1_VALUE;
+; ..\cstart.c	   310  #endif
+; ..\cstart.c	   311  #if defined EBU_ADDRSEL2 && defined __EBU_ADDRSEL2_VALUE
+; ..\cstart.c	   312          if(__EBU_ADDRSEL2_INIT)  EBU_ADDRSEL2.U = __EBU_ADDRSEL2_VALUE;
+; ..\cstart.c	   313  #endif
+; ..\cstart.c	   314  #if defined EBU_ADDRSEL3 && defined __EBU_ADDRSEL3_VALUE
+; ..\cstart.c	   315          if(__EBU_ADDRSEL3_INIT)  EBU_ADDRSEL3.U = __EBU_ADDRSEL3_VALUE;
+; ..\cstart.c	   316  #endif
+; ..\cstart.c	   317  #if defined EBU_ADDRSEL4 && defined __EBU_ADDRSEL4_VALUE
+; ..\cstart.c	   318          if(__EBU_ADDRSEL4_INIT)  EBU_ADDRSEL4.U = __EBU_ADDRSEL4_VALUE;
+; ..\cstart.c	   319  #endif
+; ..\cstart.c	   320  #if defined EBU_ADDRSEL5 && defined __EBU_ADDRSEL5_VALUE
+; ..\cstart.c	   321          if(__EBU_ADDRSEL5_INIT)  EBU_ADDRSEL5.U = __EBU_ADDRSEL5_VALUE;
+; ..\cstart.c	   322  #endif
+; ..\cstart.c	   323  #if defined EBU_ADDRSEL6 && defined __EBU_ADDRSEL6_VALUE
+; ..\cstart.c	   324          if(__EBU_ADDRSEL6_INIT)  EBU_ADDRSEL6.U = __EBU_ADDRSEL6_VALUE;
+; ..\cstart.c	   325  #endif
+; ..\cstart.c	   326  #if defined EBU_BFCON && defined __EBU_BFCON_VALUE
+; ..\cstart.c	   327          if(__EBU_BFCON_INIT)  EBU_BFCON.U = __EBU_BFCON_VALUE;
+; ..\cstart.c	   328  #endif
+; ..\cstart.c	   329  #if defined EBU_BUSAP0 && defined __EBU_BUSAP0_VALUE
+; ..\cstart.c	   330          if(__EBU_BUSAP0_INIT)  EBU_BUSAP0.U = __EBU_BUSAP0_VALUE;
+; ..\cstart.c	   331  #endif
+; ..\cstart.c	   332  #if defined EBU_BUSAP1 && defined __EBU_BUSAP1_VALUE
+; ..\cstart.c	   333          if(__EBU_BUSAP1_INIT)  EBU_BUSAP1.U = __EBU_BUSAP1_VALUE;
+; ..\cstart.c	   334  #endif
+; ..\cstart.c	   335  #if defined EBU_BUSAP2 && defined __EBU_BUSAP2_VALUE
+; ..\cstart.c	   336          if(__EBU_BUSAP2_INIT)  EBU_BUSAP2.U = __EBU_BUSAP2_VALUE;
+; ..\cstart.c	   337  #endif
+; ..\cstart.c	   338  #if defined EBU_BUSAP3 && defined __EBU_BUSAP3_VALUE
+; ..\cstart.c	   339          if(__EBU_BUSAP3_INIT)  EBU_BUSAP3.U = __EBU_BUSAP3_VALUE;
+; ..\cstart.c	   340  #endif
+; ..\cstart.c	   341  #if defined EBU_BUSAP4 && defined __EBU_BUSAP4_VALUE
+; ..\cstart.c	   342          if(__EBU_BUSAP4_INIT)  EBU_BUSAP4.U = __EBU_BUSAP4_VALUE;
+; ..\cstart.c	   343  #endif
+; ..\cstart.c	   344  #if defined EBU_BUSAP5 && defined __EBU_BUSAP5_VALUE
+; ..\cstart.c	   345          if(__EBU_BUSAP5_INIT)  EBU_BUSAP5.U = __EBU_BUSAP5_VALUE;
+; ..\cstart.c	   346  #endif
+; ..\cstart.c	   347  #if defined EBU_BUSAP6 && defined __EBU_BUSAP6_VALUE
+; ..\cstart.c	   348          if(__EBU_BUSAP6_INIT)  EBU_BUSAP6.U = __EBU_BUSAP6_VALUE;
+; ..\cstart.c	   349  #endif
+; ..\cstart.c	   350  #if defined EBU_BUSCON0 && defined __EBU_BUSCON0_VALUE
+; ..\cstart.c	   351          if(__EBU_BUSCON0_INIT)  EBU_BUSCON0.U = __EBU_BUSCON0_VALUE;
+; ..\cstart.c	   352  #endif
+; ..\cstart.c	   353  #if defined EBU_BUSCON1 && defined __EBU_BUSCON1_VALUE
+; ..\cstart.c	   354          if(__EBU_BUSCON1_INIT)  EBU_BUSCON1.U = __EBU_BUSCON1_VALUE;
+; ..\cstart.c	   355  #endif
+; ..\cstart.c	   356  #if defined EBU_BUSCON2 && defined __EBU_BUSCON2_VALUE
+; ..\cstart.c	   357          if(__EBU_BUSCON2_INIT)  EBU_BUSCON2.U = __EBU_BUSCON2_VALUE;
+; ..\cstart.c	   358  #endif
+; ..\cstart.c	   359  #if defined EBU_BUSCON3 && defined __EBU_BUSCON3_VALUE
+; ..\cstart.c	   360          if(__EBU_BUSCON3_INIT)  EBU_BUSCON3.U = __EBU_BUSCON3_VALUE;
+; ..\cstart.c	   361  #endif
+; ..\cstart.c	   362  #if defined EBU_BUSCON4 && defined __EBU_BUSCON4_VALUE
+; ..\cstart.c	   363          if(__EBU_BUSCON4_INIT)  EBU_BUSCON4.U = __EBU_BUSCON4_VALUE;
+; ..\cstart.c	   364  #endif
+; ..\cstart.c	   365  #if defined EBU_BUSCON5 && defined __EBU_BUSCON5_VALUE
+; ..\cstart.c	   366          if(__EBU_BUSCON5_INIT)  EBU_BUSCON5.U = __EBU_BUSCON5_VALUE;
+; ..\cstart.c	   367  #endif
+; ..\cstart.c	   368  #if defined EBU_BUSCON6 && defined __EBU_BUSCON6_VALUE
+; ..\cstart.c	   369          if(__EBU_BUSCON6_INIT)  EBU_BUSCON6.U = __EBU_BUSCON6_VALUE;
+; ..\cstart.c	   370  #endif
+; ..\cstart.c	   371  #if defined EBU_EMUAS && defined __EBU_EMUAS_VALUE
+; ..\cstart.c	   372          if(__EBU_EMUAS_INIT)  EBU_EMUAS.U = __EBU_EMUAS_VALUE;
+; ..\cstart.c	   373  #endif
+; ..\cstart.c	   374  #if defined EBU_EMUBAP && defined __EBU_EMUBAP_VALUE
+; ..\cstart.c	   375          if(__EBU_EMUBAP_INIT)  EBU_EMUBAP.U = __EBU_EMUBAP_VALUE;
+; ..\cstart.c	   376  #endif
+; ..\cstart.c	   377  #if defined EBU_EMUBC && defined __EBU_EMUBC_VALUE
+; ..\cstart.c	   378          if(__EBU_EMUBC_INIT)  EBU_EMUBC.U = __EBU_EMUBC_VALUE;
+; ..\cstart.c	   379  #endif
+; ..\cstart.c	   380  #if defined EBU_EMUCON && defined __EBU_EMUCON_VALUE
+; ..\cstart.c	   381          if(__EBU_EMUCON_INIT)  EBU_EMUCON.U = __EBU_EMUCON_VALUE;
+; ..\cstart.c	   382  #endif
+; ..\cstart.c	   383  #if defined EBU_EMUOVL && defined __EBU_EMUOVL_VALUE
+; ..\cstart.c	   384          if(__EBU_EMUOVL_INIT)  EBU_EMUOVL.U = __EBU_EMUOVL_VALUE;
+; ..\cstart.c	   385  #endif
+; ..\cstart.c	   386  #if defined EBU_SDRMCON0 && defined __EBU_SDRMCON0_VALUE
+; ..\cstart.c	   387          if(__EBU_SDRMCON0_INIT)  EBU_SDRMCON0.U = __EBU_SDRMCON0_VALUE;
+; ..\cstart.c	   388  #endif
+; ..\cstart.c	   389  #if defined EBU_SDRMOD0 && defined __EBU_SDRMOD0_VALUE
+; ..\cstart.c	   390          if(__EBU_SDRMOD0_INIT)  EBU_SDRMOD0.U = __EBU_SDRMOD0_VALUE;
+; ..\cstart.c	   391  #endif
+; ..\cstart.c	   392  #if defined EBU_SDRMREF0 && defined __EBU_SDRMREF0_VALUE
+; ..\cstart.c	   393          if(__EBU_SDRMREF0_INIT)  EBU_SDRMREF0.U = __EBU_SDRMREF0_VALUE;
+; ..\cstart.c	   394  #endif
+; ..\cstart.c	   395  #if defined EBU_SDRMCON1 && defined __EBU_SDRMCON1_VALUE
+; ..\cstart.c	   396          if(__EBU_SDRMCON1_INIT)  EBU_SDRMCON1.U = __EBU_SDRMCON1_VALUE;
+; ..\cstart.c	   397  #endif
+; ..\cstart.c	   398  #if defined EBU_SDRMOD1 && defined __EBU_SDRMOD1_VALUE
+; ..\cstart.c	   399          if(__EBU_SDRMOD1_INIT)  EBU_SDRMOD1.U = __EBU_SDRMOD1_VALUE;
+; ..\cstart.c	   400  #endif
+; ..\cstart.c	   401  #if defined EBU_SDRMREF1 && defined __EBU_SDRMREF1_VALUE
+; ..\cstart.c	   402          if(__EBU_SDRMREF1_INIT)  EBU_SDRMREF1.U = __EBU_SDRMREF1_VALUE;
+; ..\cstart.c	   403  #endif
+; ..\cstart.c	   404  #if defined CBS_MCDBBS && defined __CBS_MCDBBS_VALUE
+; ..\cstart.c	   405          if(__CBS_MCDBBS_INIT)  CBS_MCDBBS .U = __CBS_MCDBBS_VALUE;
+; ..\cstart.c	   406  #endif
+; ..\cstart.c	   407  #if defined SBCU_CON && defined __SBCU_CON_VALUE
+; ..\cstart.c	   408          if(__SBCU_CON_INIT)  SBCU_CON.U = __SBCU_CON_VALUE;
+; ..\cstart.c	   409  #endif
+; ..\cstart.c	   410          /*
+; ..\cstart.c	   411           * TC112_COR15 workaround:
+; ..\cstart.c	   412           * The starvation protection is disabled.
+; ..\cstart.c	   413           */
+; ..\cstart.c	   414  #if __TC112_COR15_INITIAL__
+; ..\cstart.c	   415  #  if defined SBCU_CON
+; ..\cstart.c	   416          SBCU_CON.U &= 0xfff7ffff;
+; ..\cstart.c	   417  #  endif
+; ..\cstart.c	   418  #endif
+; ..\cstart.c	   419  
+; ..\cstart.c	   420          /* Setup the context save area linked list. */
+; ..\cstart.c	   421  #if __CSA_INIT
+; ..\cstart.c	   422  
+; ..\cstart.c	   423          // Still To be Done
+; ..\cstart.c	   424          //    - these pointer arrays csa_area_begin/end should be placed in memory, not on the stack
+; ..\cstart.c	   425          //      the simulator, however, will generate an error if 'static' is placed in front of the declarations
+; ..\cstart.c	   426  #  if !__CPU_TC051_INITIAL__
+; ..\cstart.c	   427  #  define MAX_NR_OF_CSA_AREAS     1
+; ..\cstart.c	   428  extern int _lc_ub_csa_01[];    /* context save area 1 begin */
+; ..\cstart.c	   429  extern int _lc_ue_csa_01[];    /* context save area 1 end   */
+; ..\cstart.c	   430          int * csa_area_begin[] = { _lc_ub_csa_01 };
+; ..\cstart.c	   431          int * csa_area_end[]   = { _lc_ue_csa_01 };
+; ..\cstart.c	   432  #  else
+; ..\cstart.c	   433  #  define MAX_NR_OF_CSA_AREAS     3
+; ..\cstart.c	   434  extern int _lc_ub_csa_01[];    /* context save area 1 begin */
+; ..\cstart.c	   435  extern int _lc_ue_csa_01[];    /* context save area 1 end   */
+; ..\cstart.c	   436  extern int _lc_ub_csa_02[];    /* context save area 2 begin */
+; ..\cstart.c	   437  extern int _lc_ue_csa_02[];    /* context save area 2 end   */
+; ..\cstart.c	   438  extern int _lc_ub_csa_03[];    /* context save area 3 begin */
+; ..\cstart.c	   439  extern int _lc_ue_csa_03[];    /* context save area 3 end   */
+; ..\cstart.c	   440          int * csa_area_begin[] = { _lc_ub_csa_01, _lc_ub_csa_02, _lc_ub_csa_03 };
+; ..\cstart.c	   441          int * csa_area_end[]   = { _lc_ue_csa_01, _lc_ue_csa_02, _lc_ue_csa_03 };
+; ..\cstart.c	   442  #  endif
+; ..\cstart.c	   443  
+; ..\cstart.c	   444          int  i, k;
+; ..\cstart.c	   445          int  no_of_csas;
+; ..\cstart.c	   446          int * csa;
+; ..\cstart.c	   447          unsigned int  seg_nr, seg_idx, pcxi_val=0;
+; ..\cstart.c	   448          _Bool first=true;
+; ..\cstart.c	   449  
+; ..\cstart.c	   450          for (i=0; i < MAX_NR_OF_CSA_AREAS; i++)
+; ..\cstart.c	   451          {
+; ..\cstart.c	   452                  /* first calculate nr of CSAs in this area */
+; ..\cstart.c	   453                  no_of_csas = (csa_area_end[i] - csa_area_begin[i]) >> 4;
+; ..\cstart.c	   454  
+; ..\cstart.c	   455                  for (k=0; k < no_of_csas; k++)
+; ..\cstart.c	   456                  {
+; ..\cstart.c	   457                          csa = csa_area_begin[i] + k*16;
+; ..\cstart.c	   458                          /* Store null pointer in last CSA (= very first time!) */
+; ..\cstart.c	   459                          *csa = pcxi_val;
+; ..\cstart.c	   460  
+; ..\cstart.c	   461                          seg_nr  = __extru( (int) csa, 28, 4) << 16;
+; ..\cstart.c	   462                          seg_idx = __extru( (int) csa, 6, 16);
+; ..\cstart.c	   463                          pcxi_val = seg_nr | seg_idx;
+; ..\cstart.c	   464                          if (first)
+; ..\cstart.c	   465                          {
+; ..\cstart.c	   466                                  first = false;
+; ..\cstart.c	   467                                  __mtcr(LCX, pcxi_val);
+; ..\cstart.c	   468                          }
+; ..\cstart.c	   469                  }
+; ..\cstart.c	   470                  __mtcr(FCX, pcxi_val);
+; ..\cstart.c	   471          }
+; ..\cstart.c	   472  #endif
+; ..\cstart.c	   473  
+; ..\cstart.c	   474          /*
+; ..\cstart.c	   475           * PMU_TC.004 workaround:
+; ..\cstart.c	   476           * The split mode is disabled on the LMB bus to workaround.
+; ..\cstart.c	   477           */
+; ..\cstart.c	   478  #if __PMU_TC004_INITIAL__  && defined LFI_CON
+; ..\cstart.c	   479          LFI_CON.U &= 0xfffffffe;
+; ..\cstart.c	   480  #endif
+; ..\cstart.c	   481  
+; ..\cstart.c	   482          /*
+; ..\cstart.c	   483           * Inititialize global address registers a0/a1 to support
+; ..\cstart.c	   484           * __a0/__a1 storage qualifiers of the C compiler.
+; ..\cstart.c	   485           */
+; ..\cstart.c	   486  #if __A0A1_INIT
+; ..\cstart.c	   487          void * a0 = _SMALL_DATA_;
+; ..\cstart.c	   488          __asm( "mov.aa\ta0,%0"::"a"(a0) );
+; ..\cstart.c	   489  
+; ..\cstart.c	   490          void * a1 = _LITERAL_DATA_;
+; ..\cstart.c	   491          __asm( "mov.aa\ta1,%0"::"a"(a1) );
+; ..\cstart.c	   492  #endif
+; ..\cstart.c	   493  
+; ..\cstart.c	   494          /*
+; ..\cstart.c	   495           * Inititialize global address registers a8/a9 to support
+; ..\cstart.c	   496           * __a8/__a9 storage qualifiers of the C compiler. A8 and A9
+; ..\cstart.c	   497           * are reserved for OS use, or for application use in cases
+; ..\cstart.c	   498           * where the application ans OS are tightly coupled.
+; ..\cstart.c	   499           */
+; ..\cstart.c	   500  #if __A8A9_INIT
+; ..\cstart.c	   501          void * a8 = _A8_DATA_;
+; ..\cstart.c	   502          __asm( "mov.aa\ta8,%0"::"a"(a8) );
+; ..\cstart.c	   503  
+; ..\cstart.c	   504          void * a9 = _A9_DATA_;
+; ..\cstart.c	   505          __asm( "mov.aa\ta9,%0"::"a"(a9) );
+; ..\cstart.c	   506  #endif
+; ..\cstart.c	   507  
+; ..\cstart.c	   508          /*
+; ..\cstart.c	   509           * Initialize and clear C variables.
+; ..\cstart.c	   510           */
+; ..\cstart.c	   511  #if __C_INIT
+; ..\cstart.c	   512          _c_init();      /* initialize data */
+; ..\cstart.c	   513  #endif
+; ..\cstart.c	   514  
+; ..\cstart.c	   515          /* initialize profiling if required
+; ..\cstart.c	   516           */
+; ..\cstart.c	   517  #if __PROF_ENABLE__
+; ..\cstart.c	   518          __prof_init();
+; ..\cstart.c	   519  #endif
+; ..\cstart.c	   520  
+; ..\cstart.c	   521          /*
+; ..\cstart.c	   522           * Call a user function within one can initialize the
+; ..\cstart.c	   523           * registers protected via the EndInit feature.
+; ..\cstart.c	   524           * Beware that protected registers are unlocked
+; ..\cstart.c	   525           * for the duration of the Time-out Period only!
+; ..\cstart.c	   526           */
+; ..\cstart.c	   527  #ifdef _CALL_ENDINIT
+; ..\cstart.c	   528          _endinit_clear();  /* disable the write-protection */
+; ..\cstart.c	   529          _endinit();
+; ..\cstart.c	   530          _endinit_set();    /* enable the write-protection  */
+; ..\cstart.c	   531  #endif
+; ..\cstart.c	   532  
+; ..\cstart.c	   533          /*
+; ..\cstart.c	   534           * Call a user function before starting main().
+; ..\cstart.c	   535           */
+; ..\cstart.c	   536  #if defined __CALL_INIT
+; ..\cstart.c	   537          _call_init();
+; ..\cstart.c	   538  #endif
+; ..\cstart.c	   539  
+; ..\cstart.c	   540          /*
+; ..\cstart.c	   541           * Call C main program.
+; ..\cstart.c	   542           */
+; ..\cstart.c	   543          __asm("jg main");
+; ..\cstart.c	   544  #if __USE_ARGC_ARGV
+; ..\cstart.c	   545          exit( main( _argcv( argcv, __ARGCV_BUFSIZE ), (char **)argcv ) );
+; ..\cstart.c	   546  #else
+; ..\cstart.c	   547          exit( main( 0, argcv ) );                /* argc is 0 */
+; ..\cstart.c	   548  #endif
+; ..\cstart.c	   549  
+; ..\cstart.c	   550          /*
+; ..\cstart.c	   551           * Default trap vectors are resolved from the C-library.
+; ..\cstart.c	   552           */
+; ..\cstart.c	   553  #if __BTV_INIT
+; ..\cstart.c	   554  #  if __RESOLVE_TRAP_0
+; ..\cstart.c	   555  #    pragma extern  _trapmmu
+; ..\cstart.c	   556  #  endif
+; ..\cstart.c	   557  #  if __RESOLVE_TRAP_1
+; ..\cstart.c	   558  #    pragma extern  _trapprotection
+; ..\cstart.c	   559  #  endif
+; ..\cstart.c	   560  #  if __RESOLVE_TRAP_2
+; ..\cstart.c	   561  #    pragma extern  _trapinstruction
+; ..\cstart.c	   562  #  endif
+; ..\cstart.c	   563  #  if __RESOLVE_TRAP_3
+; ..\cstart.c	   564  #    pragma extern  _trapcontext
+; ..\cstart.c	   565  #  endif
+; ..\cstart.c	   566  #  if __RESOLVE_TRAP_4
+; ..\cstart.c	   567  #    pragma extern  _trapbus
+; ..\cstart.c	   568  #  endif
+; ..\cstart.c	   569  #  if __RESOLVE_TRAP_5
+; ..\cstart.c	   570  #    pragma extern  _trapassertion
+; ..\cstart.c	   571  #  endif
+; ..\cstart.c	   572  #  if __RESOLVE_TRAP_6
+; ..\cstart.c	   573  #    pragma extern  _trapsystem
+; ..\cstart.c	   574  #  endif
+; ..\cstart.c	   575  #  if __RESOLVE_TRAP_7
+; ..\cstart.c	   576  #    pragma extern  _trapnmi
+; ..\cstart.c	   577  #  endif
+; ..\cstart.c	   578  #endif
+; ..\cstart.c	   579  
+; ..\cstart.c	   580  }
+; ..\cstart.c	   581  
+; ..\cstart.c	   582  /**************************************************************************
+; ..\cstart.c	   583   *
+; ..\cstart.c	   584   * FUNCTION:     _endinit_clear
+; ..\cstart.c	   585   *
+; ..\cstart.c	   586   * DESCRIPTION:  Clears the ENDINIT bit in the WDT_CON0 register in order
+; ..\cstart.c	   587   *               to disable the write-protection for registers protected
+; ..\cstart.c	   588   *               via the EndInit feature (ie. WDT_CON1, BTV, BIV, ISP,
+; ..\cstart.c	   589   *               mod_CLC).
+; ..\cstart.c	   590   *
+; ..\cstart.c	   591   *************************************************************************/
+; ..\cstart.c	   592  void inline _endinit_clear()
+; ..\cstart.c	   593  {
+; ..\cstart.c	   594          unsigned int wdt_con0, wdt_con1;
+; ..\cstart.c	   595  
+; ..\cstart.c	   596          /*
+; ..\cstart.c	   597           * 1st step: Password access (create password and send to WDT_CON0)
+; ..\cstart.c	   598           */
+; ..\cstart.c	   599          wdt_con0 = WDT_CON0.U;
+	lea	a15,0xf00005f0
+	ld.w	d0,[a15]
+.L100:
+
+; ..\cstart.c	   600          wdt_con1 = WDT_CON1.U;
+; ..\cstart.c	   601  
+; ..\cstart.c	   602          wdt_con0 &= 0xffffff01;         /* clear WDTLCK, WDTHPW0, WDTHPW1 */
+	insert	d15,d0,#0,#1,#7
+	lea	a2,0xf00005f4
+.L99:
+
+; ..\cstart.c	   603          wdt_con0 |= 0xf0;               /* set WDTHPW1 to 0xf */
+	or	d0,d15,#240
+	ld.w	d1,[a2]
+.L102:
+
+; ..\cstart.c	   604          wdt_con1 &= 0x0c;               /* copy of WDT_CON1_WDTDR and WDT_CON1_WDTIR (d1) */
+	and	d15,d1,#12
+.L103:
+
+; ..\cstart.c	   605          wdt_con0 |= wdt_con1;           /* set WDTHPW1 to 0xf */
+; ..\cstart.c	   606          WDT_CON0.U = wdt_con0;
+	or	d0,d15
+	st.w	[a15],d0
+.L173:
+
+; ..\cstart.c	   607  
+; ..\cstart.c	   608          /*
+; ..\cstart.c	   609           * 2nd step: Modify access, set the bit ENDINIT to 0 to allow access to
+; ..\cstart.c	   610           *           registers: WDT_CON1, BTV, BIV, ISP and mod_CLC
+; ..\cstart.c	   611           */
+; ..\cstart.c	   612          wdt_con0 &= 0xfffffff0;         /* clear WDTHPW0, WDTLCK, ENDINIT  */
+; ..\cstart.c	   613          wdt_con0 |= 0x02;               /* WDTHPW0=0, WDTLCK=1, ENDINIT=0 */
+	insert	d15,d0,#2,#0,#4
+.L101:
+
+; ..\cstart.c	   614          __isync();
+	isync
+.L174:
+
+; ..\cstart.c	   615          WDT_CON0.U = wdt_con0;
+	st.w	[a15],d15
+.L175:
+
+; ..\cstart.c	   616          wdt_con0 = WDT_CON0.U;          /* dummy read required */
+	ld.w	d15,[a15]
+.L65:
+	ld.w	d15,[a2]
+.L176:
+	or	d15,#8
+	movh.a	a4,#@his(_lc_u_trap_tab)
+.L177:
+	st.w	[a2],d15
+.L178:
+	lea	a4,[a4]@los(_lc_u_trap_tab)
+	mov.d	d15,a4
+.L179:
+	mtcr	#65060,d15
+	isync
+.L180:
+	movh.a	a4,#@his(_lc_u_int_tab)
+	lea	a4,[a4]@los(_lc_u_int_tab)
+	mov.d	d15,a4
+.L181:
+	mtcr	#65056,d15
+	isync
+.L69:
+	movh.a	a4,#@his(_lc_ue_istack)
+	lea	a4,[a4]@los(_lc_ue_istack)
+	mov.d	d15,a4
+.L182:
+	insert	d15,d15,#0,#0,#3
+.L183:
+	mtcr	#65064,d15
+	isync
+.L184:
+	movh.a	a4,#63616
+.L71:
+	mov	d0,#0
+	st.w	[a4]@los(0xf87ffd10),d0
+.L72:
+	ld.w	d15,__const_02840284
+.L185:
+	st.w	[a4]@los(0xf87ffd18),d15
+.L87:
+
+; ..\cstart.c	   617  }
+; ..\cstart.c	   618  
+; ..\cstart.c	   619  /**************************************************************************
+; ..\cstart.c	   620   *
+; ..\cstart.c	   621   * FUNCTION:     _endinit_set
+; ..\cstart.c	   622   *
+; ..\cstart.c	   623   * DESCRIPTION:  Sets the ENDINIT bit in the WDT_CON0 register in order
+; ..\cstart.c	   624   *               to enable the write-protection for registers protected
+; ..\cstart.c	   625   *               via the EndInit feature (ie. WDT_CON1, BTV, BIV, ISP,
+; ..\cstart.c	   626   *               mod_CLC).
+; ..\cstart.c	   627   *
+; ..\cstart.c	   628   *************************************************************************/
+; ..\cstart.c	   629  void inline _endinit_set()
+; ..\cstart.c	   630  {
+; ..\cstart.c	   631          unsigned int wdt_con0, wdt_con1;
+; ..\cstart.c	   632  
+; ..\cstart.c	   633          /*
+; ..\cstart.c	   634           * 1st step: Password access (create password and send to WDT_CON0)
+; ..\cstart.c	   635           */
+; ..\cstart.c	   636          wdt_con0 = WDT_CON0.U;
+	ld.w	d1,[a15]
+.L105:
+
+; ..\cstart.c	   637          wdt_con1 = WDT_CON1.U;
+; ..\cstart.c	   638  
+; ..\cstart.c	   639          wdt_con0 &= 0xffffff01;         /* clear WDTLCK, WDTHPW0, WDTHPW1 */
+	insert	d15,d1,#0,#1,#7
+	ld.w	d2,[a2]
+.L107:
+
+; ..\cstart.c	   640          wdt_con0 |= 0xf0;               /* set WDTHPW1 to 0xf */
+	or	d1,d15,#240
+.L186:
+
+; ..\cstart.c	   641          wdt_con1 &= 0x0c;               /* copy of WDT_CON1_WDTDR and WDT_CON1_WDTIR (d1) */
+	and	d15,d2,#12
+.L108:
+
+; ..\cstart.c	   642          wdt_con0 |= wdt_con1;           /* set WDTHPW1 to 0xf */
+; ..\cstart.c	   643          WDT_CON0.U = wdt_con0;
+	or	d1,d15
+	st.w	[a15],d1
+.L187:
+
+; ..\cstart.c	   644  
+; ..\cstart.c	   645          /*
+; ..\cstart.c	   646           * 2nd step: Modify access, set the bit ENDINIT to 1
+; ..\cstart.c	   647           */
+; ..\cstart.c	   648          wdt_con0 &= 0xfffffff0;         /* clear WDTHPW0, WDTLCK, ENDINIT  */
+; ..\cstart.c	   649          wdt_con0 |= 0x03;               /* WDTHPW0=0, WDTLCK=1, ENDINIT=1 */
+	insert	d15,d1,#3,#0,#4
+.L106:
+
+; ..\cstart.c	   650          __isync();
+	isync
+.L188:
+
+; ..\cstart.c	   651          WDT_CON0.U = wdt_con0;
+	st.w	[a15],d15
+.L88:
+	movh.a	a15,#63488
+.L189:
+	ld.w	d15,__const_a1000a51
+.L109:
+	st.w	[a15]24,d15
+.L190:
+	ld.w	d15,__const_82000a53
+.L191:
+	st.w	[a15]28,d15
+.L73:
+	st.w	[a15]32,d0
+.L192:
+	movh.a	a2,#@his(_lc_ub_csa_01)
+.L193:
+	st.w	[a15]36,d0
+.L194:
+	lea	a2,[a2]@los(_lc_ub_csa_01)
+.L195:
+	movh.a	a15,#@his(_lc_ue_csa_01)
+.L196:
+	st.a	[a10],a2
+.L197:
+	lea	a15,[a15]@los(_lc_ue_csa_01)
+.L198:
+	st.a	[a10]4,a15
+.L199:
+	sub.a	a15,a15,a2
+	mov.d	d2,a15
+.L200:
+	mov	d1,#1
+.L110:
+	sha	d2,#-6
+.L201:
+	mov	d3,d0
+.L112:
+	j	.L2
+.L3:
+	sha	d15,d3,#6
+	ld.a	a15,[a10]
+.L202:
+	addsc.a	a15,a15,d15,#0
+.L113:
+	mov.d	d15,a15
+.L114:
+	st.w	[a15],d0
+.L203:
+	extr.u	d0,d15,#28,#4
+.L104:
+	sh	d0,d0,#16
+.L116:
+	extr.u	d15,d15,#6,#16
+.L115:
+	or	d0,d15
+.L117:
+	jeq	d1,#0,.L4				; predicted taken
+.L204:
+	mov	d1,#0
+.L205:
+	mtcr	#65084,d0
+	isync
+.L4:
+	add	d3,#1
+.L2:
+	jlt	d3,d2,.L3				; predicted taken
+.L206:
+	mtcr	#65080,d0
+	isync
+.L92:
+	movh.a	a15,#@his(_SMALL_DATA_)
+	lea	a15,[a15]@los(_SMALL_DATA_)
+.L207:
+	mov.aa	a0,a15
+.L93:
+	movh.a	a15,#@his(_LITERAL_DATA_)
+	lea	a15,[a15]@los(_LITERAL_DATA_)
+.L208:
+	mov.aa	a1,a15
+.L94:
+	movh.a	a15,#@his(_A8_DATA_)
+	lea	a15,[a15]@los(_A8_DATA_)
+.L209:
+	mov.aa	a8,a15
+.L95:
+	movh.a	a15,#@his(_A9_DATA_)
+	lea	a15,[a15]@los(_A9_DATA_)
+.L210:
+	mov.aa	a9,a15
+.L211:
+	call	_c_init
+.L111:
+	jg main
+.L212:
+	mov	d4,#0
+	lea	a4,argcv
+	call	main
+.L213:
+	mov	d4,d2
+	j	exit
+.L60:
+	
+___start_function_end:
+	.size	_start,___start_function_end-_start
+.L43:
+	; End of function
+	
+	.sdecl	'.text.libc',code,cluster('_endinit_clear')
+	.sect	'.text.libc'
+	.align	2
+	
+	.global	_endinit_clear
+; Function _endinit_clear
+.L12:
+_endinit_clear:	.type	func
+	lea	a15,0xf00005f0
+	ld.w	d0,[a15]
+.L118:
+	insert	d15,d0,#0,#1,#7
+	ld.w	d1,0xf00005f4
+.L120:
+	or	d0,d15,#240
+.L135:
+	and	d15,d1,#12
+.L121:
+	or	d0,d15
+	st.w	[a15],d0
+.L136:
+	insert	d15,d0,#2,#0,#4
+.L119:
+	isync
+.L137:
+	st.w	[a15],d15
+.L138:
+	ld.w	d15,[a15]
+.L122:
+	ret
+.L47:
+	
+___endinit_clear_function_end:
+	.size	_endinit_clear,___endinit_clear_function_end-_endinit_clear
+.L23:
+	; End of function
+	
+	.sdecl	'.text.libc',code,cluster('_endinit_set')
+	.sect	'.text.libc'
+	.align	2
+	
+	.global	_endinit_set
+; Function _endinit_set
+.L14:
+_endinit_set:	.type	func
+	lea	a15,0xf00005f0
+	ld.w	d0,[a15]
+.L123:
+	insert	d15,d0,#0,#1,#7
+	ld.w	d1,0xf00005f4
+.L125:
+	or	d0,d15,#240
+.L143:
+	and	d15,d1,#12
+.L126:
+	or	d0,d15
+	st.w	[a15],d0
+.L144:
+	insert	d15,d0,#3,#0,#4
+.L124:
+	isync
+.L145:
+	st.w	[a15],d15
+.L146:
+
+; ..\cstart.c	   652  }
+	ret
+.L53:
+	
+___endinit_set_function_end:
+	.size	_endinit_set,___endinit_set_function_end-_endinit_set
+.L28:
+	; End of function
+	
+	.sdecl	'.zdata.cstart.argcv',data,cluster('argcv')
+	.sect	'.zdata.cstart.argcv'
+	.align	4
+argcv:	.type	object
+	.size	argcv,4
+	.space	4
+	.calls	'_start','_c_init'
+	.calls	'_start','main'
+	.calls	'_start','exit'
+	.calls	'_START','',0
+	.calls	'__init_sp','',0
+	.calls	'_start','',8
+	.calls	'_endinit_clear','',0
+	.weak	exit
+	.extern	exit
+	.extern	_Exit
+	.extern	_lc_ue_ustack
+	.extern	_lc_ue_istack
+	.extern	_lc_u_int_tab
+	.extern	_lc_u_trap_tab
+	.extern	_SMALL_DATA_
+	.extern	_LITERAL_DATA_
+	.extern	_A8_DATA_
+	.extern	_A9_DATA_
+	.extern	_c_init
+	.extern	main
+	.extern	_lc_ub_csa_01
+	.extern	_lc_ue_csa_01
+	.extern	_trapmmu
+	.extern	_trapprotection
+	.extern	_trapinstruction
+	.extern	_trapcontext
+	.extern	_trapbus
+	.extern	_trapassertion
+	.extern	_trapsystem
+	.extern	_trapnmi
+	.calls	'_endinit_set','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L16:
+	.word	1170
+	.half	3
+	.word	.L17
+	.byte	4
+.L15:
+	.byte	1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L18
+.L46:
+	.byte	2
+	.byte	'_endinit_clear',0,3,1,208,4,13,1,1
+.L66:
+	.byte	3
+.L62:
+	.byte	4
+	.byte	'unsigned int',0,4,7
+.L48:
+	.byte	5
+	.byte	'wdt_con0',0,1,210,4,22
+	.word	181
+.L50:
+	.byte	5
+	.byte	'wdt_con1',0,1,210,4,32
+	.word	181
+	.byte	0,0
+.L52:
+	.byte	2
+	.byte	'_endinit_set',0,3,1,245,4,13,1,1
+.L89:
+	.byte	3
+.L54:
+	.byte	5
+	.byte	'wdt_con0',0,1,247,4,22
+	.word	181
+.L56:
+	.byte	5
+	.byte	'wdt_con1',0,1,247,4,32
+	.word	181
+	.byte	0,0,6
+	.byte	'__extru',0
+	.word	181
+	.byte	1,1,1,1
+.L77:
+	.byte	4
+	.byte	'int',0,4,5,7
+	.word	312
+	.byte	7
+	.word	312
+	.byte	7
+	.word	312
+	.byte	0,8
+	.byte	'__mtcr',0,1,1,1,1,7
+	.word	312
+	.byte	7
+	.word	312
+	.byte	0,9
+	.word	312
+	.byte	6
+	.byte	'__mfcr',0
+	.word	358
+	.byte	1,1,1,1,7
+	.word	312
+	.byte	0,10
+	.byte	'__isync',0,1,1,1,1,10
+	.byte	'__dsync',0,1,1,1,1,11
+	.byte	'exit',0,2,90,33,1,1,1,1,12,2,90,44
+	.word	312
+	.byte	0,13
+	.byte	'_c_init',0,1,48,13,1,1,1,1
+.L80:
+	.byte	14
+	.word	312
+.L74:
+	.byte	15,4
+	.word	449
+	.byte	16,0,0
+.L85:
+	.byte	4
+	.byte	'_Bool',0,1,2,17
+	.byte	'void',0,14
+	.word	472
+	.byte	18
+	.byte	'__prof_adm',0,1,1,1
+	.word	478
+	.byte	19,1,14
+	.word	502
+	.byte	18
+	.byte	'__codeptr',0,1,1,1
+	.word	504
+	.byte	20,3,145,19,18,4,21,3,147,19,2,4,4
+	.byte	'unsigned int',0,4,7,22
+	.byte	'CNT1',0,4
+	.word	539
+	.byte	12,20,2,35,0,23,4
+	.word	539
+	.byte	2,18,2,35,0,22
+	.byte	'TOS',0,4
+	.word	539
+	.byte	2,16,2,35,0,22
+	.byte	'SRPN',0,4
+	.word	539
+	.byte	8,8,2,35,0,22
+	.byte	'CPPN',0,4
+	.word	539
+	.byte	8,0,2,35,0,0,24
+	.byte	'B',0,4
+	.word	533
+	.byte	2,35,0,24
+	.byte	'I',0,4
+	.word	312
+	.byte	2,35,0,24
+	.byte	'U',0,4
+	.word	181
+	.byte	2,35,0,0,9
+	.word	527
+	.byte	18
+	.byte	'PCP_GPR6_type',0,3,158,19,3
+	.word	664
+	.byte	20,3,160,19,18,4,21,3,162,19,2,4,22
+	.byte	'Z',0,4
+	.word	539
+	.byte	1,31,2,35,0,22
+	.byte	'N',0,4
+	.word	539
+	.byte	1,30,2,35,0,22
+	.byte	'C',0,4
+	.word	539
+	.byte	1,29,2,35,0,22
+	.byte	'V',0,4
+	.word	539
+	.byte	1,28,2,35,0,22
+	.byte	'CNZ',0,4
+	.word	539
+	.byte	1,27,2,35,0,22
+	.byte	'IEN',0,4
+	.word	539
+	.byte	1,26,2,35,0,22
+	.byte	'CEN',0,4
+	.word	539
+	.byte	1,25,2,35,0,23,4
+	.word	539
+	.byte	1,24,2,35,0,22
+	.byte	'DPTR',0,4
+	.word	539
+	.byte	8,16,2,35,0,23,4
+	.word	539
+	.byte	16,0,2,35,0,0,24
+	.byte	'B',0,4
+	.word	698
+	.byte	2,35,0,24
+	.byte	'I',0,4
+	.word	312
+	.byte	2,35,0,24
+	.byte	'U',0,4
+	.word	181
+	.byte	2,35,0,0,9
+	.word	692
+	.byte	18
+	.byte	'PCP_GPR7_type',0,3,178,19,3
+	.word	874
+	.byte	4
+	.byte	'char',0,1,6,14
+	.word	902
+.L96:
+	.byte	15,4
+	.word	910
+	.byte	16,0,0,25
+	.word	472
+	.byte	26,0,27
+	.byte	'_lc_ue_ustack',0,1,38,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_lc_ue_istack',0,1,39,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_lc_u_int_tab',0,1,40,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_lc_u_trap_tab',0,1,41,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_SMALL_DATA_',0,1,42,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_LITERAL_DATA_',0,1,43,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_A8_DATA_',0,1,44,19
+	.word	924
+	.byte	1,1,27
+	.byte	'_A9_DATA_',0,1,45,19
+	.word	924
+	.byte	1,1,25
+	.word	312
+	.byte	26,0,27
+	.byte	'_lc_ub_csa_01',0,1,172,3,12
+	.word	1116
+	.byte	1,1,27
+	.byte	'_lc_ue_csa_01',0,1,173,3,12
+	.word	1116
+	.byte	1,1,0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L17:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,11
+	.byte	1,0,0,4,36,0,3,8,11,15,62,15,0,0,5,52,0,3,8,58,15,59,15,57,15,73,19,0,0,6,46,1,3,8,73,19,54,15,39,12,63
+	.byte	12,60,12,0,0,7,5,0,73,19,0,0,8,46,1,3,8,54,15,39,12,63,12,60,12,0,0,9,53,0,73,19,0,0,10,46,0,3,8,54,15
+	.byte	39,12,63,12,60,12,0,0,11,46,1,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,12,5,0,58,15,59,15,57
+	.byte	15,73,19,0,0,13,46,0,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,14,15,0,73,19,0,0,15,1,1,11,15
+	.byte	73,19,0,0,16,33,0,47,15,0,0,17,59,0,3,8,0,0,18,22,0,3,8,58,15,59,15,57,15,73,19,0,0,19,21,0,54,15,0,0
+	.byte	20,23,1,58,15,59,15,57,15,11,15,0,0,21,19,1,58,15,59,15,57,15,11,15,0,0,22,13,0,3,8,11,15,73,19,13,15
+	.byte	12,15,56,9,0,0,23,13,0,11,15,73,19,13,15,12,15,56,9,0,0,24,13,0,3,8,11,15,73,19,56,9,0,0,25,1,1,73,19
+	.byte	0,0,26,33,0,0,0,27,52,0,3,8,58,15,59,15,57,15,73,19,63,12,60,12,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L18:
+	.word	.L128-.L127
+.L127:
+	.half	3
+	.word	.L130-.L129
+.L129:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\cstart.c',0,0,0,0
+	.byte	'stdlib.h',0,1,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0,0
+.L130:
+.L128:
+	.sdecl	'.debug_info',debug,cluster('_endinit_clear')
+	.sect	'.debug_info'
+.L19:
+	.word	210
+	.half	3
+	.word	.L20
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L22,.L21
+	.byte	2
+	.word	.L15
+	.byte	3
+	.word	.L46
+	.byte	1
+	.word	.L12,.L47,.L11
+	.byte	4
+	.word	.L12,.L47
+	.byte	5
+	.word	.L48,.L49
+	.byte	5
+	.word	.L50,.L51
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_endinit_clear')
+	.sect	'.debug_abbrev'
+.L20:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,49,16,63,12,17,1,18,1,64,6
+	.byte	0,0,4,11,1,17,1,18,1,0,0,5,52,0,49,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('_endinit_clear')
+	.sect	'.debug_line'
+.L21:
+	.word	.L132-.L131
+.L131:
+	.half	3
+	.word	.L134-.L133
+.L133:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\cstart.c',0,0,0,0,0
+.L134:
+	.byte	5,28,7,0,5,2
+	.word	.L12
+	.byte	3,214,4,1,5,18,9
+	.half	.L118-.L12
+	.byte	3,3,1,5,28,3,126,1,5,18,9
+	.half	.L120-.L118
+	.byte	3,3,1,9
+	.half	.L135-.L120
+	.byte	3,1,1,9
+	.half	.L121-.L135
+	.byte	3,1,1,5,20,3,1,1,5,18,9
+	.half	.L136-.L121
+	.byte	3,7,1,5,16,9
+	.half	.L119-.L136
+	.byte	3,1,1,5,20,9
+	.half	.L137-.L119
+	.byte	3,1,1,5,28,9
+	.half	.L138-.L137
+	.byte	3,1,1,5,1,9
+	.half	.L122-.L138
+	.byte	3,1,1,7,9
+	.half	.L23-.L122
+	.byte	0,1,1
+.L132:
+	.sdecl	'.debug_ranges',debug,cluster('_endinit_clear')
+	.sect	'.debug_ranges'
+.L22:
+	.word	-1,.L12,0,.L23-.L12,0,0
+	.sdecl	'.debug_info',debug,cluster('_endinit_set')
+	.sect	'.debug_info'
+.L24:
+	.word	210
+	.half	3
+	.word	.L25
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L27,.L26
+	.byte	2
+	.word	.L15
+	.byte	3
+	.word	.L52
+	.byte	1
+	.word	.L14,.L53,.L13
+	.byte	4
+	.word	.L14,.L53
+	.byte	5
+	.word	.L54,.L55
+	.byte	5
+	.word	.L56,.L57
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_endinit_set')
+	.sect	'.debug_abbrev'
+.L25:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,49,16,63,12,17,1,18,1,64,6
+	.byte	0,0,4,11,1,17,1,18,1,0,0,5,52,0,49,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('_endinit_set')
+	.sect	'.debug_line'
+.L26:
+	.word	.L140-.L139
+.L139:
+	.half	3
+	.word	.L142-.L141
+.L141:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\cstart.c',0,0,0,0,0
+.L142:
+	.byte	5,28,7,0,5,2
+	.word	.L14
+	.byte	3,251,4,1,5,18,9
+	.half	.L123-.L14
+	.byte	3,3,1,5,28,3,126,1,5,18,9
+	.half	.L125-.L123
+	.byte	3,3,1,9
+	.half	.L143-.L125
+	.byte	3,1,1,9
+	.half	.L126-.L143
+	.byte	3,1,1,5,20,3,1,1,5,18,9
+	.half	.L144-.L126
+	.byte	3,6,1,5,16,9
+	.half	.L124-.L144
+	.byte	3,1,1,5,20,9
+	.half	.L145-.L124
+	.byte	3,1,1,5,1,9
+	.half	.L146-.L145
+	.byte	3,1,1,7,9
+	.half	.L28-.L146
+	.byte	0,1,1
+.L140:
+	.sdecl	'.debug_ranges',debug,cluster('_endinit_set')
+	.sect	'.debug_ranges'
+.L27:
+	.word	-1,.L14,0,.L28-.L14,0,0
+	.sdecl	'.debug_info',debug,cluster('_START')
+	.sect	'.debug_info'
+.L29:
+	.word	199
+	.half	3
+	.word	.L30
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L32,.L31
+	.byte	2
+	.word	.L15
+	.byte	3
+	.byte	'_START',0,1,69,6,1,1,1
+	.word	.L6,.L58,.L5
+	.byte	4
+	.word	.L6,.L58
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_START')
+	.sect	'.debug_abbrev'
+.L30:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('_START')
+	.sect	'.debug_line'
+.L31:
+	.word	.L148-.L147
+.L147:
+	.half	3
+	.word	.L150-.L149
+.L149:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\cstart.c',0,0,0,0,0
+.L150:
+	.byte	5,9,7,0,5,2
+	.word	.L6
+	.byte	3,202,0,1,9
+	.half	.L151-.L6
+	.byte	3,2,1,9
+	.half	.L152-.L151
+	.byte	3,2,1,9
+	.half	.L153-.L152
+	.byte	3,17,1,9
+	.half	.L154-.L153
+	.byte	3,14,1,9
+	.half	.L155-.L154
+	.byte	3,5,1,5,1,9
+	.half	.L156-.L155
+	.byte	3,1,1,7,9
+	.half	.L33-.L156
+	.byte	0,1,1
+.L148:
+	.sdecl	'.debug_ranges',debug,cluster('_START')
+	.sect	'.debug_ranges'
+.L32:
+	.word	-1,.L6,0,.L33-.L6,0,0
+	.sdecl	'.debug_info',debug,cluster('__init_sp')
+	.sect	'.debug_info'
+.L34:
+	.word	202
+	.half	3
+	.word	.L35
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L37,.L36
+	.byte	2
+	.word	.L15
+	.byte	3
+	.byte	'__init_sp',0,1,123,6,1,1,1
+	.word	.L8,.L59,.L7
+	.byte	4
+	.word	.L8,.L59
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('__init_sp')
+	.sect	'.debug_abbrev'
+.L35:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('__init_sp')
+	.sect	'.debug_line'
+.L36:
+	.word	.L158-.L157
+.L157:
+	.half	3
+	.word	.L160-.L159
+.L159:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\cstart.c',0,0,0,0,0
+.L160:
+	.byte	5,42,7,0,5,2
+	.word	.L8
+	.byte	3,155,1,1,5,57,9
+	.half	.L161-.L8
+	.byte	1,5,9,9
+	.half	.L162-.L161
+	.byte	3,1,1,9
+	.half	.L163-.L162
+	.byte	3,5,1,5,1,9
+	.half	.L164-.L163
+	.byte	3,1,1,7,9
+	.half	.L38-.L164
+	.byte	0,1,1
+.L158:
+	.sdecl	'.debug_ranges',debug,cluster('__init_sp')
+	.sect	'.debug_ranges'
+.L37:
+	.word	-1,.L8,0,.L38-.L8,0,0
+	.sdecl	'.debug_info',debug,cluster('_start')
+	.sect	'.debug_info'
+.L39:
+	.word	568
+	.half	3
+	.word	.L40
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L42,.L41
+	.byte	2
+	.word	.L15
+	.byte	3
+	.byte	'_start',0,1,169,1,6,1,1,1
+	.word	.L10,.L60,.L9
+	.byte	4
+	.word	.L10,.L60
+	.byte	4
+	.word	.L61,.L60
+	.byte	5
+	.byte	'pcxi',0,1,185,1,22
+	.word	.L62,.L63
+	.byte	6
+	.word	.L46,.L64,.L65
+	.byte	7
+	.word	.L66,.L64,.L65
+	.byte	8
+	.word	.L48,.L67
+	.byte	8
+	.word	.L50,.L68
+	.byte	0,0,4
+	.word	.L69,.L60
+	.byte	9
+	.word	.L70
+	.byte	5
+	.byte	'csa_area_begin',0,1,174,3,15
+	.word	.L74,.L75
+	.byte	5
+	.byte	'csa_area_end',0,1,175,3,15
+	.word	.L74,.L76
+	.byte	5
+	.byte	'k',0,1,188,3,17
+	.word	.L77,.L78
+	.byte	5
+	.byte	'no_of_csas',0,1,189,3,14
+	.word	.L77,.L79
+	.byte	5
+	.byte	'csa',0,1,190,3,15
+	.word	.L80,.L81
+	.byte	5
+	.byte	'seg_nr',0,1,191,3,23
+	.word	.L62,.L82
+	.byte	5
+	.byte	'seg_idx',0,1,191,3,31
+	.word	.L62,.L83
+	.byte	5
+	.byte	'pcxi_val',0,1,191,3,40
+	.word	.L62,.L84
+	.byte	5
+	.byte	'first',0,1,192,3,15
+	.word	.L85,.L86
+	.byte	4
+	.word	.L92,.L60
+	.byte	4
+	.word	.L93,.L60
+	.byte	4
+	.word	.L94,.L60
+	.byte	10
+	.word	.L95,.L60
+	.byte	0,0,0,0,6
+	.word	.L52,.L87,.L88
+	.byte	7
+	.word	.L89,.L87,.L88
+	.byte	8
+	.word	.L54,.L90
+	.byte	8
+	.word	.L56,.L91
+	.byte	0,0,0,0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_start')
+	.sect	'.debug_abbrev'
+.L40:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,6,29,1
+	.byte	49,16,17,1,18,1,0,0,7,11,1,49,16,17,1,18,1,0,0,8,52,0,49,16,2,6,0,0,9,11,1,85,6,0,0,10,11,0,17,1,18,1
+	.byte	0,0,0
+	.sdecl	'.debug_line',debug,cluster('_start')
+	.sect	'.debug_line'
+.L41:
+	.word	.L166-.L165
+.L165:
+	.half	3
+	.word	.L168-.L167
+.L167:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\cstart.c',0,0,0,0,0
+.L168:
+	.byte	5,6,7,0,5,2
+	.word	.L10
+	.byte	3,168,1,1,5,16,9
+	.half	.L97-.L10
+	.byte	3,6,1,5,21,9
+	.half	.L169-.L97
+	.byte	3,4,1,5,15,9
+	.half	.L170-.L169
+	.byte	1,5,35,9
+	.half	.L61-.L170
+	.byte	3,6,1,5,17,9
+	.half	.L171-.L61
+	.byte	3,1,1,5,14,9
+	.half	.L98-.L171
+	.byte	1,5,15,9
+	.half	.L172-.L98
+	.byte	3,1,1,5,28,9
+	.half	.L64-.L172
+	.byte	3,156,3,1,5,18,9
+	.half	.L100-.L64
+	.byte	3,3,1,5,28,3,126,1,5,18,9
+	.half	.L99-.L100
+	.byte	3,3,1,5,28,3,125,1,5,18,9
+	.half	.L102-.L99
+	.byte	3,4,1,9
+	.half	.L103-.L102
+	.byte	3,1,1,5,20,3,1,1,5,18,9
+	.half	.L173-.L103
+	.byte	3,7,1,5,16,9
+	.half	.L101-.L173
+	.byte	3,1,1,5,20,9
+	.half	.L174-.L101
+	.byte	3,1,1,5,28,9
+	.half	.L175-.L174
+	.byte	3,1,1,5,17,9
+	.half	.L65-.L175
+	.byte	3,224,124,1,5,20,9
+	.half	.L176-.L65
+	.byte	1,5,36,3,20,1,5,20,9
+	.half	.L177-.L176
+	.byte	3,108,1,5,36,9
+	.half	.L178-.L177
+	.byte	3,20,1,5,15,9
+	.half	.L179-.L178
+	.byte	1,5,36,9
+	.half	.L180-.L179
+	.byte	3,9,1,5,15,9
+	.half	.L181-.L180
+	.byte	1,5,43,9
+	.half	.L69-.L181
+	.byte	3,9,1,5,58,9
+	.half	.L182-.L69
+	.byte	1,5,15,9
+	.half	.L183-.L182
+	.byte	3,1,1,5,41,9
+	.half	.L184-.L183
+	.byte	3,7,1,5,43,9
+	.half	.L71-.L184
+	.byte	1,5,41,1,5,43,9
+	.half	.L72-.L71
+	.byte	3,6,1,5,41,9
+	.half	.L185-.L72
+	.byte	1,5,28,9
+	.half	.L87-.L185
+	.byte	3,128,3,1,5,18,9
+	.half	.L105-.L87
+	.byte	3,3,1,5,28,3,126,1,5,18,9
+	.half	.L107-.L105
+	.byte	3,3,1,9
+	.half	.L186-.L107
+	.byte	3,1,1,9
+	.half	.L108-.L186
+	.byte	3,1,1,5,20,3,1,1,5,18,9
+	.half	.L187-.L108
+	.byte	3,6,1,5,16,9
+	.half	.L106-.L187
+	.byte	3,1,1,5,20,9
+	.half	.L188-.L106
+	.byte	3,1,1,5,49,9
+	.half	.L88-.L188
+	.byte	3,167,125,1,5,51,9
+	.half	.L189-.L88
+	.byte	1,5,49,9
+	.half	.L109-.L189
+	.byte	1,5,51,9
+	.half	.L190-.L109
+	.byte	3,3,1,5,49,9
+	.half	.L191-.L190
+	.byte	1,9
+	.half	.L73-.L191
+	.byte	3,3,1,5,36,9
+	.half	.L192-.L73
+	.byte	3,246,0,1,5,49,9
+	.half	.L193-.L192
+	.byte	3,141,127,1,5,36,9
+	.half	.L194-.L193
+	.byte	3,243,0,1,9
+	.half	.L195-.L194
+	.byte	3,1,1,5,15,9
+	.half	.L196-.L195
+	.byte	3,127,1,5,36,9
+	.half	.L197-.L196
+	.byte	3,1,1,5,15,9
+	.half	.L198-.L197
+	.byte	1,5,47,9
+	.half	.L199-.L198
+	.byte	3,22,1,5,20,9
+	.half	.L200-.L199
+	.byte	3,123,1,5,47,9
+	.half	.L110-.L200
+	.byte	3,5,1,5,23,9
+	.half	.L201-.L110
+	.byte	3,2,1,5,41,9
+	.half	.L112-.L201
+	.byte	1,5,51,9
+	.half	.L3-.L112
+	.byte	3,2,1,5,45,1,5,49,9
+	.half	.L202-.L3
+	.byte	1,5,50,9
+	.half	.L113-.L202
+	.byte	3,4,1,5,30,9
+	.half	.L114-.L113
+	.byte	3,126,1,5,42,9
+	.half	.L203-.L114
+	.byte	3,2,1,5,62,9
+	.half	.L104-.L203
+	.byte	1,5,42,9
+	.half	.L116-.L104
+	.byte	3,1,1,5,43,9
+	.half	.L115-.L116
+	.byte	3,1,1,5,25,9
+	.half	.L117-.L115
+	.byte	3,1,1,5,39,7,9
+	.half	.L204-.L117
+	.byte	3,2,1,9
+	.half	.L205-.L204
+	.byte	3,1,1,5,44,9
+	.half	.L4-.L205
+	.byte	3,116,1,5,41,9
+	.half	.L2-.L4
+	.byte	1,5,23,7,9
+	.half	.L206-.L2
+	.byte	3,15,1,5,21,9
+	.half	.L92-.L206
+	.byte	3,17,1,5,9,9
+	.half	.L207-.L92
+	.byte	3,1,1,5,21,9
+	.half	.L93-.L207
+	.byte	3,2,1,5,9,9
+	.half	.L208-.L93
+	.byte	3,1,1,5,21,9
+	.half	.L94-.L208
+	.byte	3,10,1,5,9,9
+	.half	.L209-.L94
+	.byte	3,1,1,5,21,9
+	.half	.L95-.L209
+	.byte	3,2,1,5,9,9
+	.half	.L210-.L95
+	.byte	3,1,1,5,16,9
+	.half	.L211-.L210
+	.byte	3,7,1,5,9,9
+	.half	.L111-.L211
+	.byte	3,31,1,5,21,9
+	.half	.L212-.L111
+	.byte	3,4,1,5,24,1,5,19,9
+	.half	.L213-.L212
+	.byte	1,5,1,9
+	.half	.L43-.L213
+	.byte	3,33,0,1,1
+.L166:
+	.sdecl	'.debug_ranges',debug,cluster('_start')
+	.sect	'.debug_ranges'
+.L42:
+	.word	-1,.L10,0,.L43-.L10,0,0
+.L70:
+	.word	-1,.L10,.L71-.L10,.L72-.L10,.L73-.L10,.L60-.L10,0,0
+	.sdecl	'.debug_info',debug,cluster('argcv')
+	.sect	'.debug_info'
+.L44:
+	.word	175
+	.half	3
+	.word	.L45
+	.byte	4,1
+	.byte	'..\\cstart.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L15
+	.byte	3
+	.byte	'argcv',0,1,34,14
+	.word	.L96
+	.byte	5,3
+	.word	argcv
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('argcv')
+	.sect	'.debug_abbrev'
+.L45:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_loc',debug,cluster('_START')
+	.sect	'.debug_loc'
+.L5:
+	.word	-1,.L6,0,.L58-.L6
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('__init_sp')
+	.sect	'.debug_loc'
+.L7:
+	.word	-1,.L8,0,.L59-.L8
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('_endinit_clear')
+	.sect	'.debug_loc'
+.L11:
+	.word	-1,.L12,0,.L47-.L12
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L49:
+	.word	-1,.L12,.L118-.L12,.L119-.L12
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L119-.L12,.L122-.L12
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L51:
+	.word	-1,.L12,.L120-.L12,.L121-.L12
+	.half	5
+	.byte	144,32,157,32,32
+	.word	.L121-.L12,.L119-.L12
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('_endinit_set')
+	.sect	'.debug_loc'
+.L13:
+	.word	-1,.L14,0,.L53-.L14
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L55:
+	.word	-1,.L14,.L123-.L14,.L124-.L14
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L124-.L14,.L53-.L14
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L57:
+	.word	-1,.L14,.L125-.L14,.L126-.L14
+	.half	5
+	.byte	144,32,157,32,32
+	.word	.L126-.L14,.L124-.L14
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('_start')
+	.sect	'.debug_loc'
+.L9:
+	.word	-1,.L10,0,.L97-.L10
+	.half	2
+	.byte	138,0
+	.word	.L97-.L10,.L60-.L10
+	.half	2
+	.byte	138,8
+	.word	.L60-.L10,.L60-.L10
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L81:
+	.word	-1,.L10,.L113-.L10,.L2-.L10
+	.half	1
+	.byte	111
+	.word	.L114-.L10,.L115-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L75:
+	.word	-1,.L10,0,.L60-.L10
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L76:
+	.word	-1,.L10,0,.L60-.L10
+	.half	2
+	.byte	145,124
+	.word	0,0
+.L86:
+	.word	-1,.L10,.L110-.L10,.L111-.L10
+	.half	5
+	.byte	144,32,157,32,32
+	.word	0,0
+.L78:
+	.word	-1,.L10,.L112-.L10,.L111-.L10
+	.half	5
+	.byte	144,33,157,32,32
+	.word	0,0
+.L79:
+	.word	-1,.L10,.L110-.L10,.L111-.L10
+	.half	5
+	.byte	144,33,157,32,0
+	.word	0,0
+.L63:
+	.word	-1,.L10,.L98-.L10,.L99-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L84:
+	.word	-1,.L10,.L72-.L10,.L104-.L10
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L115-.L10,.L111-.L10
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L83:
+	.word	-1,.L10,.L115-.L10,.L2-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L82:
+	.word	-1,.L10,.L116-.L10,.L117-.L10
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L90:
+	.word	-1,.L10,.L105-.L10,.L106-.L10
+	.half	5
+	.byte	144,32,157,32,32
+	.word	.L106-.L10,.L109-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L67:
+	.word	-1,.L10,.L100-.L10,.L101-.L10
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L101-.L10,.L65-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L68:
+	.word	-1,.L10,.L102-.L10,.L103-.L10
+	.half	5
+	.byte	144,32,157,32,32
+	.word	.L103-.L10,.L101-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L91:
+	.word	-1,.L10,.L107-.L10,.L108-.L10
+	.half	5
+	.byte	144,33,157,32,0
+	.word	.L108-.L10,.L106-.L10
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L214:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('_START')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L214,.L6,.L58-.L6
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('__init_sp')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L214,.L8,.L59-.L8
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('_start')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L214,.L10,.L60-.L10
+	.byte	4
+	.word	(.L97-.L10)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L60-.L97)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('_endinit_clear')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L214,.L12,.L47-.L12
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('_endinit_set')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L214,.L14,.L53-.L14
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+
+
+	; Module end

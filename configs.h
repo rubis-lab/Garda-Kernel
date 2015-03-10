@@ -1,0 +1,21 @@
+#ifndef __CONFIGS_H__
+#define __CONFIGS_H__
+
+#define SCHEDULER_PRIORITY	16
+#define CANCOM_PRIORITY		15
+
+#define MAX_PRIORITY 10
+#define MAX_COMPONENTS 5
+
+#define DEFAULT_STACK_SIZE 512/4
+
+#define TASK_ATTR_DEFAULT {SUPER, CALL_DEPTH_OVERFLOW_AT_64, DEFAULT_STACK_SIZE}
+
+#define USER_INTERRUPT_LEVEL	3
+
+/* 45000 1us */
+#define TIMER_TICKS		9000   /* 200ns */
+#define TIMER_200NS		9000   /* 200ns */
+#define TIMER_1US		45000  /* 1us */
+
+#endif

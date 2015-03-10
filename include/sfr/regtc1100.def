@@ -1,0 +1,570 @@
+;***************************************************************************
+;**
+;** Version: @(#)regtc1100.xml	1.14 09/11/24
+;** Generated from @(#)regtc1100.xml	1.14 09/11/24
+;** 
+;** This file contains all SFR and BIT names and on-chip register definitions
+;** It is based on the following document(s):
+;** - TC1100_dave_20041027.txt
+;** 
+;** Copyright 2002-2010 Altium BV
+;**
+;***************************************************************************
+	.if	!@DEF('_REGTC1100_DEF')
+	.define	_REGTC1100_DEF '1'
+; Macros, such as PCXI, that expand to a 16-bit number do not directly represent a memory address.
+; They are intended to be used with the instructions mfcr and mtcr.
+core_base      	.equ	0xF7E1    	; The base address off the memory for the CSFR's
+PCXI           	.equ	0xFE00    	; Previous Context Info Register
+PSW            	.equ	0xFE04    	; Program Status Word
+PC             	.equ	0xFE08    	; Program Counter
+SYSCON         	.equ	0xFE14    	; System Configuration Control Register
+CPU_ID         	.equ	0xFE18    	; CPU Identification Register
+BIV            	.equ	0xFE20    	; Interrupt Vector Table
+BTV            	.equ	0xFE24    	; Trap Vector Table Pointer.
+ISP            	.equ	0xFE28    	; Interrupt Stack Pointer
+ICR            	.equ	0xFE2C    	; Interrupt Unit Control Register
+FCX            	.equ	0xFE38    	; Free CSA List Head Pointer
+LCX            	.equ	0xFE3C    	; Free CSA List Limit Pointer
+MMU_CON        	.equ	0x8000    	; MMU Configuration Register
+MMU_ASI        	.equ	0x8004    	; MMU Address Space Identifier Register
+MMU_ID         	.equ	0x8008    	; MMU Identification Register
+MMU_TVA        	.equ	0x800C    	; MMU Translation Virtual Address Register
+MMU_TPA        	.equ	0x8010    	; MMU Translation Physical Address Register
+MMU_TPX        	.equ	0x8014    	; MMU Translation Page Index Register
+MMU_TFA        	.equ	0x8018    	; MMU Translation Fault Address Register
+DPR0_0L        	.equ	0xC000    	; Data Seg. Prot. Reg. 0, Set 0, lower
+DPR0_0U        	.equ	0xC004    	; Data Seg. Prot. Reg. 0, Set 0, upper
+DPR0_1L        	.equ	0xC008    	; Data Seg. Prot. Reg. 1, Set 0, lower
+DPR0_1U        	.equ	0xC00C    	; Data Seg. Prot. Reg. 1, Set 0, upper
+DPR0_2L        	.equ	0xC010    	; Data Seg. Prot. Reg. 2, Set 0, lower
+DPR0_2U        	.equ	0xC014    	; Data Seg. Prot. Reg. 2, Set 0, upper
+DPR0_3L        	.equ	0xC018    	; Data Seg. Prot. Reg. 3, Set 0, lower
+DPR0_3U        	.equ	0xC01C    	; Data Seg. Prot. Reg. 3, Set 0, upper
+DPR1_0L        	.equ	0xC400    	; Data Seg. Prot. Reg. 0, Set 1, lower
+DPR1_0U        	.equ	0xC404    	; Data Seg. Prot. Reg. 0, Set 1, upper
+DPR1_1L        	.equ	0xC408    	; Data Seg. Prot. Reg. 1, Set 1, lower
+DPR1_1U        	.equ	0xC40C    	; Data Seg. Prot. Reg. 1, Set 1, upper
+DPR1_2L        	.equ	0xC410    	; Data Seg. Prot. Reg. 2, Set 1, lower
+DPR1_2U        	.equ	0xC414    	; Data Seg. Prot. Reg. 2, Set 1, upper
+DPR1_3L        	.equ	0xC418    	; Data Seg. Prot. Reg. 3, Set 1, lower
+DPR1_3U        	.equ	0xC41C    	; Data Seg. Prot. Reg. 3, Set 1, upper
+CPR0_0L        	.equ	0xD000    	; Code Seg. Prot. Reg. 0, Set 0, lower
+CPR0_0U        	.equ	0xD004    	; Code Seg. Prot. Reg. 0, Set 0, upper
+CPR0_1L        	.equ	0xD008    	; Code Seg. Prot. Reg. 1, Set 0, lower
+CPR0_1U        	.equ	0xD00C    	; Code Seg. Prot. Reg. 1, Set 0, upper
+CPR1_0L        	.equ	0xD400    	; Code Seg. Prot. Reg. 0, Set 1, lower
+CPR1_0U        	.equ	0xD404    	; Code Seg. Prot. Reg. 0, Set 1, upper
+CPR1_1L        	.equ	0xD408    	; Code Seg. Prot. Reg. 1, Set 1, lower
+CPR1_1U        	.equ	0xD40C    	; Code Seg. Prot. Reg. 1, Set 1, upper
+DPM0           	.equ	0xE000    	; Data Protection Mode Register, Set 0 (4 bytes)
+DPM1           	.equ	0xE080    	; Data Protection Mode Register, Set 1 (4 bytes)
+CPM0           	.equ	0xE200    	; Code Protection Mode Register, Set 0 (2 bytes)
+CPM1           	.equ	0xE280    	; Code Protection Mode Register, Set 1 (2 bytes)
+DBGSR          	.equ	0xFD00    	; Debug Status Register
+EXEVT          	.equ	0xFD08    	; External Break Input Event Specifier
+CREVT          	.equ	0xFD0C    	; Emulator Resource Protection Event Specifier
+SWEVT          	.equ	0xFD10    	; Software Break Event Specifier
+TR0EVT         	.equ	0xFD20    	; Trigger Event 0 Specifier
+TR1EVT         	.equ	0xFD24    	; Trigger Event 1 Specifier
+DMS            	.equ	0xFD40    	; Debug Monitor Start Address Register
+DCX            	.equ	0xFD44    	; Debug Contest Save Area Pointer
+SCU_ID         	.equ	0xF0000008	; SCU Module Identification Register
+RST_REQ        	.equ	0xF0000010	; Reset Request Register
+RST_SR         	.equ	0xF0000014	; Reset Status Register
+OSC_CON        	.equ	0xF0000018	; Oscillator Control Register
+WDT_CON0       	.equ	0xF0000020	; Watchdog Timer Control Register 0
+WDT_CON1       	.equ	0xF0000024	; Watchdog Timer Control Register 1
+WDT_SR         	.equ	0xF0000028	; Watchdog Timer Status Register
+NMISR          	.equ	0xF000002C	; NMI Status Register
+PMG_CON        	.equ	0xF0000030	; Power Management Control Register
+PMG_CSR        	.equ	0xF0000034	; Power Management Control and Status Register
+SCU_SCLIR      	.equ	0xF0000038	; SCU Software Configuration Latched Inputs Register
+PLL_CLC        	.equ	0xF0000040	; PLL Clock Control Register
+SCU_CON        	.equ	0xF0000050	; SCU Control Register
+SCU_STAT       	.equ	0xF0000054	; SCU Status Register
+FSR            	.equ	0xF0000060	; Fusebox Selector Register
+FDR            	.equ	0xF0000064	; SCU Fusebox Data Register
+SCU_PETCR      	.equ	0xF0000068	; SCU Parity Error Trap Control Register
+SCU_PETSR      	.equ	0xF000006C	; SCU Parity Error Trap Status Register
+MANID          	.equ	0xF0000070	; Manufacturer Identification Register
+CHIPID         	.equ	0xF0000074	; Chip Identification Register
+RTID           	.equ	0xF0000078	; Redesign Tracing Identification Register
+MACTX0SRC      	.equ	0xF000007C	; MAC Transmit Interrupt Service Request Control Register
+MACRX0SRC      	.equ	0xF0000080	; MAC Receive Interrupt Service Request Control Register 0
+MACTX1SRC      	.equ	0xF0000084	; MAC Transmit Interrupt Service Request Control Register 1
+MACRX1SRC      	.equ	0xF0000088	; MAC Receive Interrupt Service Request Control Register 1
+RBSRC0         	.equ	0xF000008C	; RB Service Request Control 0 Register
+RBSRC1         	.equ	0xF0000090	; RB Service Request Control 1 Register
+TBSRC          	.equ	0xF0000094	; TB Service Request Control Register
+DRSRC          	.equ	0xF0000098	; DR Service Request Control Register
+DTSRC          	.equ	0xF000009C	; DT Service Request Control Register
+FPU_SRC        	.equ	0xF00000A0	; FPU Service Request Control Register
+SCU_OTCON      	.equ	0xF00000A8	; SCU On Chip Test Control Register
+SCU_OTDAT      	.equ	0xF00000AC	; SCU On Chip Test Data Register
+EICR0          	.equ	0xF00000B0	; External Input Channel Register 0
+EICR1          	.equ	0xF00000B4	; External Input Channel Register 1
+EIFR           	.equ	0xF00000B8	; External Input Flag Register
+FMR            	.equ	0xF00000BC	; SCU Flag Modification Register
+IGCR0          	.equ	0xF00000C0	; Interrupt Gating Register 0
+IGCR1          	.equ	0xF00000C4	; Interrupt Gating Register 1
+EINT_SRC3      	.equ	0xF00000C8	; Service Request Control Reg. for Ext. Interrupt 3
+EINT_SRC2      	.equ	0xF00000D0	; Service Request Control Reg. for Ext. Interrupt 2
+EINT_SRC1      	.equ	0xF00000D4	; Service Request Control Reg. for Ext. Interrupt 1
+EINT_SRC0      	.equ	0xF00000D8	; Service Request Control Reg. for Ext. Interrupt 0
+SCU_DMARS      	.equ	0xF00000DC	; DMA Request Select Register
+SBCU_ID        	.equ	0xF0000108	; SBCU Module Identification Register
+SBCU_CON       	.equ	0xF0000110	; SBCU Control Register
+SBCU_ECON      	.equ	0xF0000120	; Error Control Capture Register
+SBCU_EADD      	.equ	0xF0000124	; Error Address Capture Register
+SBCU_EDAT      	.equ	0xF0000128	; Error Data Capture Register
+SBCU_DBCNTL    	.equ	0xF0000130	; Debug Control Register (OCDS)
+SBCU_DBGRNT    	.equ	0xF0000134	; Debug Grant Mask Register (OCDS)
+SBCU_DBADR1    	.equ	0xF0000138	; Debug Address1 Register (OCDS)
+SBCU_DBADR2    	.equ	0xF000013C	; Debug Address2 Register (OCDS)
+SBCU_DBBOS     	.equ	0xF0000140	; Debug Bus Operation Register (OCDS)
+SBCU_DBGNTT    	.equ	0xF0000144	; Debug Trapped Master Register (OCDS)
+SBCU_DBADRT    	.equ	0xF0000148	; Debug Trapped Address Register (OCDS)
+SBCU_DBBOST    	.equ	0xF000014C	; Debug Trapped Bus Operation Register (OCDS)
+SBCU_SRC       	.equ	0xF00001FC	; SBCU Service Request Control Register
+STM_CLC        	.equ	0xF0000200	; STM Clock Control Register
+STM_ID         	.equ	0xF0000208	; STM Module Identification Register
+STM_TIM0       	.equ	0xF0000210	; STM Register 0
+STM_TIM1       	.equ	0xF0000214	; STM Register 1
+STM_TIM2       	.equ	0xF0000218	; STM Register 2
+STM_TIM3       	.equ	0xF000021C	; STM Register 3
+STM_TIM4       	.equ	0xF0000220	; STM Register 4
+STM_TIM5       	.equ	0xF0000224	; STM Register 5
+STM_TIM6       	.equ	0xF0000228	; STM Register 6
+STM_CAP        	.equ	0xF000022C	; STM Capture Register
+STM_CMP0       	.equ	0xF0000230	; Compare Register 1
+STM_CMP1       	.equ	0xF0000234	; Compare Register 1
+STM_CMCON      	.equ	0xF0000238	; Compare Match Control Register
+STM_ICR        	.equ	0xF000023C	; STM Interrupt Control Register
+STM_ISRR       	.equ	0xF0000240	; Interrupt Set/Reset Register
+STM_SRC1       	.equ	0xF00002F8	; STM Service Request Control Register 1
+STM_SRC0       	.equ	0xF00002FC	; STM Service Request Control Register 0
+CBS_JDP_ID     	.equ	0xF0000308	; Module Identification Register
+CBS_COMDATA    	.equ	0xF0000368	; Cerberus Communication Mode Data Register
+CBS_IOSR       	.equ	0xF000036C	; Cerberus Status Register
+CBS_MCDBBS     	.equ	0xF0000370	; Cerberus Break Bus Switch Configuration Register
+CBS_MCDSSG     	.equ	0xF0000374	; Cerberus Suspend Signal Generation Status and Control Register
+CBS_OEC        	.equ	0xF0000378	; Cerberus OCDS Enable Control Register
+CBS_OCNTRL     	.equ	0xF000037C	; Cerberus OSCU Configuration and Control Register
+CBS_OSTATE     	.equ	0xF0000380	; Cerberus OSCU Status Register
+CBS_INTMOD     	.equ	0xF0000384	; Cerberus Internal Mode Status and Control Register
+CBS_ICTSA      	.equ	0xF0000388	; Cerberus Internal Controlled Trace Source Address Register
+CBS_ICTTA      	.equ	0xF000038C	; Cerberus Internal Controlled Trace Target Address Register
+CBS_MCDBBSS    	.equ	0xF0000390	; Cerberus Break Bus Switch Status Register
+CBS_MCDSSGC    	.equ	0xF0000394	; Cerberus Suspend Signal Generation Configuration Register
+CBS_SRC        	.equ	0xF00003FC	; Cerberus Service Request Control Register
+GPTU_CLC       	.equ	0xF0000600	; GPTU Clock Control Register
+GPTU_ID        	.equ	0xF0000608	; GPTU Module Identification Register
+GPTU_T01IRS    	.equ	0xF0000610	; GPTU Timer T0 and T1 Input and Reload Source Selection Register
+GPTU_T01OTS    	.equ	0xF0000614	; GPTU  Timer T0 and T1 Output, Trigger and Service Request Register
+GPTU_T2CON     	.equ	0xF0000618	; GPTU Timer T2 Control Register
+GPTU_T2RCCON   	.equ	0xF000061C	; GPTU Timer T2 Reload/Capture Control Register
+GPTU_T2AIS     	.equ	0xF0000620	; GPTU Timer T2/T2A External Input Selection Register
+GPTU_T2BIS     	.equ	0xF0000624	; GPTU Timer T2B External Input Selection Register
+GPTU_T2ES      	.equ	0xF0000628	; GPTU Timer T2 External Input Edge Selection Register
+GPTU_OSEL      	.equ	0xF000062C	; GPTU Output Source Selection Register
+GPTU_OUT       	.equ	0xF0000630	; GPTU Output Register
+GPTU_T0DCBA    	.equ	0xF0000634	; GPTU Timer T0 Count Register (T0D, T0C, T0B,T0A)
+GPTU_T0CBA     	.equ	0xF0000638	; GPTU Timer T0 Count Register (T0C, T0B, T0A)
+GPTU_T0RDCBA   	.equ	0xF000063C	; GPTU Timer T0 Reload Register (T0RD, T0RC, T0RB,T0RA)
+GPTU_T0RCBA    	.equ	0xF0000640	; GPTU Timer T0 Reload Register (T0RC, T0RB, T0RA)
+GPTU_T1DCBA    	.equ	0xF0000644	; GPTU Timer T1 Count Register (T1D, T1C, T1B,T1A)
+GPTU_T1CBA     	.equ	0xF0000648	; GPTU Timer T1 Count Register (T1C, T1B, T1A)
+GPTU_T1RDCBA   	.equ	0xF000064C	; GPTU Timer T1 Reload Register (T1RD, T1RC, T1RB,T1RA)
+GPTU_T1RCBA    	.equ	0xF0000650	; GPTU Timer T1 Reload Register (T1RC, T1RB, T1RA)
+GPTU_T2        	.equ	0xF0000654	; GPTU Timer T2 Count Register
+GPTU_T2RC0     	.equ	0xF0000658	; GPTU Timer T2 Reload/Capture Register 0
+GPTU_T2RC1     	.equ	0xF000065C	; GPTU Timer T2 Reload/Capture Register 1
+GPTU_T012RUN   	.equ	0xF0000660	; GPTU Timers T0, T1 and T2 Run Control Register
+GPTU_SRSEL     	.equ	0xF00006DC	; GPTU Service Request Source Select Register
+GPTU_SRC7      	.equ	0xF00006E0	; GPTU Service Request Control Register 7
+GPTU_SRC6      	.equ	0xF00006E4	; GPTU Service Request Control Register 6
+GPTU_SRC5      	.equ	0xF00006E8	; GPTU Service Request Control Register 5
+GPTU_SRC4      	.equ	0xF00006EC	; GPTU Service Request Control Register 4
+GPTU_SRC3      	.equ	0xF00006F0	; GPTU Service Request Control Register 3
+GPTU_SRC2      	.equ	0xF00006F4	; GPTU Service Request Control Register 2
+GPTU_SRC1      	.equ	0xF00006F8	; GPTU Service Request Control Register 1
+GPTU_SRC0      	.equ	0xF00006FC	; GPTU Service Request Control Register 0
+P0_OUT         	.equ	0xF0000C10	; Port 0 Data Output Register
+P0_IN          	.equ	0xF0000C14	; Port 0 Data Input Register
+P0_DIR         	.equ	0xF0000C18	; Port 0 Direction Register
+P0_OD          	.equ	0xF0000C1C	; Port 0 Open Drain Mode Register
+P0_PUDSEL      	.equ	0xF0000C28	; Port 0 Pull up/down Select Register
+P0_PUDEN       	.equ	0xF0000C2C	; Port 0 Pull up/down Enable Register
+P0_ALTSEL0     	.equ	0xF0000C44	; Port 0 Alternate Select Register 0
+P0_ALTSEL1     	.equ	0xF0000C48	; Port 0 Alternate Select Register 1
+P1_OUT         	.equ	0xF0000D10	; Port 1 Data Output Register
+P1_IN          	.equ	0xF0000D14	; Port 1 Data Input Register
+P1_DIR         	.equ	0xF0000D18	; Port 1 Direction Register
+P1_OD          	.equ	0xF0000D1C	; Port 1 Open Drain Mode Register
+P1_PUDSEL      	.equ	0xF0000D28	; Port 1 Pull up/down Select Register
+P1_PUDEN       	.equ	0xF0000D2C	; Port 1 Pull up/down Enable Register
+P1_ALTSEL0     	.equ	0xF0000D44	; Port 1 Alternate Select Register 0
+P1_ALTSEL1     	.equ	0xF0000D48	; Port 1 Alternate Select Register 1
+P2_OUT         	.equ	0xF0000E10	; Port 2 Data Output Register
+P2_IN          	.equ	0xF0000E14	; Port 2 Data Input Register
+P2_DIR         	.equ	0xF0000E18	; Port 2 Direction Register
+P2_OD          	.equ	0xF0000E1C	; Port 2 Open Drain Mode Register
+P2_PUDSEL      	.equ	0xF0000E28	; Port 2 Pull up/down Select Register
+P2_PUDEN       	.equ	0xF0000E2C	; Port 2 Pull up/down Enable Register
+P2_ALTSEL0     	.equ	0xF0000E44	; Port 2 Alternate Select Register 0
+P2_ALTSEL1     	.equ	0xF0000E48	; Port 2 Alternate Select Register 1
+P3_OUT         	.equ	0xF0000F10	; Port 3 Data Output Register
+P3_IN          	.equ	0xF0000F14	; Port 3 Data Input Register
+P3_DIR         	.equ	0xF0000F18	; Port 3 Direction Register
+P3_OD          	.equ	0xF0000F1C	; Port 3 Open Drain Mode Register
+P3_PUDSEL      	.equ	0xF0000F28	; Port 3 Pull up/down Select Register
+P3_PUDEN       	.equ	0xF0000F2C	; Port 3 Pull up/down Enable Register
+P3_ALTSEL0     	.equ	0xF0000F44	; Port 3 Alternate Select Register 0
+P3_ALTSEL1     	.equ	0xF0000F48	; Port 3 Alternate Select Register 1
+P4_OUT         	.equ	0xF0001010	; Port 4 Data Output Register
+P4_IN          	.equ	0xF0001014	; Port 4 Data Input Register
+P4_DIR         	.equ	0xF0001018	; Port 4 Direction Register
+P4_OD          	.equ	0xF000101C	; Port 4 Open Drain Mode Register
+P4_PUDSEL      	.equ	0xF0001028	; Port 4 Pull up/down Select Register
+P4_PUDEN       	.equ	0xF000102C	; Port 4 Pull up/down Enable Register
+P4_ALTSEL0     	.equ	0xF0001044	; Port 4 Alternate Select Register 0
+P4_ALTSEL1     	.equ	0xF0001048	; Port 4 Alternate Select Register 1
+CCU60_CLC      	.equ	0xF0002000	; CCU60 Clock Control Register
+CCU60_FDR      	.equ	0xF0002008	; CCU60 Fractional Divider Register
+CCU61_ID       	.equ	0xF0002108	; Module Identification Register
+CCU61_PISEL0   	.equ	0xF0002110	; Port Input Select Register 0
+CCU61_PISEL2   	.equ	0xF0002114	; Port Input Select Register 2
+CCU61_T12      	.equ	0xF0002120	; Timer T12 Counter Register
+CCU61_T12PR    	.equ	0xF0002124	; Timer T12 period register
+CCU61_T12DTC   	.equ	0xF0002128	; Dead-Time Control Register for Timer12
+CCU61_CC60R    	.equ	0xF0002130	; Capture/Compare Register for Channel CC60
+CCU61_CC61R    	.equ	0xF0002134	; Capture/Compare Register for Channel CC61
+CCU61_CC62R    	.equ	0xF0002138	; Capture/Compare Register for Channel CC62
+CCU61_TCTR4    	.equ	0xF000213C	; Timer Control Register 4
+CCU61_CC60SR   	.equ	0xF0002140	; Capture/Compare Shadow Register for Channel CC60
+CCU61_CC61SR   	.equ	0xF0002144	; Capture/Compare Shadow Register for Channel CC61
+CCU61_CC62SR   	.equ	0xF0002148	; Capture/Compare Shadow Register for Channel CC62
+CCU61_T13      	.equ	0xF0002150	; Timer T13 Register
+CCU61_T13PR    	.equ	0xF0002154	; Timer T13 Period Register
+CCU61_CC63R    	.equ	0xF0002158	; Compare Register for Channel CC63
+CCU61_CC63SR   	.equ	0xF000215C	; Compare Shadow Register for Channel  CC63
+CCU61_CMPSTAT  	.equ	0xF0002160	; Compare Status Register
+CCU61_CMPMODIF 	.equ	0xF0002164	; Compare State Modification Register
+CCU61_TCTR0    	.equ	0xF0002168	; Timer Control Register 0
+CCU61_TCTR2    	.equ	0xF000216C	; Timer Control Register 2
+CCU61_MODCTR   	.equ	0xF0002170	; Modulation Control Register
+CCU61_TRPCTR   	.equ	0xF0002174	; Trap Control Register
+CCU61_PSLR     	.equ	0xF0002178	; Passive State Level Register
+CCU61_T12MSEL  	.equ	0xF000217C	; T12 Capture/Compare Mode Select Register
+CCU61_MCMOUTS  	.equ	0xF0002180	; Multi-Channel Mode Output Shadow Register
+CCU61_MCMOUT   	.equ	0xF0002184	; Multi-Channel Mode Output Register
+CCU61_MCMCTR   	.equ	0xF0002188	; Multi-Channel Mode Control Register
+CCU61_IS       	.equ	0xF0002190	; Capture/Compare Interrupt Status Register
+CCU61_ISS      	.equ	0xF0002194	; Capture/Compare Interrupt Status Set Register
+CCU61_ISR      	.equ	0xF0002198	; Capture/Compare Interrupt Status Reset Register
+CCU61_IEN      	.equ	0xF000219C	; Capture/Compare Interrupt Enable Register
+CCU61_INP      	.equ	0xF00021A0	; Capture/Compare Interrupt Node Pointer Register
+CCU61_SRC3     	.equ	0xF00021F0	; CCU60 Service Request Control Register 3
+CCU61_SRC2     	.equ	0xF00021F4	; CCU60 Service Request Control Register 2
+CCU61_SRC1     	.equ	0xF00021F8	; CCU60 Service Request Control Register 1
+CCU61_SRC0     	.equ	0xF00021FC	; CCU60 Service Request Control Register 0
+DMA_CLC        	.equ	0xF0003C00	; DMA Clock Control Register
+DMA_ID         	.equ	0xF0003C08	; DMA Module Identification Register
+DMA_CHRSTR     	.equ	0xF0003C10	; Channel Reset Request Register
+DMA_TRSR       	.equ	0xF0003C14	; Transaction Request State Register
+DMA_STREQ      	.equ	0xF0003C18	; Software Transaction Request Register
+DMA_HTREQ      	.equ	0xF0003C1C	; Hardware Transaction Request Register
+DMA_EER        	.equ	0xF0003C20	; Enable Error Register
+DMA_ERRSR      	.equ	0xF0003C24	; Error Status Register
+DMA_CLRE       	.equ	0xF0003C28	; Clear Error Register
+DMA_GINTR      	.equ	0xF0003C2C	; DMA Global Interrupt Set Register
+DMA_MESR       	.equ	0xF0003C30	; Move Engine Status Register
+DMA_ME0R       	.equ	0xF0003C34	; Move Engine 0 Read Register
+DMA_ME0PR      	.equ	0xF0003C3C	; Move Engine 0 Pattern Register
+DMA_ME0AENR    	.equ	0xF0003C44	; Move Engine 0 Access Enable Register
+DMA_ME0ARR     	.equ	0xF0003C48	; Move Engine 0 Access Range Register
+DMA_INTSR      	.equ	0xF0003C54	; Interrupt Status Register
+DMA_INTCR      	.equ	0xF0003C58	; Interrupt Clear Register
+DMA_WRPSR      	.equ	0xF0003C5C	; Wrap Status Register
+DMA_OCDSR      	.equ	0xF0003C64	; OCDS Register
+DMA_SUSPMR     	.equ	0xF0003C68	; Suspend Mode Register
+DMA_CHSR00     	.equ	0xF0003C80	; Channel 00 Status Register
+DMA_CHCR00     	.equ	0xF0003C84	; DMA Channel 00 Control Register
+DMA_CHICR00    	.equ	0xF0003C88	; DMA Channel 00 Interrupt Control Register
+DMA_ADRCR00    	.equ	0xF0003C8C	; DMA Channel 00 Address Control Register
+DMA_SADR00     	.equ	0xF0003C90	; DMA Channel 00 Source Address Register
+DMA_DADR00     	.equ	0xF0003C94	; DMA Channel 00 Destination Address Register
+DMA_SHADR00    	.equ	0xF0003C98	; Channel 00 Shadowed Address Register
+DMA_CHSR01     	.equ	0xF0003CA0	; DMA Channel 01 Status Register
+DMA_CHCR01     	.equ	0xF0003CA4	; DMA Channel 01 Control Register
+DMA_CHICR01    	.equ	0xF0003CA8	; DMA Channel 01 Interrupt Control Register
+DMA_ADRCR01    	.equ	0xF0003CAC	; DMA Channel 01 Address Control Register
+DMA_SADR01     	.equ	0xF0003CB0	; DMA Channel 01 Source Address Register
+DMA_DADR01     	.equ	0xF0003CB4	; DMA Channel 01 Destination Address Register
+DMA_SHADR01    	.equ	0xF0003CB8	; DMA Channel 01 Shadowed Address Register
+DMA_CHSR02     	.equ	0xF0003CC0	; DMA Channel 02 Status Register
+DMA_CHCR02     	.equ	0xF0003CC4	; DMA Channel 02 Control Register
+DMA_CHICR02    	.equ	0xF0003CC8	; DMA Channel 02 Interrupt Control Register
+DMA_ADRCR02    	.equ	0xF0003CCC	; DMA Channel 02 Address Control Register
+DMA_SADR02     	.equ	0xF0003CD0	; DMA Channel 02 Source Address Register
+DMA_DADR02     	.equ	0xF0003CD4	; DMA Channel 02 Destination Address Register
+DMA_SHADR02    	.equ	0xF0003CD8	; DMA Channel 02 Shadowed Address Register
+DMA_CHSR03     	.equ	0xF0003CE0	; DMA Channel 03 Status Register
+DMA_CHCR03     	.equ	0xF0003CE4	; DMA Channel 03 Control Register
+DMA_CHICR03    	.equ	0xF0003CE8	; DMA Channel 03 Interrupt Control Register
+DMA_ADRCR03    	.equ	0xF0003CEC	; DMA Channel 03 Address Control Register
+DMA_SADR03     	.equ	0xF0003CF0	; DMA Channel 03 Source Address Register
+DMA_DADR03     	.equ	0xF0003CF4	; DMA Channel 03 Destination Address Register
+DMA_SHADR03    	.equ	0xF0003CF8	; DMA Channel 03 Shadowed Address Register
+DMA_CHSR04     	.equ	0xF0003D00	; DMA Channel 04 Status Register
+DMA_CHCR04     	.equ	0xF0003D04	; DMA Channel 04 Control Register
+DMA_CHICR04    	.equ	0xF0003D08	; DMA Channel 04 Interrupt Control Register
+DMA_ADRCR04    	.equ	0xF0003D0C	; DMA Channel 04 Address Control Register
+DMA_SADR04     	.equ	0xF0003D10	; DMA Channel 04 Source Address Register
+DMA_DADR04     	.equ	0xF0003D14	; DMA Channel 04 Destination Address Register
+DMA_SHADR04    	.equ	0xF0003D18	; DMA Channel 04 Shadowed Address Register
+DMA_CHSR05     	.equ	0xF0003D20	; DMA Channel 05 Status Register
+DMA_CHCR05     	.equ	0xF0003D24	; DMA Channel 05 Control Register
+DMA_CHICR05    	.equ	0xF0003D28	; DMA Channel 05 Interrupt Control Register
+DMA_ADRCR05    	.equ	0xF0003D2C	; DMA Channel 05 Address Control Register
+DMA_SADR05     	.equ	0xF0003D30	; DMA Channel 05 Source Address Register
+DMA_DADR05     	.equ	0xF0003D34	; DMA Channel 05 Destination Address Register
+DMA_SHADR05    	.equ	0xF0003D38	; DMA Channel 05 Shadowed Address Register
+DMA_CHSR06     	.equ	0xF0003D40	; DMA Channel 06 Status Register
+DMA_CHCR06     	.equ	0xF0003D44	; DMA Channel 06 Control Register
+DMA_CHICR06    	.equ	0xF0003D48	; DMA Channel 06 Interrupt Control Register
+DMA_ADRCR06    	.equ	0xF0003D4C	; DMA Channel 06 Address Control Register
+DMA_SADR06     	.equ	0xF0003D50	; DMA Channel 06 Source Address Register
+DMA_DADR06     	.equ	0xF0003D54	; DMA Channel 06 Destination Address Register
+DMA_SHADR06    	.equ	0xF0003D58	; DMA Channel 06 Shadowed Address Register
+DMA_CHSR07     	.equ	0xF0003D60	; DMA Channel 07 Status Register
+DMA_CHCR07     	.equ	0xF0003D64	; DMA Channel 07 Control Register
+DMA_CHICR07    	.equ	0xF0003D68	; DMA Channel 07 Interrupt Control Register
+DMA_ADRCR07    	.equ	0xF0003D6C	; DMA Channel 07 Address Control Register
+DMA_SADR07     	.equ	0xF0003D70	; DMA Channel 07 Source Address Register
+DMA_DADR07     	.equ	0xF0003D74	; DMA Channel 07 Destination Address Register
+DMA_SHADR07    	.equ	0xF0003D78	; DMA Channel 07 Shadowed Address Register
+DMA_TOCTR      	.equ	0xF0003E80	; DMA Bus Time-Out Control Register
+DMA_SYSSRC4    	.equ	0xF0003E8C	; System Interrupt Service Request Control Register 4
+DMA_MLI0SRC3   	.equ	0xF0003EA0	; MLI 0 Service Request Control Register 3
+DMA_MLI0SRC2   	.equ	0xF0003EA4	; MLI 0 Service Request Control Register 2
+DMA_MLI0SRC1   	.equ	0xF0003EA8	; MLI 0 Service Request Control Register 1
+DMA_MLI0SRC0   	.equ	0xF0003EAC	; MLI 0 Service Request Control Register 0
+DMA_SRC3       	.equ	0xF0003EF0	; DMA Service Request Control Register 3
+DMA_SRC2       	.equ	0xF0003EF4	; DMA Service Request Control Register 2
+DMA_SRC1       	.equ	0xF0003EF8	; DMA Service Request Control Register 1
+DMA_SRC0       	.equ	0xF0003EFC	; DMA Service Request Control Register 0
+SSC0_CLC       	.equ	0xF0100100	; SSC Clock Control Register
+SSC0_PISEL     	.equ	0xF0100104	; SSC Port Input Select Register
+SSC0_ID        	.equ	0xF0100108	; SSC0 Module Identification Register
+SSC0_FDR       	.equ	0xF010010C	; SSC Fractional Divider Register
+SSC0_CON       	.equ	0xF0100110	; SSC Control Register
+SSC0_BR        	.equ	0xF0100114	; SSC Baudrate Timer Reload Register
+SSC0_SSOC      	.equ	0xF0100118	; Slave Select Output Control Register
+SSC0_SSOTC     	.equ	0xF010011C	; Slave Select Output Timing Control Register
+SSC0_TB        	.equ	0xF0100120	; SSC Transmit Buffer Register
+SSC0_RB        	.equ	0xF0100124	; SSC Receive Buffer Register
+SSC0_STAT      	.equ	0xF0100128	; SSC Status Register
+SSC0_EFM       	.equ	0xF010012C	; SSC Error Flag Modification Register
+SSC0_RXFCON    	.equ	0xF0100130	; SSC Receive FIFO Control Register
+SSC0_TXFCON    	.equ	0xF0100134	; SSC Transmit FIFO Control Register
+SSC0_FSTAT     	.equ	0xF0100138	; SSC FIFO Status Register
+SSC0_TSRC      	.equ	0xF01001F4	; SSC Transmit Interrupt Service Request Control Register
+SSC0_RSRC      	.equ	0xF01001F8	; SSC Receive Interrupt Service Request Control Register
+SSC0_ESRC      	.equ	0xF01001FC	; SSC Error Interrupt Service Request Control Register
+SSC1_CLC       	.equ	0xF0100200	; SSC Clock Control Register
+SSC1_PISEL     	.equ	0xF0100204	; SSC Port Input Select Register
+SSC1_ID        	.equ	0xF0100208	; SSC0 Module Identification Register
+SSC1_FDR       	.equ	0xF010020C	; SSC Fractional Divider Register
+SSC1_CON       	.equ	0xF0100210	; SSC Control Register
+SSC1_BR        	.equ	0xF0100214	; SSC Baudrate Timer Reload Register
+SSC1_SSOC      	.equ	0xF0100218	; Slave Select Output Control Register
+SSC1_SSOTC     	.equ	0xF010021C	; Slave Select Output Timing Control Register
+SSC1_TB        	.equ	0xF0100220	; SSC Transmit Buffer Register
+SSC1_RB        	.equ	0xF0100224	; SSC Receive Buffer Register
+SSC1_STAT      	.equ	0xF0100228	; SSC Status Register
+SSC1_EFM       	.equ	0xF010022C	; SSC Error Flag Modification Register
+SSC1_RXFCON    	.equ	0xF0100230	; SSC Receive FIFO Control Register
+SSC1_TXFCON    	.equ	0xF0100234	; SSC Transmit FIFO Control Register
+SSC1_FSTAT     	.equ	0xF0100238	; SSC FIFO Status Register
+SSC1_TSRC      	.equ	0xF01002F4	; SSC Transmit Interrupt Service Request Control Register
+SSC1_RSRC      	.equ	0xF01002F8	; SSC Receive Interrupt Service Request Control Register
+SSC1_ESRC      	.equ	0xF01002FC	; SSC Error Interrupt Service Request Control Register
+ASC0_CLC       	.equ	0xF0100300	; ASC Clock Control Register
+ASC0_PISEL     	.equ	0xF0100304	; ASC Peripheral Input Select Register
+ASC0_ID        	.equ	0xF0100308	; ASC Module Identification Register
+ASC0_CON       	.equ	0xF0100310	; ASC Control Register
+ASC0_BG        	.equ	0xF0100314	; ASC Baudrate Timer Reload Register
+ASC0_FDV       	.equ	0xF0100318	; ASC Fractional Divider Register
+ASC0_PMW       	.equ	0xF010031C	; ASC IrDA Pulse Mode/Widdth Register
+ASC0_TBUF      	.equ	0xF0100320	; ASC Transmit Buffer Register
+ASC0_RBUF      	.equ	0xF0100324	; ASC Receive Buffer Register
+ASC0_RXFCON    	.equ	0xF0100340	; SSC Receive FIFO Control Register
+ASC0_TXFCON    	.equ	0xF0100344	; SSC Transmit FIFO Control Register
+ASC0_FSTAT     	.equ	0xF0100348	; ASC FIFO Status Register
+ASC0_WHBCON    	.equ	0xF0100350	; ASC Hardware Bits Control Register
+ASC0_TSRC      	.equ	0xF01003F0	; ASC Transmit Interrupt Service Request Control Register
+ASC0_RSRC      	.equ	0xF01003F4	; ASC Receive Interrupt Service Request Control Register
+ASC0_ESRC      	.equ	0xF01003F8	; ASC Error Interrupt Service Request Control Register
+ASC0_TBSRC     	.equ	0xF01003FC	; ASC Transmit Buffer Service Request Control Register
+ASC1_CLC       	.equ	0xF0100400	; ASC Clock Control Register
+ASC1_PISEL     	.equ	0xF0100404	; ASC Peripheral Input Select Register
+ASC1_ID        	.equ	0xF0100408	; ASC Module Identification Register
+ASC1_CON       	.equ	0xF0100410	; ASC Control Register
+ASC1_BG        	.equ	0xF0100414	; ASC Baudrate Timer Reload Register
+ASC1_FDV       	.equ	0xF0100418	; ASC Fractional Divider Register
+ASC1_PMW       	.equ	0xF010041C	; ASC IrDA Pulse Mode/Widdth Register
+ASC1_TBUF      	.equ	0xF0100420	; ASC Transmit Buffer Register
+ASC1_RBUF      	.equ	0xF0100424	; ASC Receive Buffer Register
+ASC1_RXFCON    	.equ	0xF0100440	; SSC Receive FIFO Control Register
+ASC1_TXFCON    	.equ	0xF0100444	; SSC Transmit FIFO Control Register
+ASC1_FSTAT     	.equ	0xF0100448	; ASC FIFO Status Register
+ASC1_WHBCON    	.equ	0xF0100450	; ASC Hardware Bits Control Register
+ASC1_TSRC      	.equ	0xF01004F0	; ASC Transmit Interrupt Service Request Control Register
+ASC1_RSRC      	.equ	0xF01004F4	; ASC Receive Interrupt Service Request Control Register
+ASC1_ESRC      	.equ	0xF01004F8	; ASC Error Interrupt Service Request Control Register
+ASC1_TBSRC     	.equ	0xF01004FC	; ASC Transmit Buffer Service Request Control Register
+IIC_CLC        	.equ	0xF0100600	; IIC Clock Control Register
+IIC_PISEL      	.equ	0xF0100604	; IIC Input Select Register
+IIC_ID         	.equ	0xF0100608	; IIC Module Identification Register
+IIC_SYSCON     	.equ	0xF0100610	; System Control Register
+IIC_BUSCON     	.equ	0xF0100614	; IIC BUS Control Register
+IIC_RTB        	.equ	0xF0100618	; Reset Transmit Buffer
+IIC_WHBSYSCON  	.equ	0xF0100620	; IIC Write Hardware Modifiied System Control
+IIC_XP2SRC     	.equ	0xF01006F4	; IIC Service Request Control Register 2
+IIC_XP1SRC     	.equ	0xF01006F8	; IIC Service Request Control Register 1
+IIC_XP0SRC     	.equ	0xF01006FC	; IIC Service Request Control Register 0
+MLI0_ID        	.equ	0xF010C008	; MLI Module Identification Register
+MLI0_FDR       	.equ	0xF010C00C	; MLI Fractional Divider Register
+MLI0_TCR       	.equ	0xF010C010	; Transmitter Control Register
+MLI0_TSTATR    	.equ	0xF010C014	; Transmitter Status Register
+MLI0_TP0STATR  	.equ	0xF010C018	; Transmitter Pipe 0 Status Register
+MLI0_TP1STATR  	.equ	0xF010C01C	; Transmitter Pipe 1 Status Register
+MLI0_TP2STATR  	.equ	0xF010C020	; Transmitter Pipe 2 Status Register
+MLI0_TP3STATR  	.equ	0xF010C024	; Transmitter Pipe 3 Status Register
+MLI0_TCMDR     	.equ	0xF010C028	; Transmitter Command Register
+MLI0_TRSTATR   	.equ	0xF010C02C	; Transmitter Registers Status Register
+MLI0_TP0AOFR   	.equ	0xF010C030	; Transmitter Pipe 0 Address Offset Register
+MLI0_TP1AOFR   	.equ	0xF010C034	; Transmitter Pipe 1 Address Offset Register
+MLI0_TP2AOFR   	.equ	0xF010C038	; Transmitter Pipe 2 Address Offset Register
+MLI0_TP3AOFR   	.equ	0xF010C03C	; Transmitter Pipe 3 Address Offset Register
+MLI0_TP0DATAR  	.equ	0xF010C040	; Transmitter Pipe 0 Data Register
+MLI0_TP1DATAR  	.equ	0xF010C044	; Transmitter Pipe 1 Data Register
+MLI0_TP2DATAR  	.equ	0xF010C048	; Transmitter Pipe 2 Data Register
+MLI0_TP3DATAR  	.equ	0xF010C04C	; Transmitter Pipe 3 Data Register
+MLI0_TDRAR     	.equ	0xF010C050	; Transmitter Data Read Answer Register
+MLI0_TP0BAR    	.equ	0xF010C054	; Transmitter Pipe 0 Base Address Register
+MLI0_TP1BAR    	.equ	0xF010C058	; Transmitter Pipe 1 Base Address Register
+MLI0_TP2BAR    	.equ	0xF010C05C	; Transmitter Pipe 2 Base Address Register
+MLI0_TP3BAR    	.equ	0xF010C060	; Transmitter Pipe 3 Base Address Register
+MLI0_TCBAR     	.equ	0xF010C064	; Transmitter Copy Base Address Register
+MLI0_RCR       	.equ	0xF010C068	; Receiver Control Register
+MLI0_RP0BAR    	.equ	0xF010C06C	; Receiver Pipe 0 Base Address Register
+MLI0_RP1BAR    	.equ	0xF010C070	; Receiver Pipe 1 Base Address Register
+MLI0_RP2BAR    	.equ	0xF010C074	; Receiver Pipe 2 Base Address Register
+MLI0_RP3BAR    	.equ	0xF010C078	; Receiver Pipe 3 Base Address Register
+MLI0_RP0STATR  	.equ	0xF010C07C	; Receiver Pipe 0 Status Register
+MLI0_RP1STATR  	.equ	0xF010C080	; Receiver Pipe 1 Status Register
+MLI0_RP2STATR  	.equ	0xF010C084	; Receiver Pipe 2 Status Register
+MLI0_RP3STATR  	.equ	0xF010C088	; Receiver Pipe 3 Status Register
+MLI0_RADRR     	.equ	0xF010C08C	; Receiver Address Register
+MLI0_RDATAR    	.equ	0xF010C090	; Receiver Data Register
+MLI0_SCR       	.equ	0xF010C094	; Set Clear Register
+MLI0_TIER      	.equ	0xF010C098	; Transmitter Interrupt Enable Register
+MLI0_TISR      	.equ	0xF010C09C	; Transmitter Interrupt Status Register
+MLI0_TINPR     	.equ	0xF010C0A0	; Transmitter Interrupt Node Pointer Register
+MLI0_RIER      	.equ	0xF010C0A4	; Receiver Interrupt Enable Register
+MLI0_RISR      	.equ	0xF010C0A8	; Receiver Interrupt Status Register
+MLI0_RINPR     	.equ	0xF010C0AC	; Receiver Interrupt Node Pointer Register
+MLI0_GINTR     	.equ	0xF010C0B0	; MLI Global Interrupt Set Register
+MLI0_OICR      	.equ	0xF010C0B4	; Output Input Control Register
+MLI0_AER       	.equ	0xF010C0B8	; Access Enable Register
+MLI0_ARR       	.equ	0xF010C0BC	; Access Range Register
+MCHK_ID        	.equ	0xF010C208	; MCHK Module Identification Register
+MCHK_IR        	.equ	0xF010C210	; MCHK Memory Checker Input Register
+MCHK_RR        	.equ	0xF010C214	; Memory Checker Result Register
+MCHK_WR        	.equ	0xF010C220	; Write Register
+CPS_ID         	.equ	0xF7E0FF08	; CPS Module Identification Register
+CPU_SBSRC      	.equ	0xF7E0FFBC	; Software Break Service Request Control Register
+CPU_SRC3       	.equ	0xF7E0FFF0	; CPU Service Request Control Register 3
+CPU_SRC2       	.equ	0xF7E0FFF4	; CPU Service Request Control Register 2
+CPU_SRC1       	.equ	0xF7E0FFF8	; CPU Service Request Control Register 1
+CPU_SRC0       	.equ	0xF7E0FFFC	; CPU Service Request Control Register 0
+EBU_BOOTCFG    	.equ	0xA0000004	; External Boot Memory Configuration Word
+EBU_CLC        	.equ	0xF8000000	; EBU Clock Control Register
+EBU_ID         	.equ	0xF8000008	; EBU Module Identification Register
+EBU_CON        	.equ	0xF8000010	; EBU Global Control Register
+EBU_BFCON      	.equ	0xF8000020	; Burst Flash Control Register
+EBU_SDRMREF0   	.equ	0xF8000040	; SDRAM Refresh Register 0
+EBU_SDRMREF1   	.equ	0xF8000048	; SDRAM Refresh Register 1
+EBU_SDRMCON0   	.equ	0xF8000050	; SDRAM Control Register 0
+EBU_SDRMCON1   	.equ	0xF8000058	; SDRAM Control Register 1
+EBU_SDRMOD0    	.equ	0xF8000060	; SDRAM Mode Register 0
+EBU_SDRMOD1    	.equ	0xF8000068	; SDRAM Mode Register 1
+EBU_SDRSTAT0   	.equ	0xF8000070	; EBU_LMB SDRAM Status Register 0
+EBU_SDRSTAT1   	.equ	0xF8000078	; EBU_LMB SDRAM Status Register 1
+EBU_ADDRSEL0   	.equ	0xF8000080	; Address Select Register 0
+EBU_ADDRSEL1   	.equ	0xF8000088	; Address Select Register 1
+EBU_ADDRSEL2   	.equ	0xF8000090	; Address Select Register 2
+EBU_ADDRSEL3   	.equ	0xF8000098	; Address Select Register 3
+EBU_BUSCON0    	.equ	0xF80000C0	; Bus Configuration Register 0
+EBU_BUSCON1    	.equ	0xF80000C8	; Bus Configuration Register 1
+EBU_BUSCON2    	.equ	0xF80000D0	; Bus Configuration Register 2
+EBU_BUSCON3    	.equ	0xF80000D8	; Bus Configuration Register 3
+EBU_BUSAP0     	.equ	0xF8000100	; Bus Access Parameter Register 0
+EBU_BUSAP1     	.equ	0xF8000108	; Bus Access Parameter Register 1
+EBU_BUSAP2     	.equ	0xF8000110	; Bus Access Parameter Register 2
+EBU_BUSAP3     	.equ	0xF8000118	; Bus Access Parameter Register 3
+EBU_EMUAS      	.equ	0xF8000160	; Emulator Address Select Register
+EBU_EMUBC      	.equ	0xF8000168	; Emulator Bus Configuration Register
+EBU_EMUBAP     	.equ	0xF8000170	; Emulator Bus Access Parameter Register
+EBU_EMUOVL     	.equ	0xF8000178	; Emulator Overlay Register
+EBU_USERCON    	.equ	0xF8000190	; Test/Configuration Register
+DMU_ID         	.equ	0xF8000408	; DMU Module Identification Register
+DMU_SRAR0      	.equ	0xF8000410	; SRAM Redundancy Address
+DMU_SRAR1      	.equ	0xF8000418	; SRAM Redundancy Address
+DMU_SRAR2      	.equ	0xF8000420	; SRAM Redundancy Address
+DMU_SRAR3      	.equ	0xF8000428	; SRAM Redundancy Address
+DMU_SRAR4      	.equ	0xF8000430	; SRAM Redundancy Address
+DMU_SRAR5      	.equ	0xF8000438	; SRAM Redundancy Address
+DMU_SRAR6      	.equ	0xF8000440	; SRAM Redundancy Address
+DMU_SRAR7      	.equ	0xF8000448	; SRAM Redundancy Address
+DMU_SRAR8      	.equ	0xF8000450	; SRAM Redundancy Address
+DMU_SRAR9      	.equ	0xF8000458	; SRAM Redundancy Address
+DMU_SRAR10     	.equ	0xF8000460	; SRAM Redundancy Address
+DMU_SRAR11     	.equ	0xF8000468	; SRAM Redundancy Address
+DMU_SRAR12     	.equ	0xF8000470	; SRAM Redundancy Address
+DMU_SRAR13     	.equ	0xF8000478	; SRAM Redundancy Address
+DMU_SRAR14     	.equ	0xF8000480	; SRAM Redundancy Address
+DMU_SRAR15     	.equ	0xF8000488	; SRAM Redundancy Address
+DMU_CSCACTL    	.equ	0xF8000490	; CPU SRAM Configuration Bit Chain Control Register
+DMU_CSCADIN    	.equ	0xF8000498	; CPU SRAM Configuration Bit Chain Data In Register
+DMU_CSCADOUT   	.equ	0xF80004A0	; CPU SRAM Configuration Bit Chain Data Out Register
+DMU_SETA       	.equ	0xF80004A8	; Soft-Error Trapped Address
+DMU_SRAR16     	.equ	0xF80004B0	; SRAM Redundancy Address
+DMU_SRAR17     	.equ	0xF80004B8	; SRAM Redundancy Address
+DMU_SRAR18     	.equ	0xF80004C0	; SRAM Redundancy Address
+DMU_SRAR19     	.equ	0xF80004C8	; SRAM Redundancy Address
+DMU_SRAR20     	.equ	0xF80004D0	; SRAM Redundancy Address
+DMU_SRAR21     	.equ	0xF80004D8	; SRAM Redundancy Address
+DMU_SRAR22     	.equ	0xF80004E0	; SRAM Redundancy Address
+DMU_SRAR23     	.equ	0xF80004E8	; SRAM Redundancy Address
+DMI_ID         	.equ	0xF87FFC08	; DMI Module Identification Register
+DMI_CON        	.equ	0xF87FFC10	; DMI Control Register
+DMI_STR        	.equ	0xF87FFC18	; DMI Synchronous Trap Register
+DMI_ATR        	.equ	0xF87FFC20	; DMI Asynchronous Trap Register
+DMI_CON1       	.equ	0xF87FFC28	; DMI Control Register 1
+PMI_ID         	.equ	0xF87FFD08	; PMI Module Identification Register
+PMI_CON0       	.equ	0xF87FFD10	; PMI Control Register 0
+PMI_CON1       	.equ	0xF87FFD14	; PMI Control Register 1
+PMI_CON2       	.equ	0xF87FFD18	; PMI Control Register 2
+LBCU_ID        	.equ	0xF87FFE08	; LBCU Module Identification Register
+LBCU_LEATT     	.equ	0xF87FFE20	; LMB Error Attributes Register
+LBCU_LEADDR    	.equ	0xF87FFE24	; LMB Error Addres Register
+LBCU_LEDATL    	.equ	0xF87FFE28	; LMB Error Data Register (32 LSB's)
+LBCU_LEDATH    	.equ	0xF87FFE2C	; LMB Error Data Register (32 MSB's)
+LBCU_SRC       	.equ	0xF87FFEFC	; PBCU Service Request Control Register
+LFI_ID         	.equ	0xF87FFF08	; LFI Module Identification Register
+LFI_CON        	.equ	0xF87FFF10	; LFI Configuration Register
+	.endif ; !@DEF('_REGTC1100_DEF')

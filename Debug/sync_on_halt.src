@@ -1,0 +1,915 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc1492a -H sfr/regtc1797.sfr -c99 --dep-file=.sync_on_halt.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=sync_on_halt.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o sync_on_halt.src ..\\sync_on_halt.c"
+	.compiler_name		"ctc"
+	.name	"sync_on_halt"
+
+	
+$TC131
+	.sdecl	'.zrodata.sync_on_halt.__const_f87ffd14',data,rom
+	.sect	'.zrodata.sync_on_halt.__const_f87ffd14'
+	.align	2
+__const_f87ffd14:	.type	object
+	.size	__const_f87ffd14,4
+	.word	-125829868
+	
+
+; ..\sync_on_halt.c	     1  /**************************************************************************
+; ..\sync_on_halt.c	     2  **                                                                        *
+; ..\sync_on_halt.c	     3  **  FILE        :  sync_on_halt.c                                         *
+; ..\sync_on_halt.c	     4  **                                                                        *
+; ..\sync_on_halt.c	     5  **  DESCRIPTION :                                                         *
+; ..\sync_on_halt.c	     6  **	Derivative-specific code that is run, every time the target       *
+; ..\sync_on_halt.c	     7  **	halts, to synchronize the target and the debugger.                *
+; ..\sync_on_halt.c	     8  **	                                                                  *
+; ..\sync_on_halt.c	     9  **	This code is linked in by default. At the risk of debugging       *
+; ..\sync_on_halt.c	    10  **	problems resulting from e.g. cache incoherence, it can be         *
+; ..\sync_on_halt.c	    11  **	left out by right-clicking on the file in the C/C++ Projects      *
+; ..\sync_on_halt.c	    12  **	view and selecting "Exclude from build...".                       *
+; ..\sync_on_halt.c	    13  **	                                                                  *
+; ..\sync_on_halt.c	    14  **	If a user-defined TriCore processor is being used, this file      *
+; ..\sync_on_halt.c	    15  **	may have to be adapted.                                           *
+; ..\sync_on_halt.c	    16  **                                                                        *
+; ..\sync_on_halt.c	    17  **  Copyright 1996-2010 Altium BV                                         *
+; ..\sync_on_halt.c	    18  **                                                                        *
+; ..\sync_on_halt.c	    19  **************************************************************************/
+; ..\sync_on_halt.c	    20  
+; ..\sync_on_halt.c	    21  #include <stddef.h>
+; ..\sync_on_halt.c	    22  
+; ..\sync_on_halt.c	    23  /* Code compaction, for example, must be avoided because this creates
+; ..\sync_on_halt.c	    24   * function calls and the CSA chain may not be initialized yet when
+; ..\sync_on_halt.c	    25   * this is run.
+; ..\sync_on_halt.c	    26   *
+; ..\sync_on_halt.c	    27   * Inlining must be avoided because it could make the label
+; ..\sync_on_halt.c	    28   * _sync_on_halt_end disappear. */
+; ..\sync_on_halt.c	    29  #pragma optimize acefgIklmNopRsuvwy
+; ..\sync_on_halt.c	    30  
+; ..\sync_on_halt.c	    31  /* Because this code is not part of the application program as such,
+; ..\sync_on_halt.c	    32   * it makes no sense to profile it. */
+; ..\sync_on_halt.c	    33  #pragma profiling off
+; ..\sync_on_halt.c	    34  
+; ..\sync_on_halt.c	    35  #pragma nomisrac
+; ..\sync_on_halt.c	    36  
+; ..\sync_on_halt.c	    37  /* This explicit inclusion is used because the file may be compiled
+; ..\sync_on_halt.c	    38   * with --no-tasking-sfr. */
+; ..\sync_on_halt.c	    39  #include __SFRFILE__(__CPU__)
+; ..\sync_on_halt.c	    40  
+; ..\sync_on_halt.c	    41  /* As above, but for the assembler. */
+; ..\sync_on_halt.c	    42  #define _SYNC_ON_HALT_STRINGIFY1(x) _SYNC_ON_HALT_STRINGIFY2(x)
+; ..\sync_on_halt.c	    43  #define _SYNC_ON_HALT_STRINGIFY2(y) #y
+; ..\sync_on_halt.c	    44  
+; ..\sync_on_halt.c	    45  __asm(".include <sfr/reg" _SYNC_ON_HALT_STRINGIFY1(__CPU__) ".def>");
+	.include <sfr/regtc1797.def>
+	.sdecl	'.text.sync_on_halt._sync_on_halt_end',code,cluster('_sync_on_halt_end')
+	.sect	'.text.sync_on_halt._sync_on_halt_end'
+	.align	2
+	
+	.global	_sync_on_halt_end
+
+; ..\sync_on_halt.c	    46  
+; ..\sync_on_halt.c	    47  unsigned int __near __align(64) _sync_on_halt_lcx[16];
+; ..\sync_on_halt.c	    48  unsigned int __near __align(64) _sync_on_halt_ucx[16];
+; ..\sync_on_halt.c	    49  
+; ..\sync_on_halt.c	    50  /* This function should never be called by the target application itself. */
+; ..\sync_on_halt.c	    51  extern void _sync_on_halt_end(void)
+; Function _sync_on_halt_end
+.L7:
+_sync_on_halt_end:	.type	func
+
+; ..\sync_on_halt.c	    52  {
+; ..\sync_on_halt.c	    53  	__nop();
+	nop
+.L45:
+
+; ..\sync_on_halt.c	    54  	__debug();
+	debug
+.L46:
+
+; ..\sync_on_halt.c	    55  }
+	ret
+.L28:
+	
+___sync_on_halt_end_function_end:
+	.size	_sync_on_halt_end,___sync_on_halt_end_function_end-_sync_on_halt_end
+.L18:
+	; End of function
+	
+	.sdecl	'.text.sync_on_halt._sync_on_halt',code,cluster('_sync_on_halt'),protect
+	.sect	'.text.sync_on_halt._sync_on_halt'
+	.align	2
+	
+	.global	_sync_on_halt
+
+; ..\sync_on_halt.c	    56  
+; ..\sync_on_halt.c	    57  /* This function should never be called by the target application itself.
+; ..\sync_on_halt.c	    58   * __protect__ is needed to prevent this from being eliminated through
+; ..\sync_on_halt.c	    59   * duplicate section removal. */
+; ..\sync_on_halt.c	    60  extern void __protect__ _sync_on_halt(void)
+; Function _sync_on_halt
+.L9:
+_sync_on_halt:	.type	func
+
+; ..\sync_on_halt.c	    61  {
+; ..\sync_on_halt.c	    62  #if	   defined(_REGTC1762_H) || defined(_REGTC1764_H) || defined(_REGTC1766_H) || defined(_REGTC1766B_H)	\ 
+; ..\sync_on_halt.c	    63  	|| defined(_REGTC1792_H) || defined(_REGTC1796_H) || defined(_REGTC1796B_H)				\ 
+; ..\sync_on_halt.c	    64  	|| defined(_REGTC1161_H) || defined(_REGTC1162_H) || defined(_REGTC1163_H)				\ 
+; ..\sync_on_halt.c	    65  	|| defined(_REGTC1164_H) || defined(_REGTC1165_H) || defined(_REGTC1166_H)				\ 
+; ..\sync_on_halt.c	    66  
+; ..\sync_on_halt.c	    67  /* Device has no data cache. */
+; ..\sync_on_halt.c	    68  
+; ..\sync_on_halt.c	    69  #elif	   defined(_REGTC1100_H) || defined(_REGTC1115_H) || defined(_REGTC1130_H)
+; ..\sync_on_halt.c	    70  #  define _EBU 8
+; ..\sync_on_halt.c	    71  
+; ..\sync_on_halt.c	    72  #  define _DCACHE_0_ADDRESS	0xc0000000U
+; ..\sync_on_halt.c	    73  #  define _DCACHE_0_SIZE	64		/* In kBytes. */
+; ..\sync_on_halt.c	    74  
+; ..\sync_on_halt.c	    75  #elif defined(_REGTC11IB_H)
+; ..\sync_on_halt.c	    76  
+; ..\sync_on_halt.c	    77  #  define _EBU 8
+; ..\sync_on_halt.c	    78  
+; ..\sync_on_halt.c	    79  #  define _DCACHE_0_ADDRESS	0x9fe00000U
+; ..\sync_on_halt.c	    80  #  define _DCACHE_0_SIZE	1024
+; ..\sync_on_halt.c	    81  
+; ..\sync_on_halt.c	    82  #  define _DCACHE_1_ADDRESS	0xc0000000U
+; ..\sync_on_halt.c	    83  #  define _DCACHE_1_SIZE	512
+; ..\sync_on_halt.c	    84  
+; ..\sync_on_halt.c	    85  #elif	   defined(_REGTC1167_H) || defined(_REGTC1197_H)				\ 
+; ..\sync_on_halt.c	    86  	|| defined(_REGTC1724_H) || defined(_REGTC1728_H)				\ 
+; ..\sync_on_halt.c	    87  	|| defined(_REGTC1184_H) || defined(_REGTC1784_H)				\ 
+; ..\sync_on_halt.c	    88  	|| defined(_REGTC1767_H) || defined(_REGTC1768_H) || defined(_REGTC1797_H)	\ 
+; ..\sync_on_halt.c	    89  	|| defined(_REGTC1782_H) || defined(_REGTC1783_H) || defined(_REGTC1746_H)	\ 
+; ..\sync_on_halt.c	    90  	|| defined(_REGTC1337_H) || defined(_REGTC1367_H) || defined(_REGTC1387_H)
+; ..\sync_on_halt.c	    91  #  ifndef __TC131__
+; ..\sync_on_halt.c	    92  #    error Internal inconsistency.
+; ..\sync_on_halt.c	    93  #  endif
+; ..\sync_on_halt.c	    94  
+; ..\sync_on_halt.c	    95  #  define _DCACHE_LINES		256
+; ..\sync_on_halt.c	    96  #  define _DCACHE_WAYS		2
+; ..\sync_on_halt.c	    97  #  define _DCACHE_LINE_INDEX	4
+; ..\sync_on_halt.c	    98  
+; ..\sync_on_halt.c	    99  #  define _DCACHE_OFFSET	0x80000000U
+; ..\sync_on_halt.c	   100  
+; ..\sync_on_halt.c	   101  
+; ..\sync_on_halt.c	   102  #elif defined(_REGTC1736_H)
+; ..\sync_on_halt.c	   103  
+; ..\sync_on_halt.c	   104  /* Device has no data cache, but does have a Data Line Buffer (DLB). We need
+; ..\sync_on_halt.c	   105   * to execute CACHEI.WI at least once. */
+; ..\sync_on_halt.c	   106  
+; ..\sync_on_halt.c	   107  #  ifndef __TC131__
+; ..\sync_on_halt.c	   108  #    error Internal inconsistency.
+; ..\sync_on_halt.c	   109  #  endif
+; ..\sync_on_halt.c	   110  
+; ..\sync_on_halt.c	   111  #  define _DCACHE_LINES		1
+; ..\sync_on_halt.c	   112  #  define _DCACHE_WAYS		1
+; ..\sync_on_halt.c	   113  #  define _DCACHE_LINE_INDEX	4
+; ..\sync_on_halt.c	   114  
+; ..\sync_on_halt.c	   115  #  define _DCACHE_OFFSET	0x80000000U
+; ..\sync_on_halt.c	   116  
+; ..\sync_on_halt.c	   117  #elif defined(_REGTC1798_H) || defined(_REGTC1748_H) || defined(_REGTC1791_H) || defined(_REGTC1793_H)
+; ..\sync_on_halt.c	   118  
+; ..\sync_on_halt.c	   119  #  ifndef __TC16__
+; ..\sync_on_halt.c	   120  #    error Internal inconsistency.
+; ..\sync_on_halt.c	   121  #  endif
+; ..\sync_on_halt.c	   122  
+; ..\sync_on_halt.c	   123  #  define _DCACHE_LINES		128
+; ..\sync_on_halt.c	   124  #  define _DCACHE_WAYS		4
+; ..\sync_on_halt.c	   125  #  define _DCACHE_LINE_INDEX	5
+; ..\sync_on_halt.c	   126  
+; ..\sync_on_halt.c	   127  #  define _DCACHE_OFFSET	0x80000000U
+; ..\sync_on_halt.c	   128  
+; ..\sync_on_halt.c	   129  #else
+; ..\sync_on_halt.c	   130  #  error Unknown device. For user-defined devices, this code may have to be adapted.
+; ..\sync_on_halt.c	   131  #endif
+; ..\sync_on_halt.c	   132  
+; ..\sync_on_halt.c	   133  
+; ..\sync_on_halt.c	   134  
+; ..\sync_on_halt.c	   135  
+; ..\sync_on_halt.c	   136  
+; ..\sync_on_halt.c	   137  #ifdef _DCACHE_LINES
+; ..\sync_on_halt.c	   138          unsigned char *         line_addr;	
+; ..\sync_on_halt.c	   139          unsigned int            line_index;
+; ..\sync_on_halt.c	   140          unsigned int            way_index;
+; ..\sync_on_halt.c	   141  #endif
+; ..\sync_on_halt.c	   142  
+; ..\sync_on_halt.c	   143  #ifdef _EBU
+; ..\sync_on_halt.c	   144  	EBU_ADDRSEL0_type *	ebu_addrselx;
+; ..\sync_on_halt.c	   145  	ptrdiff_t		ebu_addrsel_delta;
+; ..\sync_on_halt.c	   146  	int			region_index;
+; ..\sync_on_halt.c	   147  	unsigned int		region_addr_u;
+; ..\sync_on_halt.c	   148  #endif
+; ..\sync_on_halt.c	   149  
+; ..\sync_on_halt.c	   150  #if defined(_EBU) || defined(_DCACHE_0_ADDRESS)
+; ..\sync_on_halt.c	   151  	unsigned char *		line_addr;
+; ..\sync_on_halt.c	   152  	unsigned int		line_count;
+; ..\sync_on_halt.c	   153  	unsigned int		line_index;
+; ..\sync_on_halt.c	   154  #endif
+; ..\sync_on_halt.c	   155  
+; ..\sync_on_halt.c	   156  
+; ..\sync_on_halt.c	   157  	/* Determine number of EBU regions. (Note that at the time of this writing at
+; ..\sync_on_halt.c	   158  	 * least it was not actually possible for there to be 5 or 6, only 4 or 7.) */
+; ..\sync_on_halt.c	   159  #ifndef _EBU
+; ..\sync_on_halt.c	   160     /* (Nothing.) */
+; ..\sync_on_halt.c	   161  #elif defined(EBU_ADDRSEL7) || !defined(EBU_ADDRSEL3)
+; ..\sync_on_halt.c	   162  #  error Unexpected number of EBU_ADDRSELx registers.
+; ..\sync_on_halt.c	   163  #elif defined(EBU_ADDRSEL6)
+; ..\sync_on_halt.c	   164  #  define _EBU_REGION_COUNT 7
+; ..\sync_on_halt.c	   165  #elif defined(EBU_ADDRSEL5)
+; ..\sync_on_halt.c	   166  #  define _EBU_REGION_COUNT 6
+; ..\sync_on_halt.c	   167  #elif defined(EBU_ADDRSEL4)
+; ..\sync_on_halt.c	   168  #  define _EBU_REGION_COUNT 5
+; ..\sync_on_halt.c	   169  #else
+; ..\sync_on_halt.c	   170  #  define _EBU_REGION_COUNT 4
+; ..\sync_on_halt.c	   171  #endif
+; ..\sync_on_halt.c	   172  
+; ..\sync_on_halt.c	   173  	/* ***************************************************************************************
+; ..\sync_on_halt.c	   174  	 * Save PSW and (most of) the address and data registers. (Not all of these will actually
+; ..\sync_on_halt.c	   175  	 * be used,but that is up to the compiler and cannot be predicted reliably.)
+; ..\sync_on_halt.c	   176  	 *
+; ..\sync_on_halt.c	   177  	 * Note that PSW must be saved because of the switch to supervisor mode below, but also
+; ..\sync_on_halt.c	   178  	 * because the remainder of the code may change the flags.
+; ..\sync_on_halt.c	   179  	 *
+; ..\sync_on_halt.c	   180  	 * The st*cx instructions do not affect the CSA list and do not require it to be properly
+; ..\sync_on_halt.c	   181  	 * initialized (which it might not be at this point). */
+; ..\sync_on_halt.c	   182  	__asm("stlcx _sync_on_halt_lcx");
+	stlcx _sync_on_halt_lcx
+.L51:
+
+; ..\sync_on_halt.c	   183  	__asm("stucx _sync_on_halt_ucx");
+	stucx _sync_on_halt_ucx
+.L52:
+
+; ..\sync_on_halt.c	   184  
+; ..\sync_on_halt.c	   185  	/* Set PSW.IO to 2 (supervisor mode). This is needed for certain operations
+; ..\sync_on_halt.c	   186  	 * performed below. */
+; ..\sync_on_halt.c	   187  	__mtcr(PSW, (int) (((unsigned int) __mfcr(PSW) & 0xfffff3ffU) | 0x800U));
+	mfcr	d15,#65028
+.L53:
+	insert	d15,d15,#2,#10,#2
+.L54:
+	mtcr	#65028,d15
+	isync
+.L55:
+
+; ..\sync_on_halt.c	   188  
+; ..\sync_on_halt.c	   189  	/* ***************************************************************
+; ..\sync_on_halt.c	   190  	 * Initiate flushing of instruction cache. (Waiting for it to
+; ..\sync_on_halt.c	   191  	 * complete is done later, i.e. in parallel with the data
+; ..\sync_on_halt.c	   192  	 * cache flushing.)
+; ..\sync_on_halt.c	   193  	 */
+; ..\sync_on_halt.c	   194  #if	   defined(_REGTC1100_H) || defined(_REGTC1115_H) || defined(_REGTC1130_H) || defined(_REGTC11IB_H)	\ 
+; ..\sync_on_halt.c	   195  	|| defined(_REGTC1762_H) || defined(_REGTC1764_H) || defined(_REGTC1766_H) || defined(_REGTC1766B_H)	\ 
+; ..\sync_on_halt.c	   196  	|| defined(_REGTC1161_H) || defined(_REGTC1162_H) || defined(_REGTC1163_H)				\ 
+; ..\sync_on_halt.c	   197  	|| defined(_REGTC1164_H) || defined(_REGTC1165_H) || defined(_REGTC1166_H)				\ 
+; ..\sync_on_halt.c	   198  	|| defined(_REGTC1792_H) || defined(_REGTC1796_H) || defined(_REGTC1796B_H)
+; ..\sync_on_halt.c	   199  
+; ..\sync_on_halt.c	   200  /* Instruction cache flushing not supported for these devices. */
+; ..\sync_on_halt.c	   201  
+; ..\sync_on_halt.c	   202  #elif	   defined(_REGTC1167_H) || defined(_REGTC1197_H) 				\ 
+; ..\sync_on_halt.c	   203  	|| defined(_REGTC1724_H) || defined(_REGTC1728_H) || defined(_REGTC1736_H)	\ 
+; ..\sync_on_halt.c	   204  	|| defined(_REGTC1184_H) || defined(_REGTC1784_H)				\ 
+; ..\sync_on_halt.c	   205  	|| defined(_REGTC1767_H) || defined(_REGTC1768_H) || defined(_REGTC1797_H)	\ 
+; ..\sync_on_halt.c	   206  	|| defined(_REGTC1782_H) || defined(_REGTC1783_H) || defined(_REGTC1746_H)	\ 
+; ..\sync_on_halt.c	   207  	|| defined(_REGTC1337_H) || defined(_REGTC1367_H) || defined(_REGTC1387_H)
+; ..\sync_on_halt.c	   208  
+; ..\sync_on_halt.c	   209  #  define _ICACHE_BIT0	PMI_CON1.B.PCINV
+; ..\sync_on_halt.c	   210  #  define _ICACHE_BIT1	PMI_CON1.B.PBINV
+; ..\sync_on_halt.c	   211  
+; ..\sync_on_halt.c	   212  #elif defined(_REGTC1798_H) || defined(_REGTC1748_H) || defined(_REGTC1791_H) || defined(_REGTC1793_H)
+; ..\sync_on_halt.c	   213  
+; ..\sync_on_halt.c	   214  //#  define _ICACHE_BIT0	PCON1.B.PCINV
+; ..\sync_on_halt.c	   215  //#  define _ICACHE_BIT1	PCON1.B.PBINV
+; ..\sync_on_halt.c	   216  
+; ..\sync_on_halt.c	   217  #  define _ICACHE_BIT0_W(bit_val) \ 
+; ..\sync_on_halt.c	   218          __mtcr(PCON1, (int) (((unsigned int) __mfcr(PCON1) & 0xfffffffeU) | (bit_val ? 1 : 0)))
+; ..\sync_on_halt.c	   219  #  define _ICACHE_BIT1_W(bit_val) \ 
+; ..\sync_on_halt.c	   220          __mtcr(PCON1, (int) (((unsigned int) __mfcr(PCON1) & 0xfffffffdU) | (bit_val ? 2 : 0)))
+; ..\sync_on_halt.c	   221  
+; ..\sync_on_halt.c	   222  #  define _ICACHE_BIT0_R \ 
+; ..\sync_on_halt.c	   223          (((unsigned int) __mfcr(PCON1) & 0x1U)!=0U)
+; ..\sync_on_halt.c	   224  #  define _ICACHE_BIT1_R \ 
+; ..\sync_on_halt.c	   225          (((unsigned int) __mfcr(PCON1) & 0x2U)!=0U)
+; ..\sync_on_halt.c	   226  
+; ..\sync_on_halt.c	   227  #else
+; ..\sync_on_halt.c	   228  #  error Unknown device.
+; ..\sync_on_halt.c	   229  #endif
+; ..\sync_on_halt.c	   230  
+; ..\sync_on_halt.c	   231  
+; ..\sync_on_halt.c	   232  #ifdef _ICACHE_BIT0
+; ..\sync_on_halt.c	   233  	_ICACHE_BIT0 = 1;
+	ld.w	d15,__const_f87ffd14
+	mov.a	a15,d15
+	ld.w	d15,[a15]
+.L56:
+	or	d15,#1
+	st.w	[a15],d15
+.L57:
+
+; ..\sync_on_halt.c	   234  	_ICACHE_BIT1 = 1;
+	ld.w	d15,[a15]
+.L58:
+	or	d15,#2
+	st.w	[a15],d15
+.L59:
+
+; ..\sync_on_halt.c	   235  #endif
+; ..\sync_on_halt.c	   236  
+; ..\sync_on_halt.c	   237  #ifdef _ICACHE_BIT0_W
+; ..\sync_on_halt.c	   238          _ICACHE_BIT0_W(1);
+; ..\sync_on_halt.c	   239          _ICACHE_BIT1_W(1);
+; ..\sync_on_halt.c	   240  #endif
+; ..\sync_on_halt.c	   241  
+; ..\sync_on_halt.c	   242  	/* **********************************************************
+; ..\sync_on_halt.c	   243  	 * Flush data cache. This will also flush the data line
+; ..\sync_on_halt.c	   244  	 * buffer, if there is one. */
+; ..\sync_on_halt.c	   245  
+; ..\sync_on_halt.c	   246  #ifdef _EBU
+; ..\sync_on_halt.c	   247  	ebu_addrselx = &EBU_ADDRSEL0;
+; ..\sync_on_halt.c	   248  
+; ..\sync_on_halt.c	   249  	ebu_addrsel_delta = ((EBU_ADDRSEL0_type *) &EBU_ADDRSEL1) - &EBU_ADDRSEL0;
+; ..\sync_on_halt.c	   250  
+; ..\sync_on_halt.c	   251  	for (	region_index = 0; region_index < _EBU_REGION_COUNT;
+; ..\sync_on_halt.c	   252  		region_index++, ebu_addrselx += ebu_addrsel_delta	)
+; ..\sync_on_halt.c	   253  	{
+; ..\sync_on_halt.c	   254  		if (!ebu_addrselx->B.REGENAB)
+; ..\sync_on_halt.c	   255  		{
+; ..\sync_on_halt.c	   256  			continue;
+; ..\sync_on_halt.c	   257  		}
+; ..\sync_on_halt.c	   258  
+; ..\sync_on_halt.c	   259  		if (	   (((ebu_addrselx->B.BASE >> 16) & 0xfU) == _EBU)
+; ..\sync_on_halt.c	   260  			|| (ebu_addrselx->B.ALTENAB && (ebu_addrselx->B.ALTSEG == _EBU))
+; ..\sync_on_halt.c	   261  		   )
+; ..\sync_on_halt.c	   262  		{
+; ..\sync_on_halt.c	   263  			/* EBU region is accessible via segment specified by _EBU. */
+; ..\sync_on_halt.c	   264  
+; ..\sync_on_halt.c	   265  			/* Calculate start address of region. First, bits 28-31. */
+; ..\sync_on_halt.c	   266  			region_addr_u = ((unsigned int) _EBU << 28);
+; ..\sync_on_halt.c	   267  
+; ..\sync_on_halt.c	   268  			/* Add bits 12-27. */
+; ..\sync_on_halt.c	   269  			region_addr_u +=	((unsigned int) (ebu_addrselx->B.BASE & 0xffff) << 12)
+; ..\sync_on_halt.c	   270  						& (0xffffffffU << (27 - ebu_addrselx->B.MASK));
+; ..\sync_on_halt.c	   271  
+; ..\sync_on_halt.c	   272  			/* Size measured in 16-byte (128-bit) cache lines.
+; ..\sync_on_halt.c	   273  			 * For example, when MASK equals 15, the size is
+; ..\sync_on_halt.c	   274  			 * 4 KBytes, i.e. 256 lines. */
+; ..\sync_on_halt.c	   275  			line_count = 1 << (23 - ebu_addrselx->B.MASK);
+; ..\sync_on_halt.c	   276  
+; ..\sync_on_halt.c	   277  			line_addr = (unsigned char *) region_addr_u;
+; ..\sync_on_halt.c	   278  
+; ..\sync_on_halt.c	   279  			for (line_index = 0; line_index < line_count; line_index++)
+; ..\sync_on_halt.c	   280  			{
+; ..\sync_on_halt.c	   281                                  __cacheawi(line_addr);
+; ..\sync_on_halt.c	   282  
+; ..\sync_on_halt.c	   283                                  line_addr += 16;				
+; ..\sync_on_halt.c	   284  			}
+; ..\sync_on_halt.c	   285  		}
+; ..\sync_on_halt.c	   286  	}
+; ..\sync_on_halt.c	   287  #endif /* #ifdef _EBU */
+; ..\sync_on_halt.c	   288  
+; ..\sync_on_halt.c	   289  #ifdef _DCACHE_0_ADDRESS
+; ..\sync_on_halt.c	   290  	line_count = (_DCACHE_0_SIZE * 1024) / 16;
+; ..\sync_on_halt.c	   291  	line_addr = (unsigned char *) _DCACHE_0_ADDRESS;
+; ..\sync_on_halt.c	   292  
+; ..\sync_on_halt.c	   293  	for (line_index = 0; line_index < line_count; line_index++)
+; ..\sync_on_halt.c	   294  	{
+; ..\sync_on_halt.c	   295  		__cacheawi(line_addr);
+; ..\sync_on_halt.c	   296  
+; ..\sync_on_halt.c	   297  		line_addr += 16;
+; ..\sync_on_halt.c	   298  	}
+; ..\sync_on_halt.c	   299  #endif
+; ..\sync_on_halt.c	   300  
+; ..\sync_on_halt.c	   301  #ifdef _DCACHE_1_ADDRESS
+; ..\sync_on_halt.c	   302  	line_count = (_DCACHE_1_SIZE * 1024) / 16;
+; ..\sync_on_halt.c	   303  	line_addr = (unsigned char *) _DCACHE_1_ADDRESS;
+; ..\sync_on_halt.c	   304  
+; ..\sync_on_halt.c	   305  	for (line_index = 0; line_index < line_count; line_index++)
+; ..\sync_on_halt.c	   306  	{
+; ..\sync_on_halt.c	   307  		__cacheawi(line_addr);
+; ..\sync_on_halt.c	   308  
+; ..\sync_on_halt.c	   309  		line_addr += 16;
+; ..\sync_on_halt.c	   310  	}
+; ..\sync_on_halt.c	   311  #endif
+; ..\sync_on_halt.c	   312  
+; ..\sync_on_halt.c	   313  
+; ..\sync_on_halt.c	   314  #ifdef _DCACHE_LINES
+; ..\sync_on_halt.c	   315          line_addr = (unsigned char *) _DCACHE_OFFSET;                ;
+	movh.a	a2,#32768
+.L36:
+
+; ..\sync_on_halt.c	   316  	
+; ..\sync_on_halt.c	   317  	for (line_index = 0; line_index < _DCACHE_LINES; line_index++)
+	lea	a4,255
+.L2:
+
+; ..\sync_on_halt.c	   318  	{
+; ..\sync_on_halt.c	   319  		for (way_index = 0; way_index < _DCACHE_WAYS; way_index++)
+	mov.aa	a5,a2
+.L60:
+	mov.a	a6,#1
+.L3:
+
+; ..\sync_on_halt.c	   320  		{
+; ..\sync_on_halt.c	   321  			__cacheiwi( line_addr+way_index );
+	cachei.wi	[a5+]1
+.L61:
+	loop	a6,.L3				; predicted taken
+.L62:
+
+; ..\sync_on_halt.c	   322                  }
+; ..\sync_on_halt.c	   323  		
+; ..\sync_on_halt.c	   324  		line_addr += (1 << _DCACHE_LINE_INDEX);			
+	lea	a2,[a2]16
+.L63:
+	loop	a4,.L2				; predicted taken
+
+; ..\sync_on_halt.c	   325  	}
+; ..\sync_on_halt.c	   326  #endif
+; ..\sync_on_halt.c	   327  
+; ..\sync_on_halt.c	   328  	/* **********************************************************
+; ..\sync_on_halt.c	   329  	 * Wait for code cache flushing to complete.
+; ..\sync_on_halt.c	   330  	 */
+; ..\sync_on_halt.c	   331  #ifdef _ICACHE_BIT0
+; ..\sync_on_halt.c	   332  	while (_ICACHE_BIT0 || _ICACHE_BIT1);
+.L4:
+.L5:
+	ld.w	d15,[a15]
+	jnz.t	d15:0,.L5				; predicted taken
+.L64:
+	ld.w	d15,[a15]
+	jnz.t	d15:1,.L4				; predicted taken
+.L65:
+
+; ..\sync_on_halt.c	   333  #endif
+; ..\sync_on_halt.c	   334  
+; ..\sync_on_halt.c	   335  #ifdef _ICACHE_BIT0_R
+; ..\sync_on_halt.c	   336          while (_ICACHE_BIT0_R || _ICACHE_BIT1_R);
+; ..\sync_on_halt.c	   337  #endif
+; ..\sync_on_halt.c	   338  
+; ..\sync_on_halt.c	   339  	/* ***************************************************************************************
+; ..\sync_on_halt.c	   340  	 * Restore registers. */
+; ..\sync_on_halt.c	   341  
+; ..\sync_on_halt.c	   342  	/* If we switched to supervisor mode above, this restores the prior mode
+; ..\sync_on_halt.c	   343  	 * as well. */
+; ..\sync_on_halt.c	   344  	__mtcr(PSW, _sync_on_halt_ucx[1]);
+	ld.w	d15,_sync_on_halt_ucx+4
+.L66:
+	mtcr	#65028,d15
+	isync
+.L67:
+
+; ..\sync_on_halt.c	   345  	__asm("lducx _sync_on_halt_ucx");
+	lducx _sync_on_halt_ucx
+.L68:
+
+; ..\sync_on_halt.c	   346  	__asm("ldlcx _sync_on_halt_lcx");
+	ldlcx _sync_on_halt_lcx
+.L69:
+
+; ..\sync_on_halt.c	   347  
+; ..\sync_on_halt.c	   348  	/* ***************************************************************************************
+; ..\sync_on_halt.c	   349  	 * Flush pipeline. */
+; ..\sync_on_halt.c	   350  
+; ..\sync_on_halt.c	   351  	__dsync();		/* Synchronize data. */
+	dsync
+.L70:
+
+; ..\sync_on_halt.c	   352  	__isync();		/* Synchronize instructions. */
+	isync
+.L71:
+
+; ..\sync_on_halt.c	   353  	__nop();		/*  */
+	nop
+.L72:
+
+; ..\sync_on_halt.c	   354  	__nop();		/* TC113_CPU9. */
+	nop
+.L73:
+
+; ..\sync_on_halt.c	   355  
+; ..\sync_on_halt.c	   356  	/* No function call should be used here, because the CSA may not have
+; ..\sync_on_halt.c	   357  	 * been initialized yet. */
+; ..\sync_on_halt.c	   358  	__asm("j _sync_on_halt_end");
+	j _sync_on_halt_end
+.L74:
+
+; ..\sync_on_halt.c	   359  	return;
+; ..\sync_on_halt.c	   360  }
+	ret
+.L29:
+	
+___sync_on_halt_function_end:
+	.size	_sync_on_halt,___sync_on_halt_function_end-_sync_on_halt
+.L23:
+	; End of function
+	
+	.sdecl	'.zbss.sync_on_halt._sync_on_halt_lcx',data,cluster('_sync_on_halt_lcx')
+	.sect	'.zbss.sync_on_halt._sync_on_halt_lcx'
+	.global	_sync_on_halt_lcx
+	.align	64
+_sync_on_halt_lcx:	.type	object
+	.size	_sync_on_halt_lcx,64
+	.space	64
+	.sdecl	'.zbss.sync_on_halt._sync_on_halt_ucx',data,cluster('_sync_on_halt_ucx')
+	.sect	'.zbss.sync_on_halt._sync_on_halt_ucx'
+	.global	_sync_on_halt_ucx
+	.align	64
+_sync_on_halt_ucx:	.type	object
+	.size	_sync_on_halt_ucx,64
+	.space	64
+	.calls	'_sync_on_halt_end','',0
+	.calls	'_sync_on_halt','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L11:
+	.word	768
+	.half	3
+	.word	.L12
+	.byte	4
+.L10:
+	.byte	1
+	.byte	'..\\sync_on_halt.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L13
+	.byte	2
+	.byte	'__cacheiwi',0,1,1,1,1,3
+	.byte	'unsigned char',0,1,8
+.L30:
+	.byte	4
+	.word	179
+	.byte	5
+	.byte	'p',0
+	.word	196
+	.byte	0,2
+	.byte	'__mtcr',0,1,1,1,1,3
+	.byte	'int',0,4,5,6
+	.word	221
+	.byte	6
+	.word	221
+	.byte	0,7
+	.word	221
+	.byte	8
+	.byte	'__mfcr',0
+	.word	239
+	.byte	1,1,1,1,6
+	.word	221
+	.byte	0,9
+	.byte	'__debug',0,1,1,1,1,9
+	.byte	'__nop',0,1,1,1,1,9
+	.byte	'__isync',0,1,1,1,1,9
+	.byte	'__dsync',0,1,1,1,1
+.L32:
+	.byte	3
+	.byte	'unsigned int',0,4,7,10
+	.byte	'void',0,4
+	.word	332
+	.byte	11
+	.byte	'__prof_adm',0,1,1,1
+	.word	338
+	.byte	12,1,4
+	.word	362
+	.byte	11
+	.byte	'__codeptr',0,1,1,1
+	.word	364
+	.byte	13,2,145,19,18,4,14,2,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,15
+	.byte	'CNT1',0,4
+	.word	399
+	.byte	12,20,2,35,0,16,4
+	.word	399
+	.byte	2,18,2,35,0,15
+	.byte	'TOS',0,4
+	.word	399
+	.byte	2,16,2,35,0,15
+	.byte	'SRPN',0,4
+	.word	399
+	.byte	8,8,2,35,0,15
+	.byte	'CPPN',0,4
+	.word	399
+	.byte	8,0,2,35,0,0,17
+	.byte	'B',0,4
+	.word	393
+	.byte	2,35,0,17
+	.byte	'I',0,4
+	.word	221
+	.byte	2,35,0,17
+	.byte	'U',0,4
+	.word	316
+	.byte	2,35,0,0,7
+	.word	387
+	.byte	11
+	.byte	'PCP_GPR6_type',0,2,158,19,3
+	.word	524
+	.byte	13,2,160,19,18,4,14,2,162,19,2,4,15
+	.byte	'Z',0,4
+	.word	399
+	.byte	1,31,2,35,0,15
+	.byte	'N',0,4
+	.word	399
+	.byte	1,30,2,35,0,15
+	.byte	'C',0,4
+	.word	399
+	.byte	1,29,2,35,0,15
+	.byte	'V',0,4
+	.word	399
+	.byte	1,28,2,35,0,15
+	.byte	'CNZ',0,4
+	.word	399
+	.byte	1,27,2,35,0,15
+	.byte	'IEN',0,4
+	.word	399
+	.byte	1,26,2,35,0,15
+	.byte	'CEN',0,4
+	.word	399
+	.byte	1,25,2,35,0,16,4
+	.word	399
+	.byte	1,24,2,35,0,15
+	.byte	'DPTR',0,4
+	.word	399
+	.byte	8,16,2,35,0,16,4
+	.word	399
+	.byte	16,0,2,35,0,0,17
+	.byte	'B',0,4
+	.word	558
+	.byte	2,35,0,17
+	.byte	'I',0,4
+	.word	221
+	.byte	2,35,0,17
+	.byte	'U',0,4
+	.word	316
+	.byte	2,35,0,0,7
+	.word	552
+	.byte	11
+	.byte	'PCP_GPR7_type',0,2,178,19,3
+	.word	734
+.L35:
+	.byte	18,64
+	.word	316
+	.byte	19,15,0,0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L12:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,54,15,39,12,63,12,60,12,0,0,3,36,0,3,8,11,15
+	.byte	62,15,0,0,4,15,0,73,19,0,0,5,5,0,3,8,73,19,0,0,6,5,0,73,19,0,0,7,53,0,73,19,0,0,8,46,1,3,8,73,19,54,15
+	.byte	39,12,63,12,60,12,0,0,9,46,0,3,8,54,15,39,12,63,12,60,12,0,0,10,59,0,3,8,0,0,11,22,0,3,8,58,15,59,15,57
+	.byte	15,73,19,0,0,12,21,0,54,15,0,0,13,23,1,58,15,59,15,57,15,11,15,0,0,14,19,1,58,15,59,15,57,15,11,15,0,0
+	.byte	15,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,16,13,0,11,15,73,19,13,15,12,15,56,9,0,0,17,13,0,3,8,11,15
+	.byte	73,19,56,9,0,0,18,1,1,11,15,73,19,0,0,19,33,0,47,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L13:
+	.word	.L38-.L37
+.L37:
+	.half	3
+	.word	.L40-.L39
+.L39:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\sync_on_halt.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0,0
+.L40:
+.L38:
+	.sdecl	'.debug_info',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_info'
+.L14:
+	.word	216
+	.half	3
+	.word	.L15
+	.byte	4,1
+	.byte	'..\\sync_on_halt.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L17,.L16
+	.byte	2
+	.word	.L10
+	.byte	3
+	.byte	'_sync_on_halt_end',0,1,51,13,1,1,1
+	.word	.L7,.L28,.L6
+	.byte	4
+	.word	.L7,.L28
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_abbrev'
+.L15:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_line'
+.L16:
+	.word	.L42-.L41
+.L41:
+	.half	3
+	.word	.L44-.L43
+.L43:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\sync_on_halt.c',0,0,0,0,0
+.L44:
+	.byte	5,7,7,0,5,2
+	.word	.L7
+	.byte	3,52,1,5,9,9
+	.half	.L45-.L7
+	.byte	3,1,1,5,1,9
+	.half	.L46-.L45
+	.byte	3,1,1,7,9
+	.half	.L18-.L46
+	.byte	0,1,1
+.L42:
+	.sdecl	'.debug_ranges',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_ranges'
+.L17:
+	.word	-1,.L7,0,.L18-.L7,0,0
+	.sdecl	'.debug_info',debug,cluster('_sync_on_halt')
+	.sect	'.debug_info'
+.L19:
+	.word	283
+	.half	3
+	.word	.L20
+	.byte	4,1
+	.byte	'..\\sync_on_halt.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L22,.L21
+	.byte	2
+	.word	.L10
+	.byte	3
+	.byte	'_sync_on_halt',0,1,60,25,1,1,1
+	.word	.L9,.L29,.L8
+	.byte	4
+	.word	.L9,.L29
+	.byte	5
+	.byte	'line_addr',0,1,138,1,33
+	.word	.L30,.L31
+	.byte	5
+	.byte	'line_index',0,1,139,1,33
+	.word	.L32,.L33
+	.byte	5
+	.byte	'way_index',0,1,140,1,33
+	.word	.L32,.L34
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('_sync_on_halt')
+	.sect	'.debug_abbrev'
+.L20:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('_sync_on_halt')
+	.sect	'.debug_line'
+.L21:
+	.word	.L48-.L47
+.L47:
+	.half	3
+	.word	.L50-.L49
+.L49:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\sync_on_halt.c',0,0,0,0,0
+.L50:
+	.byte	5,2,7,0,5,2
+	.word	.L9
+	.byte	3,181,1,1,9
+	.half	.L51-.L9
+	.byte	3,1,1,5,43,9
+	.half	.L52-.L51
+	.byte	3,4,1,5,64,9
+	.half	.L53-.L52
+	.byte	1,5,8,9
+	.half	.L54-.L53
+	.byte	1,5,2,9
+	.half	.L55-.L54
+	.byte	3,46,1,5,15,9
+	.half	.L56-.L55
+	.byte	1,5,2,9
+	.half	.L57-.L56
+	.byte	3,1,1,5,15,9
+	.half	.L58-.L57
+	.byte	1,5,21,9
+	.half	.L59-.L58
+	.byte	3,209,0,1,5,49,9
+	.half	.L36-.L59
+	.byte	3,2,1,5,60,9
+	.half	.L2-.L36
+	.byte	3,2,1,5,47,9
+	.half	.L60-.L2
+	.byte	1,5,14,9
+	.half	.L3-.L60
+	.byte	3,2,1,5,47,9
+	.half	.L61-.L3
+	.byte	3,126,1,5,13,7,9
+	.half	.L62-.L61
+	.byte	3,5,1,5,49,9
+	.half	.L63-.L62
+	.byte	3,121,1,5,9,7,9
+	.half	.L5-.L63
+	.byte	3,15,1,5,25,9
+	.half	.L64-.L5
+	.byte	1,5,31,9
+	.half	.L65-.L64
+	.byte	3,12,1,5,8,9
+	.half	.L66-.L65
+	.byte	1,5,2,9
+	.half	.L67-.L66
+	.byte	3,1,1,9
+	.half	.L68-.L67
+	.byte	3,1,1,5,9,9
+	.half	.L69-.L68
+	.byte	3,5,1,9
+	.half	.L70-.L69
+	.byte	3,1,1,5,7,9
+	.half	.L71-.L70
+	.byte	3,1,1,9
+	.half	.L72-.L71
+	.byte	3,1,1,5,2,9
+	.half	.L73-.L72
+	.byte	3,4,1,5,1,9
+	.half	.L74-.L73
+	.byte	3,2,1,7,9
+	.half	.L23-.L74
+	.byte	0,1,1
+.L48:
+	.sdecl	'.debug_ranges',debug,cluster('_sync_on_halt')
+	.sect	'.debug_ranges'
+.L22:
+	.word	-1,.L9,0,.L23-.L9,0,0
+	.sdecl	'.debug_info',debug,cluster('_sync_on_halt_lcx')
+	.sect	'.debug_info'
+.L24:
+	.word	194
+	.half	3
+	.word	.L25
+	.byte	4,1
+	.byte	'..\\sync_on_halt.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L10
+	.byte	3
+	.byte	'_sync_on_halt_lcx',0,1,47,33
+	.word	.L35
+	.byte	1,5,3
+	.word	_sync_on_halt_lcx
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_sync_on_halt_lcx')
+	.sect	'.debug_abbrev'
+.L25:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_sync_on_halt_ucx')
+	.sect	'.debug_info'
+.L26:
+	.word	194
+	.half	3
+	.word	.L27
+	.byte	4,1
+	.byte	'..\\sync_on_halt.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L10
+	.byte	3
+	.byte	'_sync_on_halt_ucx',0,1,48,33
+	.word	.L35
+	.byte	1,5,3
+	.word	_sync_on_halt_ucx
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_sync_on_halt_ucx')
+	.sect	'.debug_abbrev'
+.L27:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_loc',debug,cluster('_sync_on_halt')
+	.sect	'.debug_loc'
+.L8:
+	.word	-1,.L9,0,.L29-.L9
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L31:
+	.word	-1,.L9,.L36-.L9,.L29-.L9
+	.half	1
+	.byte	98
+	.word	0,0
+.L33:
+	.word	0,0
+.L34:
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_loc'
+.L6:
+	.word	-1,.L7,0,.L28-.L7
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L75:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('_sync_on_halt_end')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L75,.L7,.L28-.L7
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('_sync_on_halt')
+	.sect	'.debug_frame'
+	.word	16
+	.word	.L75,.L9,.L29-.L9
+	.byte	8,19,8,23
+
+
+	; Module end

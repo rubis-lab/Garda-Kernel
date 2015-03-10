@@ -1,0 +1,887 @@
+;***************************************************************************
+;**
+;** Version: @(#)regtc1163.xml	1.13 09/07/24
+;** Generated from @(#)regtc1163.xml	1.13 09/07/24
+;** 
+;** This file contains all SFR and BIT names and on-chip register definitions
+;** It is based on the following document(s):
+;** - TC1163_um_SFRfile_v10.txt
+;** 
+;** Copyright 2002-2010 Altium BV
+;**
+;***************************************************************************
+	.if	!@DEF('_REGTC1163_DEF')
+	.define	_REGTC1163_DEF '1'
+; Macros, such as PCXI, that expand to a 16-bit number do not directly represent a memory address.
+; They are intended to be used with the instructions mfcr and mtcr.
+core_base      	.equ	0xF7E1    	; The base address off the memory for the CSFR's
+PCXI           	.equ	0xFE00    	; Previous Context Info Register
+PSW            	.equ	0xFE04    	; Program Status Word
+PC             	.equ	0xFE08    	; Program Counter
+SYSCON         	.equ	0xFE14    	; System Configuration Control Register
+CPU_ID         	.equ	0xFE18    	; CPU Identification Register
+BIV            	.equ	0xFE20    	; Interrupt Vector Table
+BTV            	.equ	0xFE24    	; Trap Vector Table Pointer.
+ISP            	.equ	0xFE28    	; Interrupt Stack Pointer
+ICR            	.equ	0xFE2C    	; Interrupt Unit Control Register
+FCX            	.equ	0xFE38    	; Free CSA List Head Pointer
+LCX            	.equ	0xFE3C    	; Free CSA List Limit Pointer
+DPR0_0L        	.equ	0xC000    	; Data Seg. Prot. Reg. 0, Set 0, lower
+DPR0_0U        	.equ	0xC004    	; Data Seg. Prot. Reg. 0, Set 0, upper
+DPR0_1L        	.equ	0xC008    	; Data Seg. Prot. Reg. 1, Set 0, lower
+DPR0_1U        	.equ	0xC00C    	; Data Seg. Prot. Reg. 1, Set 0, upper
+DPR0_2L        	.equ	0xC010    	; Data Seg. Prot. Reg. 2, Set 0, lower
+DPR0_2U        	.equ	0xC014    	; Data Seg. Prot. Reg. 2, Set 0, upper
+DPR0_3L        	.equ	0xC018    	; Data Seg. Prot. Reg. 3, Set 0, lower
+DPR0_3U        	.equ	0xC01C    	; Data Seg. Prot. Reg. 3, Set 0, upper
+DPR1_0L        	.equ	0xC400    	; Data Seg. Prot. Reg. 0, Set 1, lower
+DPR1_0U        	.equ	0xC404    	; Data Seg. Prot. Reg. 0, Set 1, upper
+DPR1_1L        	.equ	0xC408    	; Data Seg. Prot. Reg. 1, Set 1, lower
+DPR1_1U        	.equ	0xC40C    	; Data Seg. Prot. Reg. 1, Set 1, upper
+DPR1_2L        	.equ	0xC410    	; Data Seg. Prot. Reg. 2, Set 1, lower
+DPR1_2U        	.equ	0xC414    	; Data Seg. Prot. Reg. 2, Set 1, upper
+DPR1_3L        	.equ	0xC418    	; Data Seg. Prot. Reg. 3, Set 1, lower
+DPR1_3U        	.equ	0xC41C    	; Data Seg. Prot. Reg. 3, Set 1, upper
+CPR0_0L        	.equ	0xD000    	; Code Seg. Prot. Reg. 0, Set 0, lower
+CPR0_0U        	.equ	0xD004    	; Code Seg. Prot. Reg. 0, Set 0, upper
+CPR0_1L        	.equ	0xD008    	; Code Seg. Prot. Reg. 1, Set 0, lower
+CPR0_1U        	.equ	0xD00C    	; Code Seg. Prot. Reg. 1, Set 0, upper
+CPR1_0L        	.equ	0xD400    	; Code Seg. Prot. Reg. 0, Set 1, lower
+CPR1_0U        	.equ	0xD404    	; Code Seg. Prot. Reg. 0, Set 1, upper
+CPR1_1L        	.equ	0xD408    	; Code Seg. Prot. Reg. 1, Set 1, lower
+CPR1_1U        	.equ	0xD40C    	; Code Seg. Prot. Reg. 1, Set 1, upper
+DPM0           	.equ	0xE000    	; Data Protection Mode Register, Set 0 (4 bytes)
+DPM1           	.equ	0xE080    	; Data Protection Mode Register, Set 1 (4 bytes)
+CPM0           	.equ	0xE200    	; Code Protection Mode Register, Set 0 (2 bytes)
+CPM1           	.equ	0xE280    	; Code Protection Mode Register, Set 1 (2 bytes)
+DBGSR          	.equ	0xFD00    	; Debug Status Register
+EXEVT          	.equ	0xFD08    	; External Break Input Event Specifier
+CREVT          	.equ	0xFD0C    	; Emulator Resource Protection Event Specifier
+SWEVT          	.equ	0xFD10    	; Software Break Event Specifier
+TR0EVT         	.equ	0xFD20    	; Trigger Event 0 Specifier
+TR1EVT         	.equ	0xFD24    	; Trigger Event 1 Specifier
+DMS            	.equ	0xFD40    	; Debug Monitor Start Address Register
+DCX            	.equ	0xFD44    	; Debug Contest Save Area Pointer
+SCU_ID         	.equ	0xF0000008	; SCU Module Identification Register
+SCU_SCLKFDR    	.equ	0xF000000C	; SCU System Clock Fractional Divider Register
+RST_REQ        	.equ	0xF0000010	; Reset Request Register
+RST_SR         	.equ	0xF0000014	; Reset Status Register
+OSC_CON        	.equ	0xF0000018	; Oscillator Control Register
+WDT_CON0       	.equ	0xF0000020	; Watchdog Timer Control Register 0
+WDT_CON1       	.equ	0xF0000024	; Watchdog Timer Control Register 1
+WDT_SR         	.equ	0xF0000028	; Watchdog Timer Status Register
+NMISR          	.equ	0xF000002C	; NMI Status Register
+PMG_CSR        	.equ	0xF0000034	; Power Management Control and Status Register
+SCU_SCLIR      	.equ	0xF0000038	; SCU Software Configuration Latched Inputs Register
+PLL_CLC        	.equ	0xF0000040	; PLL Clock Control Register
+SCU_EMSR       	.equ	0xF0000044	; SCU Emergency Stop Register
+SCU_TCCON      	.equ	0xF0000048	; SCU Temperature Compensation Control Register
+SCU_CON        	.equ	0xF0000050	; SCU Control Register
+SCU_STAT       	.equ	0xF0000054	; SCU Status Register
+SCU_TCLR0      	.equ	0xF0000058	; SCU Temperature Compensation Level Register 0
+MANID          	.equ	0xF0000070	; Manufacturer Identification Register
+CHIPID         	.equ	0xF0000074	; Chip Identification Register
+RTID           	.equ	0xF0000078	; Redesign Tracing Identification Register
+EICR0          	.equ	0xF0000080	; External Input Channel Register 0
+EICR1          	.equ	0xF0000084	; External Input Channel Register 1
+EIFR           	.equ	0xF0000088	; External Input Flag Register
+FMR            	.equ	0xF000008C	; SCU Flag Modification Register
+PDRR           	.equ	0xF0000090	; Pattern Detection Result Register
+IGCR0          	.equ	0xF0000094	; Interrupt Gating Register 0
+IGCR1          	.equ	0xF0000098	; Interrupt Gating Register 1
+TGADC0         	.equ	0xF000009C	; Trigger Gating ADC0 Register
+SCU_PTCON      	.equ	0xF00000B0	; SCU Pad Test Control Register
+SCU_PTDAT0     	.equ	0xF00000B4	; SCU Pad Test Data Register 0
+SCU_PETCR      	.equ	0xF00000D0	; SCU Parity Error Trap Control Register
+SCU_PETSR      	.equ	0xF00000D4	; SCU Parity Error Trap Status Register
+SCU_DMARS      	.equ	0xF00000D8	; DMA Request Select Register
+SBCU_ID        	.equ	0xF0000108	; SBCU Module Identification Register
+SBCU_CON       	.equ	0xF0000110	; SBCU Control Register
+SBCU_ECON      	.equ	0xF0000120	; Error Control Capture Register
+SBCU_EADD      	.equ	0xF0000124	; Error Address Capture Register
+SBCU_EDAT      	.equ	0xF0000128	; Error Data Capture Register
+SBCU_DBCNTL    	.equ	0xF0000130	; Debug Control Register (OCDS)
+SBCU_DBGRNT    	.equ	0xF0000134	; SBCU Debug Grant Mask Register
+SBCU_DBADR1    	.equ	0xF0000138	; Debug Address1 Register (OCDS)
+SBCU_DBADR2    	.equ	0xF000013C	; Debug Address2 Register (OCDS)
+SBCU_DBBOS     	.equ	0xF0000140	; Debug Bus Operation Register (OCDS)
+SBCU_DBGNTT    	.equ	0xF0000144	; Debug Trapped Master Register (OCDS)
+SBCU_DBADRT    	.equ	0xF0000148	; Debug Trapped Address Register (OCDS)
+SBCU_DBBOST    	.equ	0xF000014C	; Debug Trapped Bus Operation Register (OCDS)
+SBCU_SRC       	.equ	0xF00001FC	; SBCU Service Request Control Register
+STM_CLC        	.equ	0xF0000200	; STM Clock Control Register
+STM_ID         	.equ	0xF0000208	; STM Module Identification Register
+STM_TIM0       	.equ	0xF0000210	; Timer Register 0
+STM_TIM1       	.equ	0xF0000214	; Timer Register 1
+STM_TIM2       	.equ	0xF0000218	; Timer Register 2
+STM_TIM3       	.equ	0xF000021C	; Timer Register 3
+STM_TIM4       	.equ	0xF0000220	; Timer Register 4
+STM_TIM5       	.equ	0xF0000224	; Timer Register 5
+STM_TIM6       	.equ	0xF0000228	; Timer Register 6
+STM_CAP        	.equ	0xF000022C	; Timer Capture Register
+STM_CMP0       	.equ	0xF0000230	; Compare Register 1
+STM_CMP1       	.equ	0xF0000234	; Compare Register 1
+STM_CMCON      	.equ	0xF0000238	; Compare Match Control Register
+STM_ICR        	.equ	0xF000023C	; STM Interrupt Control Register
+STM_ISRR       	.equ	0xF0000240	; Interrupt Set/Reset Register
+STM_SRC1       	.equ	0xF00002F8	; STM Service Request Control Register 1
+STM_SRC0       	.equ	0xF00002FC	; STM Service Request Control Register 0
+CBS_JDPID      	.equ	0xF0000408	; Cerberus Module Identification Register
+CBS_COMDATA    	.equ	0xF0000468	; Cerberus Communication Mode Data Register
+CBS_IOSR       	.equ	0xF000046C	; Cerberus Status Register
+CBS_MCDBBS     	.equ	0xF0000470	; Cerberus Break Bus Switch Configuration Register
+CBS_MCDSSG     	.equ	0xF0000474	; Cerberus Suspend Signal Generation Status and Control Register
+CBS_OEC        	.equ	0xF0000478	; Cerberus OCDS Enable Control Register
+CBS_OCNTRL     	.equ	0xF000047C	; Cerberus OSCU Configuration and Control Register
+CBS_OSTATE     	.equ	0xF0000480	; Cerberus OSCU Status Register
+CBS_MCDBBSS    	.equ	0xF0000490	; Cerberus Break Bus Switch Status Register
+CBS_MCDSSGC    	.equ	0xF0000494	; Cerberus Suspend Signal Generation Configuration Register
+CBS_SRC        	.equ	0xF00004FC	; Cerberus Service Request Control Register
+MSC0_CLC       	.equ	0xF0000800	; MSC Clock Control Register
+MSC0_ID        	.equ	0xF0000808	; MSC Module Identification Register
+MSC0_FDR       	.equ	0xF000080C	; MSC Fractional Divider Register
+MSC0_USR       	.equ	0xF0000810	; Upstream Status Register
+MSC0_DSC       	.equ	0xF0000814	; Downstream Control Register
+MSC0_DSS       	.equ	0xF0000818	; Downstream Status Register
+MSC0_DD        	.equ	0xF000081C	; Downstream Data Register
+MSC0_DC        	.equ	0xF0000820	; Downstream Command Register
+MSC0_DSDSL     	.equ	0xF0000824	; Downstream Select Data Source Register Low
+MSC0_DSDSH     	.equ	0xF0000828	; Downstream Select Data Source Register High
+MSC0_ESR       	.equ	0xF000082C	; MSC Emergency Stop Register
+MSC0_UD0       	.equ	0xF0000830	; Upstream Data Register 0
+MSC0_UD1       	.equ	0xF0000834	; Upstream Data Register 1
+MSC0_UD2       	.equ	0xF0000838	; Upstream Data Register 2
+MSC0_UD3       	.equ	0xF000083C	; Upstream Data Register 3
+MSC0_ICR       	.equ	0xF0000840	; MSC Interrupt Control Register
+MSC0_ISR       	.equ	0xF0000844	; MSC Interrupt Status Register
+MSC0_ISC       	.equ	0xF0000848	; Interrupt Set Clear Register
+MSC0_OCR       	.equ	0xF000084C	; Output Control Register
+MSC0_SRC1      	.equ	0xF00008F8	; MSC Service Request Control Register 1
+MSC0_SRC0      	.equ	0xF00008FC	; MSC Service Request Control Register 0
+ASC0_CLC       	.equ	0xF0000A00	; ASC Clock Control Register
+ASC0_PISEL     	.equ	0xF0000A04	; ASC Peripheral Input Select Register
+ASC0_ID        	.equ	0xF0000A08	; ASC Module Identification Register
+ASC0_CON       	.equ	0xF0000A10	; ASC Control Register
+ASC0_BG        	.equ	0xF0000A14	; ASC Baudrate Timer Reload Register
+ASC0_FDV       	.equ	0xF0000A18	; ASC Fractional Divider Register
+ASC0_TBUF      	.equ	0xF0000A20	; ASC Transmit Buffer Register
+ASC0_RBUF      	.equ	0xF0000A24	; ASC Receive Buffer Register
+ASC0_WHBCON    	.equ	0xF0000A50	; ASC Hardware Bits Control Register
+ASC0_TSRC      	.equ	0xF0000AF0	; ASC Transmit Interrupt Service Request Control Register
+ASC0_RSRC      	.equ	0xF0000AF4	; ASC Receive Interrupt Service Request Control Register
+ASC0_ESRC      	.equ	0xF0000AF8	; ASC Error Interrupt Service Request Control Register
+ASC0_TBSRC     	.equ	0xF0000AFC	; ASC Transmit Buffer Service Request Control Register
+ASC1_PISEL     	.equ	0xF0000B04	; ASC Peripheral Input Select Register
+ASC1_ID        	.equ	0xF0000B08	; ASC Module Identification Register
+ASC1_CON       	.equ	0xF0000B10	; ASC Control Register
+ASC1_BG        	.equ	0xF0000B14	; ASC Baudrate Timer Reload Register
+ASC1_FDV       	.equ	0xF0000B18	; ASC Fractional Divider Register
+ASC1_TBUF      	.equ	0xF0000B20	; ASC Transmit Buffer Register
+ASC1_RBUF      	.equ	0xF0000B24	; ASC Receive Buffer Register
+ASC1_WHBCON    	.equ	0xF0000B50	; ASC Hardware Bits Control Register
+ASC1_TSRC      	.equ	0xF0000BF0	; ASC Transmit Interrupt Service Request Control Register
+ASC1_RSRC      	.equ	0xF0000BF4	; ASC Receive Interrupt Service Request Control Register
+ASC1_ESRC      	.equ	0xF0000BF8	; ASC Error Interrupt Service Request Control Register
+ASC1_TBSRC     	.equ	0xF0000BFC	; ASC Transmit Buffer Service Request Control Register
+P0_OUT         	.equ	0xF0000C00	; Output Register
+P0_OMR         	.equ	0xF0000C04	; Port 0 Output Modification Register
+P0_IOCR0       	.equ	0xF0000C10	; Input/Output Control Register 0
+P0_IOCR4       	.equ	0xF0000C14	; Input/Output Control Register 4
+P0_IOCR8       	.equ	0xF0000C18	; Input/Output Control Register 8
+P0_IOCR12      	.equ	0xF0000C1C	; Input/Output Control Register 12
+P0_IN          	.equ	0xF0000C24	; Port 0 Input Register
+P0_PDR         	.equ	0xF0000C40	; Port 0 Pad Driver Mode Register
+P0_ESR         	.equ	0xF0000C50	; Port 0 Emergency Stop Register
+P1_OUT         	.equ	0xF0000D00	; Port 1 Data Output Register
+P1_OMR         	.equ	0xF0000D04	; Port 1 Output Modification Register
+P1_IOCR0       	.equ	0xF0000D10	; Input/Output Control Register 0
+P1_IOCR4       	.equ	0xF0000D14	; Input/Output Control Register 4
+P1_IOCR8       	.equ	0xF0000D18	; Input/Output Control Register 8
+P1_IOCR12      	.equ	0xF0000D1C	; Input/Output Control Register 12
+P1_IN          	.equ	0xF0000D24	; Port 1 Input Register
+P1_PDR         	.equ	0xF0000D40	; Port 1 Pad Driver Mode Register
+P1_ESR         	.equ	0xF0000D50	; Port 1 Emergency Stop Register
+P2_OUT         	.equ	0xF0000E00	; Output Register
+P2_OMR         	.equ	0xF0000E04	; Port 2 Output Modification Register
+P2_IOCR0       	.equ	0xF0000E10	; Input/Output Control Register 0
+P2_IOCR4       	.equ	0xF0000E14	; Input/Output Control Register 4
+P2_IOCR8       	.equ	0xF0000E18	; Input/Output Control Register 8
+P2_IOCR12      	.equ	0xF0000E1C	; Input/Output Control Register 12
+P2_IN          	.equ	0xF0000E24	; Port 2 Input Register
+P2_PDR         	.equ	0xF0000E40	; Port 2 Pad Driver Mode Register
+P2_ESR         	.equ	0xF0000E50	; Port 2 Emergency Stop Register
+P3_OUT         	.equ	0xF0000F00	; Output Register
+P3_OMR         	.equ	0xF0000F04	; Port 3 Output Modification Register
+P3_IOCR0       	.equ	0xF0000F10	; Input/Output Control Register 0
+P3_IOCR4       	.equ	0xF0000F14	; Input/Output Control Register 4
+P3_IOCR8       	.equ	0xF0000F18	; Input/Output Control Register 8
+P3_IOCR12      	.equ	0xF0000F1C	; Input/Output Control Register 12
+P3_IN          	.equ	0xF0000F24	; Port 3 Input Register
+P3_PDR         	.equ	0xF0000F40	; Port 3 Pad Driver Mode Register
+P4_OUT         	.equ	0xF0001000	; Output Register
+P4_OMR         	.equ	0xF0001004	; Port 4 Output Modification Register
+P4_IOCR0       	.equ	0xF0001010	; Input/Output Control Register 0
+P4_IN          	.equ	0xF0001024	; Port 4 Input Register
+P4_PDR         	.equ	0xF0001040	; Port 4 Pad Driver Mode Register
+P4_ESR         	.equ	0xF0001050	; Port 4 Emergency Stop Register
+P5_OUT         	.equ	0xF0001100	; Output Register
+P5_OMR         	.equ	0xF0001104	; Port 5 Output Modification Register
+P5_IOCR0       	.equ	0xF0001110	; Input/Output Control Register 0
+P5_IOCR4       	.equ	0xF0001114	; Input/Output Control Register 4
+P5_IOCR8       	.equ	0xF0001118	; Input/Output Control Register 8
+P5_IOCR12      	.equ	0xF000111C	; Input/Output Control Register 12
+P5_IN          	.equ	0xF0001124	; Port 5 Input Register
+P5_PDR         	.equ	0xF0001140	; Port 5 Pad Driver Mode Register
+P5_ESR         	.equ	0xF0001150	; Port 5 Emergency Stop Register
+GPTA0_CLC      	.equ	0xF0001800	; GPTA Clock Control Register
+GPTA0_DBGCTR   	.equ	0xF0001804	; GPTA Debug Clock Control Register
+GPTA0_ID       	.equ	0xF0001808	; GPTA Module Identification Register
+GPTA0_FDR      	.equ	0xF000180C	; GPTA Fractional Divider Register
+GPTA0_SRSC0    	.equ	0xF0001810	; GPTA Service Request Clear Register 0
+GPTA0_SRSS0    	.equ	0xF0001814	; GPTA Service Request Set Register 0
+GPTA0_SRSC1    	.equ	0xF0001818	; GPTA Service Request Clear Register 1
+GPTA0_SRSS1    	.equ	0xF000181C	; GPTA Service Request Set Register 1
+GPTA0_SRSC2    	.equ	0xF0001820	; GPTA Service Request Clear Register 2
+GPTA0_SRSS2    	.equ	0xF0001824	; GPTA Service Request Set Register 2
+GPTA0_SRSC3    	.equ	0xF0001828	; GPTA Service Request Clear Register 3
+GPTA0_SRSS3    	.equ	0xF000182C	; GPTA Service Request Set Register 3
+GPTA0_SRNR     	.equ	0xF0001830	; Service Request Node Redirection Register
+GPTA0_MRACTL   	.equ	0xF0001838	; GPTA Multiplexer Register Array Control Register
+GPTA0_MRADIN   	.equ	0xF000183C	; GPTA Multiplexer Register Array Data In Register
+GPTA0_MRADOUT  	.equ	0xF0001840	; GPTA Multiplexer Register Array Data Out Register
+GPTA0_FPCSTAT  	.equ	0xF0001844	; GPTA Filter and Prescaler Cell Status Register
+GPTA0_FPCCTR0  	.equ	0xF0001848	; GPTA Filter and Prescaler Cell Control Register 0
+GPTA0_FPCTIM0  	.equ	0xF000184C	; GPTA Filter and Prescaler Cell Timer Register 0
+GPTA0_FPCCTR1  	.equ	0xF0001850	; GPTA Filter and Prescaler Cell Control Register 1
+GPTA0_FPCTIM1  	.equ	0xF0001854	; GPTA Filter and Prescaler Cell Timer Register 1
+GPTA0_FPCCTR2  	.equ	0xF0001858	; GPTA Filter and Prescaler Cell Control Register 2
+GPTA0_FPCTIM2  	.equ	0xF000185C	; GPTA Filter and Prescaler Cell Timer Register 2
+GPTA0_FPCCTR3  	.equ	0xF0001860	; GPTA Filter and Prescaler Cell Control Register 3
+GPTA0_FPCTIM3  	.equ	0xF0001864	; GPTA Filter and Prescaler Cell Timer Register 3
+GPTA0_FPCCTR4  	.equ	0xF0001868	; GPTA Filter and Prescaler Cell Control Register 4
+GPTA0_FPCTIM4  	.equ	0xF000186C	; GPTA Filter and Prescaler Cell Timer Register 4
+GPTA0_FPCCTR5  	.equ	0xF0001870	; GPTA Filter and Prescaler Cell Control Register 5
+GPTA0_FPCTIM5  	.equ	0xF0001874	; GPTA Filter and Prescaler Cell Timer Register 5
+GPTA0_PDLCTR   	.equ	0xF0001878	; GPTA Phase Discrimination Logic Control Register
+GPTA0_DCMCTR0  	.equ	0xF0001880	; GPTA Duty Cycle Measurement Control Register 0
+GPTA0_DCMTIM0  	.equ	0xF0001884	; GPTA Duty Cycle Measurement Timer Register 0
+GPTA0_DCMCAV0  	.equ	0xF0001888	; GPTA Duty Cycle Measurement Capture Register 0
+GPTA0_DCMCOV0  	.equ	0xF000188C	; GPTA Duty Cycle Measurement Capture/Compare Register 0
+GPTA0_DCMCTR1  	.equ	0xF0001890	; GPTA Duty Cycle Measurement Control Register 1
+GPTA0_DCMTIM1  	.equ	0xF0001894	; GPTA Duty Cycle Measurement Timer Register 1
+GPTA0_DCMCAV1  	.equ	0xF0001898	; GPTA Duty Cycle Measurement Capture Register 1
+GPTA0_DCMCOV1  	.equ	0xF000189C	; GPTA Duty Cycle Measurement Capture/Compare Register 1
+GPTA0_DCMCTR2  	.equ	0xF00018A0	; GPTA Duty Cycle Measurement Control Register 2
+GPTA0_DCMTIM2  	.equ	0xF00018A4	; GPTA Duty Cycle Measurement Timer Register 2
+GPTA0_DCMCAV2  	.equ	0xF00018A8	; GPTA Duty Cycle Measurement Capture Register 2
+GPTA0_DCMCOV2  	.equ	0xF00018AC	; GPTA Duty Cycle Measurement Capture/Compare Register 2
+GPTA0_DCMCTR3  	.equ	0xF00018B0	; GPTA Duty Cycle Measurement Control Register 3
+GPTA0_DCMTIM3  	.equ	0xF00018B4	; GPTA Duty Cycle Measurement Timer Register 3
+GPTA0_DCMCAV3  	.equ	0xF00018B8	; GPTA Duty Cycle Measurement Capture Register 3
+GPTA0_DCMCOV3  	.equ	0xF00018BC	; GPTA Duty Cycle Measurement Capture/Compare Register 3
+GPTA0_PLLCTR   	.equ	0xF00018C0	; GPTA Phase Locked Loop Control Register
+GPTA0_PLLMTI   	.equ	0xF00018C4	; GPTA Phase Locked Loop Micro Tick Register
+GPTA0_PLLCNT   	.equ	0xF00018C8	; GPTA Phase Locked Loop Counter Register
+GPTA0_PLLSTP   	.equ	0xF00018CC	; GPTA Phase Locked Loop Step Register
+GPTA0_PLLREV   	.equ	0xF00018D0	; GPTA Phase Locked Loop Reload Register
+GPTA0_PLLDTR   	.equ	0xF00018D4	; GPTA Phase Locked Loop Delta Register
+GPTA0_CKBCTR   	.equ	0xF00018D8	; GPTA Clock Bus Control Register
+GPTA0_GTCTR0   	.equ	0xF00018E0	; GPTA Global Timer Control Register 0
+GPTA0_GTREV0   	.equ	0xF00018E4	; GPTA Global Timer Reload Value Register 0
+GPTA0_GTTIM0   	.equ	0xF00018E8	; GPTA Global Timer Register 0
+GPTA0_GTCTR1   	.equ	0xF00018F0	; GPTA Global Timer Control Register 1
+GPTA0_GTREV1   	.equ	0xF00018F4	; GPTA Global Timer Reload Value Register 1
+GPTA0_GTTIM1   	.equ	0xF00018F8	; GPTA Global Timer Register 1
+GPTA0_GTCCTR00 	.equ	0xF0001900	; GPTA Global Timer Cell Control Register 00
+GPTA0_GTCCTR01 	.equ	0xF0001908	; GPTA Global Timer Cell Control Register 01
+GPTA0_GTCCTR02 	.equ	0xF0001910	; GPTA Global Timer Cell Control Register 02
+GPTA0_GTCCTR03 	.equ	0xF0001918	; GPTA Global Timer Cell Control Register 03
+GPTA0_GTCCTR04 	.equ	0xF0001920	; GPTA Global Timer Cell Control Register 04
+GPTA0_GTCCTR05 	.equ	0xF0001928	; GPTA Global Timer Cell Control Register 05
+GPTA0_GTCCTR06 	.equ	0xF0001930	; GPTA Global Timer Cell Control Register 06
+GPTA0_GTCCTR07 	.equ	0xF0001938	; GPTA Global Timer Cell Control Register 07
+GPTA0_GTCCTR08 	.equ	0xF0001940	; GPTA Global Timer Cell Control Register 08
+GPTA0_GTCCTR09 	.equ	0xF0001948	; GPTA Global Timer Cell Control Register 09
+GPTA0_GTCCTR10 	.equ	0xF0001950	; GPTA Global Timer Cell Control Register 10
+GPTA0_GTCCTR11 	.equ	0xF0001958	; GPTA Global Timer Cell Control Register 11
+GPTA0_GTCCTR12 	.equ	0xF0001960	; GPTA Global Timer Cell Control Register 12
+GPTA0_GTCCTR13 	.equ	0xF0001968	; GPTA Global Timer Cell Control Register 13
+GPTA0_GTCCTR14 	.equ	0xF0001970	; GPTA Global Timer Cell Control Register 14
+GPTA0_GTCCTR15 	.equ	0xF0001978	; GPTA Global Timer Cell Control Register 15
+GPTA0_GTCCTR16 	.equ	0xF0001980	; GPTA Global Timer Cell Control Register 16
+GPTA0_GTCCTR17 	.equ	0xF0001988	; GPTA Global Timer Cell Control Register 17
+GPTA0_GTCCTR18 	.equ	0xF0001990	; GPTA Global Timer Cell Control Register 18
+GPTA0_GTCCTR19 	.equ	0xF0001998	; GPTA Global Timer Cell Control Register 19
+GPTA0_GTCCTR20 	.equ	0xF00019A0	; GPTA Global Timer Cell Control Register 20
+GPTA0_GTCCTR21 	.equ	0xF00019A8	; GPTA Global Timer Cell Control Register 21
+GPTA0_GTCCTR22 	.equ	0xF00019B0	; GPTA Global Timer Cell Control Register 22
+GPTA0_GTCCTR23 	.equ	0xF00019B8	; GPTA Global Timer Cell Control Register 23
+GPTA0_GTCCTR24 	.equ	0xF00019C0	; GPTA Global Timer Cell Control Register 24
+GPTA0_GTCCTR25 	.equ	0xF00019C8	; GPTA Global Timer Cell Control Register 25
+GPTA0_GTCCTR26 	.equ	0xF00019D0	; GPTA Global Timer Cell Control Register 26
+GPTA0_GTCCTR27 	.equ	0xF00019D8	; GPTA Global Timer Cell Control Register 27
+GPTA0_GTCCTR28 	.equ	0xF00019E0	; GPTA Global Timer Cell Control Register 28
+GPTA0_GTCCTR29 	.equ	0xF00019E8	; GPTA Global Timer Cell Control Register 29
+GPTA0_GTCCTR30 	.equ	0xF00019F0	; GPTA Global Timer Cell Control Register 30
+GPTA0_GTCCTR31 	.equ	0xF00019F8	; GPTA Global Timer Cell Control Register 31
+GPTA0_GTCXR00  	.equ	0xF0001904	; GPTA Global Timer Cell X Register 00
+GPTA0_GTCXR01  	.equ	0xF000190C	; GPTA Global Timer Cell X Register 01
+GPTA0_GTCXR02  	.equ	0xF0001914	; GPTA Global Timer Cell X Register 02
+GPTA0_GTCXR03  	.equ	0xF000191C	; GPTA Global Timer Cell X Register 03
+GPTA0_GTCXR04  	.equ	0xF0001924	; GPTA Global Timer Cell X Register 04
+GPTA0_GTCXR05  	.equ	0xF000192C	; GPTA Global Timer Cell X Register 05
+GPTA0_GTCXR06  	.equ	0xF0001934	; GPTA Global Timer Cell X Register 06
+GPTA0_GTCXR07  	.equ	0xF000193C	; GPTA Global Timer Cell X Register 07
+GPTA0_GTCXR08  	.equ	0xF0001944	; GPTA Global Timer Cell X Register 08
+GPTA0_GTCXR09  	.equ	0xF000194C	; GPTA Global Timer Cell X Register 09
+GPTA0_GTCXR10  	.equ	0xF0001954	; GPTA Global Timer Cell X Register 10
+GPTA0_GTCXR11  	.equ	0xF000195C	; GPTA Global Timer Cell X Register 11
+GPTA0_GTCXR12  	.equ	0xF0001964	; GPTA Global Timer Cell X Register 12
+GPTA0_GTCXR13  	.equ	0xF000196C	; GPTA Global Timer Cell X Register 13
+GPTA0_GTCXR14  	.equ	0xF0001974	; GPTA Global Timer Cell X Register 14
+GPTA0_GTCXR15  	.equ	0xF000197C	; GPTA Global Timer Cell X Register 15
+GPTA0_GTCXR16  	.equ	0xF0001984	; GPTA Global Timer Cell X Register 16
+GPTA0_GTCXR17  	.equ	0xF000198C	; GPTA Global Timer Cell X Register 17
+GPTA0_GTCXR18  	.equ	0xF0001994	; GPTA Global Timer Cell X Register 18
+GPTA0_GTCXR19  	.equ	0xF000199C	; GPTA Global Timer Cell X Register 19
+GPTA0_GTCXR20  	.equ	0xF00019A4	; GPTA Global Timer Cell X Register 20
+GPTA0_GTCXR21  	.equ	0xF00019AC	; GPTA Global Timer Cell X Register 21
+GPTA0_GTCXR22  	.equ	0xF00019B4	; GPTA Global Timer Cell X Register 22
+GPTA0_GTCXR23  	.equ	0xF00019BC	; GPTA Global Timer Cell X Register 23
+GPTA0_GTCXR24  	.equ	0xF00019C4	; GPTA Global Timer Cell X Register 24
+GPTA0_GTCXR25  	.equ	0xF00019CC	; GPTA Global Timer Cell X Register 25
+GPTA0_GTCXR26  	.equ	0xF00019D4	; GPTA Global Timer Cell X Register 26
+GPTA0_GTCXR27  	.equ	0xF00019DC	; GPTA Global Timer Cell X Register 27
+GPTA0_GTCXR28  	.equ	0xF00019E4	; GPTA Global Timer Cell X Register 28
+GPTA0_GTCXR29  	.equ	0xF00019EC	; GPTA Global Timer Cell X Register 29
+GPTA0_GTCXR30  	.equ	0xF00019F4	; GPTA Global Timer Cell X Register 30
+GPTA0_GTCXR31  	.equ	0xF00019FC	; GPTA Global Timer Cell X Register 31
+GPTA0_LTCCTR00 	.equ	0xF0001A00	; GPTA Local Timer Cell Control Register 00
+GPTA0_LTCCTR01 	.equ	0xF0001A08	; GPTA Local Timer Cell Control Register 01
+GPTA0_LTCCTR02 	.equ	0xF0001A10	; GPTA Local Timer Cell Control Register 02
+GPTA0_LTCCTR03 	.equ	0xF0001A18	; GPTA Local Timer Cell Control Register 03
+GPTA0_LTCCTR04 	.equ	0xF0001A20	; GPTA Local Timer Cell Control Register 04
+GPTA0_LTCCTR05 	.equ	0xF0001A28	; GPTA Local Timer Cell Control Register 05
+GPTA0_LTCCTR06 	.equ	0xF0001A30	; GPTA Local Timer Cell Control Register 06
+GPTA0_LTCCTR07 	.equ	0xF0001A38	; GPTA Local Timer Cell Control Register 07
+GPTA0_LTCCTR08 	.equ	0xF0001A40	; GPTA Local Timer Cell Control Register 08
+GPTA0_LTCCTR09 	.equ	0xF0001A48	; GPTA Local Timer Cell Control Register 09
+GPTA0_LTCCTR10 	.equ	0xF0001A50	; GPTA Local Timer Cell Control Register 10
+GPTA0_LTCCTR11 	.equ	0xF0001A58	; GPTA Local Timer Cell Control Register 11
+GPTA0_LTCCTR12 	.equ	0xF0001A60	; GPTA Local Timer Cell Control Register 12
+GPTA0_LTCCTR13 	.equ	0xF0001A68	; GPTA Local Timer Cell Control Register 13
+GPTA0_LTCCTR14 	.equ	0xF0001A70	; GPTA Local Timer Cell Control Register 14
+GPTA0_LTCCTR15 	.equ	0xF0001A78	; GPTA Local Timer Cell Control Register 15
+GPTA0_LTCCTR16 	.equ	0xF0001A80	; GPTA Local Timer Cell Control Register 16
+GPTA0_LTCCTR17 	.equ	0xF0001A88	; GPTA Local Timer Cell Control Register 17
+GPTA0_LTCCTR18 	.equ	0xF0001A90	; GPTA Local Timer Cell Control Register 18
+GPTA0_LTCCTR19 	.equ	0xF0001A98	; GPTA Local Timer Cell Control Register 19
+GPTA0_LTCCTR20 	.equ	0xF0001AA0	; GPTA Local Timer Cell Control Register 20
+GPTA0_LTCCTR21 	.equ	0xF0001AA8	; GPTA Local Timer Cell Control Register 21
+GPTA0_LTCCTR22 	.equ	0xF0001AB0	; GPTA Local Timer Cell Control Register 22
+GPTA0_LTCCTR23 	.equ	0xF0001AB8	; GPTA Local Timer Cell Control Register 23
+GPTA0_LTCCTR24 	.equ	0xF0001AC0	; GPTA Local Timer Cell Control Register 24
+GPTA0_LTCCTR25 	.equ	0xF0001AC8	; GPTA Local Timer Cell Control Register 25
+GPTA0_LTCCTR26 	.equ	0xF0001AD0	; GPTA Local Timer Cell Control Register 26
+GPTA0_LTCCTR27 	.equ	0xF0001AD8	; GPTA Local Timer Cell Control Register 27
+GPTA0_LTCCTR28 	.equ	0xF0001AE0	; GPTA Local Timer Cell Control Register 28
+GPTA0_LTCCTR29 	.equ	0xF0001AE8	; GPTA Local Timer Cell Control Register 29
+GPTA0_LTCCTR30 	.equ	0xF0001AF0	; GPTA Local Timer Cell Control Register 30
+GPTA0_LTCCTR31 	.equ	0xF0001AF8	; GPTA Local Timer Cell Control Register 31
+GPTA0_LTCCTR32 	.equ	0xF0001B00	; GPTA Local Timer Cell Control Register 32
+GPTA0_LTCCTR33 	.equ	0xF0001B08	; GPTA Local Timer Cell Control Register 33
+GPTA0_LTCCTR34 	.equ	0xF0001B10	; GPTA Local Timer Cell Control Register 34
+GPTA0_LTCCTR35 	.equ	0xF0001B18	; GPTA Local Timer Cell Control Register 35
+GPTA0_LTCCTR36 	.equ	0xF0001B20	; GPTA Local Timer Cell Control Register 36
+GPTA0_LTCCTR37 	.equ	0xF0001B28	; GPTA Local Timer Cell Control Register 37
+GPTA0_LTCCTR38 	.equ	0xF0001B30	; GPTA Local Timer Cell Control Register 38
+GPTA0_LTCCTR39 	.equ	0xF0001B38	; GPTA Local Timer Cell Control Register 39
+GPTA0_LTCCTR40 	.equ	0xF0001B40	; GPTA Local Timer Cell Control Register 40
+GPTA0_LTCCTR41 	.equ	0xF0001B48	; GPTA Local Timer Cell Control Register 41
+GPTA0_LTCCTR42 	.equ	0xF0001B50	; GPTA Local Timer Cell Control Register 42
+GPTA0_LTCCTR43 	.equ	0xF0001B58	; GPTA Local Timer Cell Control Register 43
+GPTA0_LTCCTR44 	.equ	0xF0001B60	; GPTA Local Timer Cell Control Register 44
+GPTA0_LTCCTR45 	.equ	0xF0001B68	; GPTA Local Timer Cell Control Register 45
+GPTA0_LTCCTR46 	.equ	0xF0001B70	; GPTA Local Timer Cell Control Register 46
+GPTA0_LTCCTR47 	.equ	0xF0001B78	; GPTA Local Timer Cell Control Register 47
+GPTA0_LTCCTR48 	.equ	0xF0001B80	; GPTA Local Timer Cell Control Register 48
+GPTA0_LTCCTR49 	.equ	0xF0001B88	; GPTA Local Timer Cell Control Register 49
+GPTA0_LTCCTR50 	.equ	0xF0001B90	; GPTA Local Timer Cell Control Register 50
+GPTA0_LTCCTR51 	.equ	0xF0001B98	; GPTA Local Timer Cell Control Register 51
+GPTA0_LTCCTR52 	.equ	0xF0001BA0	; GPTA Local Timer Cell Control Register 52
+GPTA0_LTCCTR53 	.equ	0xF0001BA8	; GPTA Local Timer Cell Control Register 53
+GPTA0_LTCCTR54 	.equ	0xF0001BB0	; GPTA Local Timer Cell Control Register 54
+GPTA0_LTCCTR55 	.equ	0xF0001BB8	; GPTA Local Timer Cell Control Register 55
+GPTA0_LTCCTR56 	.equ	0xF0001BC0	; GPTA Local Timer Cell Control Register 56
+GPTA0_LTCCTR57 	.equ	0xF0001BC8	; GPTA Local Timer Cell Control Register 57
+GPTA0_LTCCTR58 	.equ	0xF0001BD0	; GPTA Local Timer Cell Control Register 58
+GPTA0_LTCCTR59 	.equ	0xF0001BD8	; GPTA Local Timer Cell Control Register 59
+GPTA0_LTCCTR60 	.equ	0xF0001BE0	; GPTA Local Timer Cell Control Register 60
+GPTA0_LTCCTR61 	.equ	0xF0001BE8	; GPTA Local Timer Cell Control Register 61
+GPTA0_LTCCTR62 	.equ	0xF0001BF0	; GPTA Local Timer Cell Control Register 62
+GPTA0_LTCXR00  	.equ	0xF0001A04	; GPTA Local Timer Cell X Register 00
+GPTA0_LTCXR01  	.equ	0xF0001A0C	; GPTA Local Timer Cell X Register 01
+GPTA0_LTCXR02  	.equ	0xF0001A14	; GPTA Local Timer Cell X Register 02
+GPTA0_LTCXR03  	.equ	0xF0001A1C	; GPTA Local Timer Cell X Register 03
+GPTA0_LTCXR04  	.equ	0xF0001A24	; GPTA Local Timer Cell X Register 04
+GPTA0_LTCXR05  	.equ	0xF0001A2C	; GPTA Local Timer Cell X Register 05
+GPTA0_LTCXR06  	.equ	0xF0001A34	; GPTA Local Timer Cell X Register 06
+GPTA0_LTCXR07  	.equ	0xF0001A3C	; GPTA Local Timer Cell X Register 07
+GPTA0_LTCXR08  	.equ	0xF0001A44	; GPTA Local Timer Cell X Register 08
+GPTA0_LTCXR09  	.equ	0xF0001A4C	; GPTA Local Timer Cell X Register 09
+GPTA0_LTCXR10  	.equ	0xF0001A54	; GPTA Local Timer Cell X Register 10
+GPTA0_LTCXR11  	.equ	0xF0001A5C	; GPTA Local Timer Cell X Register 11
+GPTA0_LTCXR12  	.equ	0xF0001A64	; GPTA Local Timer Cell X Register 12
+GPTA0_LTCXR13  	.equ	0xF0001A6C	; GPTA Local Timer Cell X Register 13
+GPTA0_LTCXR14  	.equ	0xF0001A74	; GPTA Local Timer Cell X Register 14
+GPTA0_LTCXR15  	.equ	0xF0001A7C	; GPTA Local Timer Cell X Register 15
+GPTA0_LTCXR16  	.equ	0xF0001A84	; GPTA Local Timer Cell X Register 16
+GPTA0_LTCXR17  	.equ	0xF0001A8C	; GPTA Local Timer Cell X Register 17
+GPTA0_LTCXR18  	.equ	0xF0001A94	; GPTA Local Timer Cell X Register 18
+GPTA0_LTCXR19  	.equ	0xF0001A9C	; GPTA Local Timer Cell X Register 19
+GPTA0_LTCXR20  	.equ	0xF0001AA4	; GPTA Local Timer Cell X Register 20
+GPTA0_LTCXR21  	.equ	0xF0001AAC	; GPTA Local Timer Cell X Register 21
+GPTA0_LTCXR22  	.equ	0xF0001AB4	; GPTA Local Timer Cell X Register 22
+GPTA0_LTCXR23  	.equ	0xF0001ABC	; GPTA Local Timer Cell X Register 23
+GPTA0_LTCXR24  	.equ	0xF0001AC4	; GPTA Local Timer Cell X Register 24
+GPTA0_LTCXR25  	.equ	0xF0001ACC	; GPTA Local Timer Cell X Register 25
+GPTA0_LTCXR26  	.equ	0xF0001AD4	; GPTA Local Timer Cell X Register 26
+GPTA0_LTCXR27  	.equ	0xF0001ADC	; GPTA Local Timer Cell X Register 27
+GPTA0_LTCXR28  	.equ	0xF0001AE4	; GPTA Local Timer Cell X Register 28
+GPTA0_LTCXR29  	.equ	0xF0001AEC	; GPTA Local Timer Cell X Register 29
+GPTA0_LTCXR30  	.equ	0xF0001AF4	; GPTA Local Timer Cell X Register 30
+GPTA0_LTCXR31  	.equ	0xF0001AFC	; GPTA Local Timer Cell X Register 31
+GPTA0_LTCXR32  	.equ	0xF0001B04	; GPTA Local Timer Cell X Register 32
+GPTA0_LTCXR33  	.equ	0xF0001B0C	; GPTA Local Timer Cell X Register 33
+GPTA0_LTCXR34  	.equ	0xF0001B14	; GPTA Local Timer Cell X Register 34
+GPTA0_LTCXR35  	.equ	0xF0001B1C	; GPTA Local Timer Cell X Register 35
+GPTA0_LTCXR36  	.equ	0xF0001B24	; GPTA Local Timer Cell X Register 36
+GPTA0_LTCXR37  	.equ	0xF0001B2C	; GPTA Local Timer Cell X Register 37
+GPTA0_LTCXR38  	.equ	0xF0001B34	; GPTA Local Timer Cell X Register 38
+GPTA0_LTCXR39  	.equ	0xF0001B3C	; GPTA Local Timer Cell X Register 39
+GPTA0_LTCXR40  	.equ	0xF0001B44	; GPTA Local Timer Cell X Register 40
+GPTA0_LTCXR41  	.equ	0xF0001B4C	; GPTA Local Timer Cell X Register 41
+GPTA0_LTCXR42  	.equ	0xF0001B54	; GPTA Local Timer Cell X Register 42
+GPTA0_LTCXR43  	.equ	0xF0001B5C	; GPTA Local Timer Cell X Register 43
+GPTA0_LTCXR44  	.equ	0xF0001B64	; GPTA Local Timer Cell X Register 44
+GPTA0_LTCXR45  	.equ	0xF0001B6C	; GPTA Local Timer Cell X Register 45
+GPTA0_LTCXR46  	.equ	0xF0001B74	; GPTA Local Timer Cell X Register 46
+GPTA0_LTCXR47  	.equ	0xF0001B7C	; GPTA Local Timer Cell X Register 47
+GPTA0_LTCXR48  	.equ	0xF0001B84	; GPTA Local Timer Cell X Register 48
+GPTA0_LTCXR49  	.equ	0xF0001B8C	; GPTA Local Timer Cell X Register 49
+GPTA0_LTCXR50  	.equ	0xF0001B94	; GPTA Local Timer Cell X Register 50
+GPTA0_LTCXR51  	.equ	0xF0001B9C	; GPTA Local Timer Cell X Register 51
+GPTA0_LTCXR52  	.equ	0xF0001BA4	; GPTA Local Timer Cell X Register 52
+GPTA0_LTCXR53  	.equ	0xF0001BAC	; GPTA Local Timer Cell X Register 53
+GPTA0_LTCXR54  	.equ	0xF0001BB4	; GPTA Local Timer Cell X Register 54
+GPTA0_LTCXR55  	.equ	0xF0001BBC	; GPTA Local Timer Cell X Register 55
+GPTA0_LTCXR56  	.equ	0xF0001BC4	; GPTA Local Timer Cell X Register 56
+GPTA0_LTCXR57  	.equ	0xF0001BCC	; GPTA Local Timer Cell X Register 57
+GPTA0_LTCXR58  	.equ	0xF0001BD4	; GPTA Local Timer Cell X Register 58
+GPTA0_LTCXR59  	.equ	0xF0001BDC	; GPTA Local Timer Cell X Register 59
+GPTA0_LTCXR60  	.equ	0xF0001BE4	; GPTA Local Timer Cell X Register 60
+GPTA0_LTCXR61  	.equ	0xF0001BEC	; GPTA Local Timer Cell X Register 61
+GPTA0_LTCXR62  	.equ	0xF0001BF4	; GPTA Local Timer Cell X Register 62
+GPTA0_LTCCTR63 	.equ	0xF0001BF8	; GPTA Local Timer Cell Control Register 63
+GPTA0_LTCXR63  	.equ	0xF0001BFC	; GPTA Local Timer Cell X Register 63
+GPTA0_EDCTR    	.equ	0xF0001C00	; GPTA Clock Enable/Disable Control Register
+GPTA0_SRC37    	.equ	0xF0001F68	; GPTA Service Request Control Register 37
+GPTA0_SRC36    	.equ	0xF0001F6C	; GPTA Service Request Control Register 36
+GPTA0_SRC35    	.equ	0xF0001F70	; GPTA Service Request Control Register 35
+GPTA0_SRC34    	.equ	0xF0001F74	; GPTA Service Request Control Register 34
+GPTA0_SRC33    	.equ	0xF0001F78	; GPTA Service Request Control Register 33
+GPTA0_SRC32    	.equ	0xF0001F7C	; GPTA Service Request Control Register 32
+GPTA0_SRC31    	.equ	0xF0001F80	; GPTA Service Request Control Register 31
+GPTA0_SRC30    	.equ	0xF0001F84	; GPTA Service Request Control Register 30
+GPTA0_SRC29    	.equ	0xF0001F88	; GPTA Service Request Control Register 29
+GPTA0_SRC28    	.equ	0xF0001F8C	; GPTA Service Request Control Register 28
+GPTA0_SRC27    	.equ	0xF0001F90	; GPTA Service Request Control Register 27
+GPTA0_SRC26    	.equ	0xF0001F94	; GPTA Service Request Control Register 26
+GPTA0_SRC25    	.equ	0xF0001F98	; GPTA Service Request Control Register 25
+GPTA0_SRC24    	.equ	0xF0001F9C	; GPTA Service Request Control Register 24
+GPTA0_SRC23    	.equ	0xF0001FA0	; GPTA Service Request Control Register 23
+GPTA0_SRC22    	.equ	0xF0001FA4	; GPTA Service Request Control Register 22
+GPTA0_SRC21    	.equ	0xF0001FA8	; GPTA Service Request Control Register 21
+GPTA0_SRC20    	.equ	0xF0001FAC	; GPTA Service Request Control Register 20
+GPTA0_SRC19    	.equ	0xF0001FB0	; GPTA Service Request Control Register 19
+GPTA0_SRC18    	.equ	0xF0001FB4	; GPTA Service Request Control Register 18
+GPTA0_SRC17    	.equ	0xF0001FB8	; GPTA Service Request Control Register 17
+GPTA0_SRC16    	.equ	0xF0001FBC	; GPTA Service Request Control Register 16
+GPTA0_SRC15    	.equ	0xF0001FC0	; GPTA Service Request Control Register 15
+GPTA0_SRC14    	.equ	0xF0001FC4	; GPTA Service Request Control Register 14
+GPTA0_SRC13    	.equ	0xF0001FC8	; GPTA Service Request Control Register 13
+GPTA0_SRC12    	.equ	0xF0001FCC	; GPTA Service Request Control Register 12
+GPTA0_SRC11    	.equ	0xF0001FD0	; GPTA Service Request Control Register 11
+GPTA0_SRC10    	.equ	0xF0001FD4	; GPTA Service Request Control Register 10
+GPTA0_SRC09    	.equ	0xF0001FD8	; GPTA Service Request Control Register 09
+GPTA0_SRC08    	.equ	0xF0001FDC	; GPTA Service Request Control Register 08
+GPTA0_SRC07    	.equ	0xF0001FE0	; GPTA Service Request Control Register 07
+GPTA0_SRC06    	.equ	0xF0001FE4	; GPTA Service Request Control Register 06
+GPTA0_SRC05    	.equ	0xF0001FE8	; GPTA Service Request Control Register 05
+GPTA0_SRC04    	.equ	0xF0001FEC	; GPTA Service Request Control Register 04
+GPTA0_SRC03    	.equ	0xF0001FF0	; GPTA Service Request Control Register 03
+GPTA0_SRC02    	.equ	0xF0001FF4	; GPTA Service Request Control Register 02
+GPTA0_SRC01    	.equ	0xF0001FF8	; GPTA Service Request Control Register 01
+GPTA0_SRC00    	.equ	0xF0001FFC	; GPTA Service Request Control Register 00
+DMA_CLC        	.equ	0xF0003C00	; DMA Clock Control Register
+DMA_ID         	.equ	0xF0003C08	; DMA Module Identification Register
+DMA_CHRSTR     	.equ	0xF0003C10	; Channel Reset Request Register
+DMA_TRSR       	.equ	0xF0003C14	; Transaction Request State Register
+DMA_STREQ      	.equ	0xF0003C18	; Software Transaction Request Register
+DMA_HTREQ      	.equ	0xF0003C1C	; Hardware Transaction Request Register
+DMA_EER        	.equ	0xF0003C20	; Enable Error Register
+DMA_ERRSR      	.equ	0xF0003C24	; Error Status Register
+DMA_CLRE       	.equ	0xF0003C28	; Clear Error Register
+DMA_GINTR      	.equ	0xF0003C2C	; DMA Global Interrupt Set Register
+DMA_MESR       	.equ	0xF0003C30	; Move Engine Status Register
+DMA_ME0R       	.equ	0xF0003C34	; DMA Move Engine 0 Read Register
+DMA_ME0PR      	.equ	0xF0003C3C	; Move Engine 0 Pattern Register
+DMA_ME0AENR    	.equ	0xF0003C44	; Move Engine 0 Access Enable Register
+DMA_ME0ARR     	.equ	0xF0003C48	; Move Engine 0 Access Range Register
+DMA_INTSR      	.equ	0xF0003C54	; Interrupt Status Register
+DMA_INTCR      	.equ	0xF0003C58	; Interrupt Clear Register
+DMA_WRPSR      	.equ	0xF0003C5C	; Wrap Status Register
+DMA_OCDSR      	.equ	0xF0003C64	; OCDS Register
+DMA_SUSPMR     	.equ	0xF0003C68	; Suspend Mode Register
+DMA_CHSR00     	.equ	0xF0003C80	; Channel 00 Status Register
+DMA_CHCR00     	.equ	0xF0003C84	; DMA Channel 00 Control Register
+DMA_CHICR00    	.equ	0xF0003C88	; DMA Channel 00 Interrupt Control Register
+DMA_ADRCR00    	.equ	0xF0003C8C	; DMA Channel 00 Address Control Register
+DMA_SADR00     	.equ	0xF0003C90	; DMA Channel 00 Source Address Register
+DMA_DADR00     	.equ	0xF0003C94	; DMA Channel 00 Destination Address Register
+DMA_SHADR00    	.equ	0xF0003C98	; Channel 00 Shadowed Address Register
+DMA_CHSR01     	.equ	0xF0003CA0	; DMA Channel 01 Status Register
+DMA_CHCR01     	.equ	0xF0003CA4	; DMA Channel 01 Control Register
+DMA_CHICR01    	.equ	0xF0003CA8	; DMA Channel 01 Interrupt Control Register
+DMA_ADRCR01    	.equ	0xF0003CAC	; DMA Channel 01 Address Control Register
+DMA_SADR01     	.equ	0xF0003CB0	; DMA Channel 01 Source Address Register
+DMA_DADR01     	.equ	0xF0003CB4	; DMA Channel 01 Destination Address Register
+DMA_SHADR01    	.equ	0xF0003CB8	; DMA Channel 01 Shadowed Address Register
+DMA_CHSR02     	.equ	0xF0003CC0	; DMA Channel 02 Status Register
+DMA_CHCR02     	.equ	0xF0003CC4	; DMA Channel 02 Control Register
+DMA_CHICR02    	.equ	0xF0003CC8	; DMA Channel 02 Interrupt Control Register
+DMA_ADRCR02    	.equ	0xF0003CCC	; DMA Channel 02 Address Control Register
+DMA_SADR02     	.equ	0xF0003CD0	; DMA Channel 02 Source Address Register
+DMA_DADR02     	.equ	0xF0003CD4	; DMA Channel 02 Destination Address Register
+DMA_SHADR02    	.equ	0xF0003CD8	; DMA Channel 02 Shadowed Address Register
+DMA_CHSR03     	.equ	0xF0003CE0	; DMA Channel 03 Status Register
+DMA_CHCR03     	.equ	0xF0003CE4	; DMA Channel 03 Control Register
+DMA_CHICR03    	.equ	0xF0003CE8	; DMA Channel 03 Interrupt Control Register
+DMA_ADRCR03    	.equ	0xF0003CEC	; DMA Channel 03 Address Control Register
+DMA_SADR03     	.equ	0xF0003CF0	; DMA Channel 03 Source Address Register
+DMA_DADR03     	.equ	0xF0003CF4	; DMA Channel 03 Destination Address Register
+DMA_SHADR03    	.equ	0xF0003CF8	; DMA Channel 03 Shadowed Address Register
+DMA_CHSR04     	.equ	0xF0003D00	; DMA Channel 04 Status Register
+DMA_CHCR04     	.equ	0xF0003D04	; DMA Channel 04 Control Register
+DMA_CHICR04    	.equ	0xF0003D08	; DMA Channel 04 Interrupt Control Register
+DMA_ADRCR04    	.equ	0xF0003D0C	; DMA Channel 04 Address Control Register
+DMA_SADR04     	.equ	0xF0003D10	; DMA Channel 04 Source Address Register
+DMA_DADR04     	.equ	0xF0003D14	; DMA Channel 04 Destination Address Register
+DMA_SHADR04    	.equ	0xF0003D18	; DMA Channel 04 Shadowed Address Register
+DMA_CHSR05     	.equ	0xF0003D20	; DMA Channel 05 Status Register
+DMA_CHCR05     	.equ	0xF0003D24	; DMA Channel 05 Control Register
+DMA_CHICR05    	.equ	0xF0003D28	; DMA Channel 05 Interrupt Control Register
+DMA_ADRCR05    	.equ	0xF0003D2C	; DMA Channel 05 Address Control Register
+DMA_SADR05     	.equ	0xF0003D30	; DMA Channel 05 Source Address Register
+DMA_DADR05     	.equ	0xF0003D34	; DMA Channel 05 Destination Address Register
+DMA_SHADR05    	.equ	0xF0003D38	; DMA Channel 05 Shadowed Address Register
+DMA_CHSR06     	.equ	0xF0003D40	; DMA Channel 06 Status Register
+DMA_CHCR06     	.equ	0xF0003D44	; DMA Channel 06 Control Register
+DMA_CHICR06    	.equ	0xF0003D48	; DMA Channel 06 Interrupt Control Register
+DMA_ADRCR06    	.equ	0xF0003D4C	; DMA Channel 06 Address Control Register
+DMA_SADR06     	.equ	0xF0003D50	; DMA Channel 06 Source Address Register
+DMA_DADR06     	.equ	0xF0003D54	; DMA Channel 06 Destination Address Register
+DMA_SHADR06    	.equ	0xF0003D58	; DMA Channel 06 Shadowed Address Register
+DMA_CHSR07     	.equ	0xF0003D60	; DMA Channel 07 Status Register
+DMA_CHCR07     	.equ	0xF0003D64	; DMA Channel 07 Control Register
+DMA_CHICR07    	.equ	0xF0003D68	; DMA Channel 07 Interrupt Control Register
+DMA_ADRCR07    	.equ	0xF0003D6C	; DMA Channel 07 Address Control Register
+DMA_SADR07     	.equ	0xF0003D70	; DMA Channel 07 Source Address Register
+DMA_DADR07     	.equ	0xF0003D74	; DMA Channel 07 Destination Address Register
+DMA_SHADR07    	.equ	0xF0003D78	; DMA Channel 07 Shadowed Address Register
+DMA_TOCTR      	.equ	0xF0003E80	; DMA Bus Time-Out Control Register
+DMA_SYSSRC4    	.equ	0xF0003E8C	; System Interrupt Service Request Control Register 4
+DMA_SYSSRC3    	.equ	0xF0003E90	; System Interrupt Service Request Control Register 3
+DMA_SYSSRC2    	.equ	0xF0003E94	; System Interrupt Service Request Control Register 2
+DMA_SYSSRC1    	.equ	0xF0003E98	; System Interrupt Service Request Control Register 1
+DMA_SYSSRC0    	.equ	0xF0003E9C	; System Interrupt Service Request Control Register 0
+DMA_MLI0SRC3   	.equ	0xF0003EA0	; MLI 0 Service Request Control Register 3
+DMA_MLI0SRC2   	.equ	0xF0003EA4	; MLI 0 Service Request Control Register 2
+DMA_MLI0SRC1   	.equ	0xF0003EA8	; MLI 0 Service Request Control Register 1
+DMA_MLI0SRC0   	.equ	0xF0003EAC	; MLI 0 Service Request Control Register 0
+DMA_SRC3       	.equ	0xF0003EF0	; DMA Service Request Control Register 3
+DMA_SRC2       	.equ	0xF0003EF4	; DMA Service Request Control Register 2
+DMA_SRC1       	.equ	0xF0003EF8	; DMA Service Request Control Register 1
+DMA_SRC0       	.equ	0xF0003EFC	; DMA Service Request Control Register 0
+PCP_RAM_BASE   	.equ	0xF0050000	; PCP Parameter Memory Start Address
+PCP_CLC        	.equ	0xF0043F00	; PCP Clock Control Register
+PCP_ID         	.equ	0xF0043F08	; PCP Module Identification Register
+PCP_CS         	.equ	0xF0043F10	; PCP Control/Status Register
+PCP_ES         	.equ	0xF0043F14	; PCP Error/Debug Status Register
+PCP_ICR        	.equ	0xF0043F20	; PCP Interrupt Control Register
+PCP_ITR        	.equ	0xF0043F24	; PCP Interrupt Threshold Control Register
+PCP_ICON       	.equ	0xF0043F28	; PCP Interrupt Configuration Register
+PCP_SSR        	.equ	0xF0043F2C	; PCP Stall Status Register
+PCP_SRC11      	.equ	0xF0043FD0	; Service Request Control Register 11
+PCP_SRC10      	.equ	0xF0043FD4	; Service Request Control Register 10
+PCP_SRC9       	.equ	0xF0043FD8	; Service Request Control Register 9
+PCP_SRC8       	.equ	0xF0043FDC	; Service Request Control Register 8
+PCP_SRC7       	.equ	0xF0043FE0	; Service Request Control Register 7
+PCP_SRC6       	.equ	0xF0043FE4	; Service Request Control Register 6
+PCP_SRC5       	.equ	0xF0043FE8	; Service Request Control Register 5
+PCP_SRC4       	.equ	0xF0043FEC	; Service Request Control Register 4
+PCP_SRC3       	.equ	0xF0043FF0	; Service Request Control Register 3
+PCP_SRC2       	.equ	0xF0043FF4	; Service Request Control Register 2
+PCP_SRC1       	.equ	0xF0043FF8	; Service Request Control Register 1
+PCP_SRC0       	.equ	0xF0043FFC	; Service Request Control Register 0
+SSC0_CLC       	.equ	0xF0100100	; SSC Clock Control Register
+SSC0_PISEL     	.equ	0xF0100104	; SSC Port Input Select Register
+SSC0_ID        	.equ	0xF0100108	; SSC Module Identification Register
+SSC0_FDR       	.equ	0xF010010C	; SSC Fractional Divider Register
+SSC0_CON       	.equ	0xF0100110	; SSC Control Register
+SSC0_BR        	.equ	0xF0100114	; SSC Baudrate Timer Reload Register
+SSC0_SSOC      	.equ	0xF0100118	; Slave Select Output Control Register
+SSC0_SSOTC     	.equ	0xF010011C	; Slave Select Output Timing Control Register
+SSC0_TB        	.equ	0xF0100120	; SSC Transmit Buffer Register
+SSC0_RB        	.equ	0xF0100124	; SSC Receive Buffer Register
+SSC0_STAT      	.equ	0xF0100128	; SSC Status Register
+SSC0_EFM       	.equ	0xF010012C	; SSC Error Flag Modification Register
+SSC0_TSRC      	.equ	0xF01001F4	; SSC Transmit Interrupt Service Request Control Register
+SSC0_RSRC      	.equ	0xF01001F8	; SSC Receive Interrupt Service Request Control Register
+SSC0_ESRC      	.equ	0xF01001FC	; SSC Error Interrupt Service Request Control Register
+SSC1_CLC       	.equ	0xF0100200	; SSC Clock Control Register
+SSC1_PISEL     	.equ	0xF0100204	; SSC Port Input Select Register
+SSC1_ID        	.equ	0xF0100208	; SSC Module Identification Register
+SSC1_FDR       	.equ	0xF010020C	; SSC Fractional Divider Register
+SSC1_CON       	.equ	0xF0100210	; SSC Control Register
+SSC1_BR        	.equ	0xF0100214	; SSC Baudrate Timer Reload Register
+SSC1_SSOC      	.equ	0xF0100218	; Slave Select Output Control Register
+SSC1_SSOTC     	.equ	0xF010021C	; Slave Select Output Timing Control Register
+SSC1_TB        	.equ	0xF0100220	; SSC Transmit Buffer Register
+SSC1_RB        	.equ	0xF0100224	; SSC Receive Buffer Register
+SSC1_STAT      	.equ	0xF0100228	; SSC Status Register
+SSC1_EFM       	.equ	0xF010022C	; SSC Error Flag Modification Register
+SSC1_TSRC      	.equ	0xF01002F4	; SSC Transmit Interrupt Service Request Control Register
+SSC1_RSRC      	.equ	0xF01002F8	; SSC Receive Interrupt Service Request Control Register
+SSC1_ESRC      	.equ	0xF01002FC	; SSC Error Interrupt Service Request Control Register
+FADC_CLC       	.equ	0xF0100300	; FADC Clock Control Register
+FADC_ID        	.equ	0xF0100308	; FADC Module Identification Register
+FADC_FDR       	.equ	0xF010030C	; FADC Fractional Divider Register
+FADC_CRSR      	.equ	0xF0100310	; Conversion Request Status Register
+FADC_FMR       	.equ	0xF0100314	; FADC Flag Modification Register
+FADC_NCTR      	.equ	0xF0100318	; Neighbour Channel Trigger Register
+FADC_GCR       	.equ	0xF010031C	; Global Control Register
+FADC_CFGR0     	.equ	0xF0100320	; Configuration Register Channel 0
+FADC_CFGR1     	.equ	0xF0100324	; Configuration Register Channel 1
+FADC_ACR0      	.equ	0xF0100330	; Analog Control Register Channel 0
+FADC_ACR1      	.equ	0xF0100334	; Analog Control Register Channel 1
+FADC_RCH0      	.equ	0xF0100340	; Conversion Result Register Channel 0
+FADC_RCH1      	.equ	0xF0100344	; Conversion Result Register Channel 1
+FADC_FCR0      	.equ	0xF0100360	; Filter 0 Control Register
+FADC_CRR0      	.equ	0xF0100364	; Filter 0 Current Result Register
+FADC_IRR10     	.equ	0xF0100368	; Filter 0 Intermediate Result Register 1
+FADC_IRR20     	.equ	0xF010036C	; Filter 0 Intermediate Result Register 2
+FADC_IRR30     	.equ	0xF0100370	; Filter 0 Intermediate Result Register 3
+FADC_FRR0      	.equ	0xF0100374	; Filter 0 Final Result Register
+FADC_FCR1      	.equ	0xF0100380	; Filter 1 Control Register
+FADC_CRR1      	.equ	0xF0100384	; Filter 1 Current Result Register
+FADC_IRR11     	.equ	0xF0100388	; Filter 1 Intermediate Result Register 1
+FADC_FRR1      	.equ	0xF0100394	; Filter 1 Final Result Register
+FADC_SRC1      	.equ	0xF01003F8	; FADC Service Request Control Register 1
+FADC_SRC0      	.equ	0xF01003FC	; FADC Service Request Control Register 0
+ADC0_CLC       	.equ	0xF0100400	; ADC Clock Control Register
+ADC0_ID        	.equ	0xF0100408	; ADC Module Identification Register
+ADC0_FDR       	.equ	0xF010040C	; ADC Fractional Divider Register
+ADC0_CHCON0    	.equ	0xF0100410	; ADC Channel Control Register 0
+ADC0_CHCON1    	.equ	0xF0100414	; ADC Channel Control Register 1
+ADC0_CHCON2    	.equ	0xF0100418	; ADC Channel Control Register 2
+ADC0_CHCON3    	.equ	0xF010041C	; ADC Channel Control Register 3
+ADC0_CHCON4    	.equ	0xF0100420	; ADC Channel Control Register 4
+ADC0_CHCON5    	.equ	0xF0100424	; ADC Channel Control Register 5
+ADC0_CHCON6    	.equ	0xF0100428	; ADC Channel Control Register 6
+ADC0_CHCON7    	.equ	0xF010042C	; ADC Channel Control Register 7
+ADC0_CHCON8    	.equ	0xF0100430	; ADC Channel Control Register 8
+ADC0_CHCON9    	.equ	0xF0100434	; ADC Channel Control Register 9
+ADC0_CHCON10   	.equ	0xF0100438	; ADC Channel Control Register 10
+ADC0_CHCON11   	.equ	0xF010043C	; ADC Channel Control Register 11
+ADC0_CHCON12   	.equ	0xF0100440	; ADC Channel Control Register 12
+ADC0_CHCON13   	.equ	0xF0100444	; ADC Channel Control Register 13
+ADC0_CHCON14   	.equ	0xF0100448	; ADC Channel Control Register 14
+ADC0_CHCON15   	.equ	0xF010044C	; ADC Channel Control Register 15
+ADC0_AP        	.equ	0xF0100484	; ADC Arbitration Participation Register
+ADC0_SAL       	.equ	0xF0100488	; ADC Source Arbitration Level Register
+ADC0_TTC       	.equ	0xF010048C	; ADC Timer Trigger Control Register
+ADC0_EXTC      	.equ	0xF0100490	; ADC External Trigger Control Register
+ADC0_SCON      	.equ	0xF0100498	; ADC Source Control Register
+ADC0_QUEUET0   	.equ	0xF01004A0	; ADC Queue Test Register 0
+ADC0_LCCON0    	.equ	0xF0100500	; ADC Limit Check Control Register 0
+ADC0_LCCON1    	.equ	0xF0100504	; ADC Limit Check Control Register 1
+ADC0_LCCON2    	.equ	0xF0100508	; ADC Limit Check Control Register 2
+ADC0_LCCON3    	.equ	0xF010050C	; ADC Limit Check Control Register 3
+ADC0_TCON      	.equ	0xF0100514	; ADC Timer Control Register
+ADC0_CHIN      	.equ	0xF0100518	; ADC Channel Injection Control Register
+ADC0_QR        	.equ	0xF010051C	; ADC Queue Register
+ADC0_CON       	.equ	0xF0100520	; ADC Converter Control Register
+ADC0_SCN       	.equ	0xF0100524	; ADC Auto Scan Control Register
+ADC0_REQ0      	.equ	0xF0100528	; ADC Conversion Request Register SW0
+ADC0_CHSTAT0   	.equ	0xF0100530	; ADC Channel Status Register 0
+ADC0_CHSTAT1   	.equ	0xF0100534	; ADC Channel Status Register 1
+ADC0_CHSTAT2   	.equ	0xF0100538	; ADC Channel Status Register 2
+ADC0_CHSTAT3   	.equ	0xF010053C	; ADC Channel Status Register 3
+ADC0_CHSTAT4   	.equ	0xF0100540	; ADC Channel Status Register 4
+ADC0_CHSTAT5   	.equ	0xF0100544	; ADC Channel Status Register 5
+ADC0_CHSTAT6   	.equ	0xF0100548	; ADC Channel Status Register 6
+ADC0_CHSTAT7   	.equ	0xF010054C	; ADC Channel Status Register 7
+ADC0_CHSTAT8   	.equ	0xF0100550	; ADC Channel Status Register 8
+ADC0_CHSTAT9   	.equ	0xF0100554	; ADC Channel Status Register 9
+ADC0_CHSTAT10  	.equ	0xF0100558	; ADC Channel Status Register 10
+ADC0_CHSTAT11  	.equ	0xF010055C	; ADC Channel Status Register 11
+ADC0_CHSTAT12  	.equ	0xF0100560	; ADC Channel Status Register 12
+ADC0_CHSTAT13  	.equ	0xF0100564	; ADC Channel Status Register 13
+ADC0_CHSTAT14  	.equ	0xF0100568	; ADC Channel Status Register 14
+ADC0_CHSTAT15  	.equ	0xF010056C	; ADC Channel Status Register 15
+ADC0_QUEUE0    	.equ	0xF0100570	; ADC Queue Status Register
+ADC0_SW0CRP    	.equ	0xF0100580	; ADC Software SW0 Conversion Request Pending Register
+ADC0_ASCRP     	.equ	0xF0100588	; ADC Auto Scan Conversion Request Pending Register
+ADC0_TSTAT     	.equ	0xF01005B0	; ADC Timer Status Register
+ADC0_STAT      	.equ	0xF01005B4	; ADC Converter Status Register
+ADC0_TCRP      	.equ	0xF01005B8	; ADC Timer Conversion Request Pending Register
+ADC0_EXCRP     	.equ	0xF01005BC	; ADC External Event Conversion Request Pending Register
+ADC0_MSS0      	.equ	0xF01005D0	; ADC Module Service Request Status Register 0
+ADC0_MSS1      	.equ	0xF01005D4	; ADC Module Service Request Status Register 1
+ADC0_SRNP      	.equ	0xF01005DC	; ADC Service Request Node Pointer Register
+ADC0_SRC3      	.equ	0xF01005F0	; ADC Service Request Control Register 3
+ADC0_SRC2      	.equ	0xF01005F4	; ADC Service Request Control Register 2
+ADC0_SRC1      	.equ	0xF01005F8	; ADC Service Request Control Register 1
+ADC0_SRC0      	.equ	0xF01005FC	; ADC Service Request Control Register 0
+MLI0_ID        	.equ	0xF010C008	; MLI Module Identification Register
+MLI0_FDR       	.equ	0xF010C00C	; MLI Fractional Divider Register
+MLI0_TCR       	.equ	0xF010C010	; Transmitter Control Register
+MLI0_TSTATR    	.equ	0xF010C014	; Transmitter Status Register
+MLI0_TP0STATR  	.equ	0xF010C018	; Transmitter Pipe 0 Status Register
+MLI0_TP1STATR  	.equ	0xF010C01C	; Transmitter Pipe 1 Status Register
+MLI0_TP2STATR  	.equ	0xF010C020	; Transmitter Pipe 2 Status Register
+MLI0_TP3STATR  	.equ	0xF010C024	; Transmitter Pipe 3 Status Register
+MLI0_TCMDR     	.equ	0xF010C028	; Transmitter Command Register
+MLI0_TRSTATR   	.equ	0xF010C02C	; Transmitter Registers Status Register
+MLI0_TP0AOFR   	.equ	0xF010C030	; Transmitter Pipe 0 Address Offset Register
+MLI0_TP1AOFR   	.equ	0xF010C034	; Transmitter Pipe 1 Address Offset Register
+MLI0_TP2AOFR   	.equ	0xF010C038	; Transmitter Pipe 2 Address Offset Register
+MLI0_TP3AOFR   	.equ	0xF010C03C	; Transmitter Pipe 3 Address Offset Register
+MLI0_TP0DATAR  	.equ	0xF010C040	; Transmitter Pipe 0 Data Register
+MLI0_TP1DATAR  	.equ	0xF010C044	; Transmitter Pipe 1 Data Register
+MLI0_TP2DATAR  	.equ	0xF010C048	; Transmitter Pipe 2 Data Register
+MLI0_TP3DATAR  	.equ	0xF010C04C	; Transmitter Pipe 3 Data Register
+MLI0_TDRAR     	.equ	0xF010C050	; Transmitter Data Read Answer Register
+MLI0_TP0BAR    	.equ	0xF010C054	; Transmitter Pipe 0 Base Address Register
+MLI0_TP1BAR    	.equ	0xF010C058	; Transmitter Pipe 1 Base Address Register
+MLI0_TP2BAR    	.equ	0xF010C05C	; Transmitter Pipe 2 Base Address Register
+MLI0_TP3BAR    	.equ	0xF010C060	; Transmitter Pipe 3 Base Address Register
+MLI0_TCBAR     	.equ	0xF010C064	; Transmitter Copy Base Address Register
+MLI0_RCR       	.equ	0xF010C068	; Receiver Control Register
+MLI0_RP0BAR    	.equ	0xF010C06C	; Receiver Pipe 0 Base Address Register
+MLI0_RP1BAR    	.equ	0xF010C070	; Receiver Pipe 1 Base Address Register
+MLI0_RP2BAR    	.equ	0xF010C074	; Receiver Pipe 2 Base Address Register
+MLI0_RP3BAR    	.equ	0xF010C078	; Receiver Pipe 3 Base Address Register
+MLI0_RP0STATR  	.equ	0xF010C07C	; Receiver Pipe 0 Status Register
+MLI0_RP1STATR  	.equ	0xF010C080	; Receiver Pipe 1 Status Register
+MLI0_RP2STATR  	.equ	0xF010C084	; Receiver Pipe 2 Status Register
+MLI0_RP3STATR  	.equ	0xF010C088	; Receiver Pipe 3 Status Register
+MLI0_RADRR     	.equ	0xF010C08C	; Receiver Address Register
+MLI0_RDATAR    	.equ	0xF010C090	; Receiver Data Register
+MLI0_SCR       	.equ	0xF010C094	; Set Clear Register
+MLI0_TIER      	.equ	0xF010C098	; Transmitter Interrupt Enable Register
+MLI0_TISR      	.equ	0xF010C09C	; Transmitter Interrupt Status Register
+MLI0_TINPR     	.equ	0xF010C0A0	; Transmitter Interrupt Node Pointer Register
+MLI0_RIER      	.equ	0xF010C0A4	; Receiver Interrupt Enable Register
+MLI0_RISR      	.equ	0xF010C0A8	; Receiver Interrupt Status Register
+MLI0_RINPR     	.equ	0xF010C0AC	; Receiver Interrupt Node Pointer Register
+MLI0_GINTR     	.equ	0xF010C0B0	; MLI Global Interrupt Set Register
+MLI0_OICR      	.equ	0xF010C0B4	; Output Input Control Register
+MLI0_AER       	.equ	0xF010C0B8	; Access Enable Register
+MLI0_ARR       	.equ	0xF010C0BC	; Access Range Register
+MCHK_ID        	.equ	0xF010C208	; MCHK Module Identification Register
+MCHK_IR        	.equ	0xF010C210	; MCHK Memory Checker Input Register
+MCHK_RR        	.equ	0xF010C214	; Memory Checker Result Register
+MCHK_WR        	.equ	0xF010C220	; Write Register
+CPS_ID         	.equ	0xF7E0FF08	; CPS Module Identification Register
+CPU_SBSRC      	.equ	0xF7E0FFBC	; Software Break Service Request Control Register
+CPU_SRC3       	.equ	0xF7E0FFF0	; CPU Service Request Control Register 3
+CPU_SRC2       	.equ	0xF7E0FFF4	; CPU Service Request Control Register 2
+CPU_SRC1       	.equ	0xF7E0FFF8	; CPU Service Request Control Register 1
+CPU_SRC0       	.equ	0xF7E0FFFC	; CPU Service Request Control Register 0
+PMU_ID         	.equ	0xF8000508	; PMU Module Identification Register (LL)
+PMU_RABR0      	.equ	0xF8000520	; Redirected Address Base Register 0
+PMU_RABR1      	.equ	0xF800052C	; Redirected Address Base Register 1
+PMU_RABR2      	.equ	0xF8000538	; Redirected Address Base Register 2
+PMU_RABR3      	.equ	0xF8000544	; Redirected Address Base Register 3
+PMU_RABR4      	.equ	0xF8000550	; Redirected Address Base Register 4
+PMU_RABR5      	.equ	0xF800055C	; Redirected Address Base Register 5
+PMU_RABR6      	.equ	0xF8000568	; Redirected Address Base Register 6
+PMU_RABR7      	.equ	0xF8000574	; Redirected Address Base Register 7
+PMU_RABR8      	.equ	0xF8000580	; Redirected Address Base Register 8
+PMU_RABR9      	.equ	0xF800058C	; Redirected Address Base Register 9
+PMU_RABR10     	.equ	0xF8000598	; Redirected Address Base Register 10
+PMU_RABR11     	.equ	0xF80005A4	; Redirected Address Base Register 11
+PMU_RABR12     	.equ	0xF80005B0	; Redirected Address Base Register 12
+PMU_RABR13     	.equ	0xF80005BC	; Redirected Address Base Register 13
+PMU_RABR14     	.equ	0xF80005C8	; Redirected Address Base Register 14
+PMU_RABR15     	.equ	0xF80005D4	; Redirected Address Base Register 15
+PMU_OTAR0      	.equ	0xF8000524	; Overlay Target Address Register 0
+PMU_OTAR1      	.equ	0xF8000530	; Overlay Target Address Register 1
+PMU_OTAR2      	.equ	0xF800053C	; Overlay Target Address Register 2
+PMU_OTAR3      	.equ	0xF8000548	; Overlay Target Address Register 3
+PMU_OTAR4      	.equ	0xF8000554	; Overlay Target Address Register 4
+PMU_OTAR5      	.equ	0xF8000560	; Overlay Target Address Register 5
+PMU_OTAR6      	.equ	0xF800056C	; Overlay Target Address Register 6
+PMU_OTAR7      	.equ	0xF8000578	; Overlay Target Address Register 7
+PMU_OTAR8      	.equ	0xF8000584	; Overlay Target Address Register 8
+PMU_OTAR9      	.equ	0xF8000590	; Overlay Target Address Register 9
+PMU_OTAR10     	.equ	0xF800059C	; Overlay Target Address Register 10
+PMU_OTAR11     	.equ	0xF80005A8	; Overlay Target Address Register 11
+PMU_OTAR12     	.equ	0xF80005B4	; Overlay Target Address Register 12
+PMU_OTAR13     	.equ	0xF80005C0	; Overlay Target Address Register 13
+PMU_OTAR14     	.equ	0xF80005CC	; Overlay Target Address Register 14
+PMU_OTAR15     	.equ	0xF80005D8	; Overlay Target Address Register 15
+PMU_OMASK0     	.equ	0xF8000528	; Overlay Mask Register 0
+PMU_OMASK1     	.equ	0xF8000534	; Overlay Mask Register 1
+PMU_OMASK2     	.equ	0xF8000540	; Overlay Mask Register 2
+PMU_OMASK3     	.equ	0xF800054C	; Overlay Mask Register 3
+PMU_OMASK4     	.equ	0xF8000558	; Overlay Mask Register 4
+PMU_OMASK5     	.equ	0xF8000564	; Overlay Mask Register 5
+PMU_OMASK6     	.equ	0xF8000570	; Overlay Mask Register 6
+PMU_OMASK7     	.equ	0xF800057C	; Overlay Mask Register 7
+PMU_OMASK8     	.equ	0xF8000588	; Overlay Mask Register 8
+PMU_OMASK9     	.equ	0xF8000594	; Overlay Mask Register 9
+PMU_OMASK10    	.equ	0xF80005A0	; Overlay Mask Register 10
+PMU_OMASK11    	.equ	0xF80005AC	; Overlay Mask Register 11
+PMU_OMASK12    	.equ	0xF80005B8	; Overlay Mask Register 12
+PMU_OMASK13    	.equ	0xF80005C4	; Overlay Mask Register 13
+PMU_OMASK14    	.equ	0xF80005D0	; Overlay Mask Register 14
+PMU_OMASK15    	.equ	0xF80005DC	; Overlay Mask Register 15
+FLASH_ID       	.equ	0xF8002008	; Flash Module Identification Register
+FLASH_FSR      	.equ	0xF8002010	; Flash Status Register
+FLASH_FCON     	.equ	0xF8002014	; Flash Configuration Register
+FLASH_MARP     	.equ	0xF8002018	; Margin Control Register PFlash
+FLASH_MARD     	.equ	0xF800201C	; Margin Control Register DFlash
+FLASH_PROCON0  	.equ	0xF8002020	; Flash Protection Configuration User 0
+FLASH_PROCON1  	.equ	0xF8002024	; Flash Protection Configuration User 1
+FLASH_PROCON2  	.equ	0xF8002028	; Flash Protection Configuration User 2
+DMI_ID         	.equ	0xF87FFC08	; DMI Module Identification Register
+DMI_CON        	.equ	0xF87FFC10	; DMI Control Register
+DMI_STR        	.equ	0xF87FFC18	; DMI Synchronous Trap Register
+DMI_ATR        	.equ	0xF87FFC20	; DMI Asynchronous Trap Register
+DMI_CON1       	.equ	0xF87FFC28	; DMI Control Register 1
+PMI_ID         	.equ	0xF87FFD08	; PMI Module Identification Register
+PMI_CON0       	.equ	0xF87FFD10	; PMI Control Register 0
+PMI_CON1       	.equ	0xF87FFD14	; PMI Control Register 1
+PMI_CON2       	.equ	0xF87FFD18	; PMI Control Register 2
+LBCU_ID        	.equ	0xF87FFE08	; LBCU Module Identification Register
+LBCU_LEATT     	.equ	0xF87FFE20	; LMB Error Attributes Register
+LBCU_LEADDR    	.equ	0xF87FFE24	; LMB Error Addres Register
+LBCU_LEDATL    	.equ	0xF87FFE28	; LMB Error Data Register (32 LSB's)
+LBCU_LEDATH    	.equ	0xF87FFE2C	; LMB Error Data Register (32 MSB's)
+LBCU_SRC       	.equ	0xF87FFEFC	; PBCU Service Request Control Register
+LFI_ID         	.equ	0xF87FFF08	; LFI Module Identification Register
+LFI_CON        	.equ	0xF87FFF10	; LFI Configuration Register
+	.endif ; !@DEF('_REGTC1163_DEF')

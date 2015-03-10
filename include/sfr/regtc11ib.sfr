@@ -1,0 +1,4361 @@
+/**************************************************************************
+**
+** Version: @(#)regtc11ib.xml	1.16 09/12/11
+** Generated from @(#)regtc11ib.xml	1.16 09/12/11
+** 
+** This file contains all SFR and BIT names and on-chip register definitions
+** It is based on the following document(s):
+** - TC11IB_umsu_v11_1.pdf (April 2002)
+** 
+** Copyright 2002-2010 Altium BV
+**
+**************************************************************************/
+#ifndef _REGTC11IB_H
+#define _REGTC11IB_H
+
+/* Core Base */
+#define core_base	0xF7E1	/* The base address off the memory for the CSFR's */
+
+/* Core Special Function Registers (CSFR). Macros, such as LCX, that expand to a 16-bit number do not directly represent a memory address.
+   They are intended to be used with the intrinsic functions __mfcr(...) and __mtcr(...). */
+#define LCX	0xFE3C	/* Free CSA List Limit Pointer */
+#define FCX	0xFE38	/* Free CSA List Head Pointer */
+#define ICR	0xFE2C	/* Interrupt Unit Control Register */
+#define ISP	0xFE28	/* Interrupt Stack Pointer */
+#define BTV	0xFE24	/* Base Address of Trap Vector Table Pointer. */
+#define BIV	0xFE20	/* Base Address of Interrupt Vector Table */
+#define SYSCON	0xFE14	/* System Configuration Control Register */
+#define PC	0xFE08	/* Program Counter */
+#define PSW	0xFE04	/* Program Status Word */
+#define PCXI	0xFE00	/* Previous Context Info Register */
+#define DCX	0xFD44	/* Debug Context Save Area Pointer */
+#define DMS	0xFD40	/* Debug Monitor Start Address Register (read-only) */
+#define TR1EVT	0xFD24	/* Trigger Event 1 Specifier */
+#define TR0EVT	0xFD20	/* Trigger Event 0 Specifier */
+#define SWEVT	0xFD10	/* Software Break Event Specifier */
+#define CREVT	0xFD0C	/* Emulator Resource Protection Event Specifier */
+#define EXEVT	0xFD08	/* External Break Input Event Specifier */
+#define DBGSR	0xFD00	/* Debug Status Register */
+#define CPM1	0xE280	/* Code Protection Mode Register, Set 1 (2 bytes) */
+#define CPM0	0xE200	/* Code Protection Mode Register, Set 0 (2 bytes) */
+#define DPM1	0xE080	/* Data Protection Mode Register, Set 1 (4 bytes) */
+#define DPM0	0xE000	/* Data Protection Mode Register, Set 0 (4 bytes) */
+#define CPR1_1U	0xD40C	/* Code Seg. Prot. Reg. 1, Set 1, upper */
+#define CPR1_1L	0xD408	/* Code Seg. Prot. Reg. 1, Set 1, lower */
+#define CPR1_0U	0xD404	/* Code Seg. Prot. Reg. 0, Set 1, upper */
+#define CPR1_0L	0xD400	/* Code Seg. Prot. Reg. 0, Set 1, lower */
+#define CPR0_1U	0xD00C	/* Code Seg. Prot. Reg. 1, Set 0, upper */
+#define CPR0_1L	0xD008	/* Code Seg. Prot. Reg. 1, Set 0, lower */
+#define CPR0_0U	0xD004	/* Code Seg. Prot. Reg. 0, Set 0, upper */
+#define CPR0_0L	0xD000	/* Code Seg. Prot. Reg. 0, Set 0, lower */
+#define DPR1_3U	0xC41C	/* Data Seg. Prot. Reg. 3, Set 1, upper */
+#define DPR1_3L	0xC418	/* Data Seg. Prot. Reg. 3, Set 1, lower */
+#define DPR1_2U	0xC414	/* Data Seg. Prot. Reg. 2, Set 1, upper */
+#define DPR1_2L	0xC410	/* Data Seg. Prot. Reg. 2, Set 1, lower */
+#define DPR1_1U	0xC40C	/* Data Seg. Prot. Reg. 1, Set 1, upper */
+#define DPR1_1L	0xC408	/* Data Seg. Prot. Reg. 1, Set 1, lower */
+#define DPR1_0U	0xC404	/* Data Seg. Prot. Reg. 0, Set 1, upper */
+#define DPR1_0L	0xC400	/* Data Seg. Prot. Reg. 0, Set 1, lower */
+#define DPR0_3U	0xC01C	/* Data Seg. Prot. Reg. 3, Set 0, upper */
+#define DPR0_3L	0xC018	/* Data Seg. Prot. Reg. 3, Set 0, lower */
+#define DPR0_2U	0xC014	/* Data Seg. Prot. Reg. 2, Set 0, upper */
+#define DPR0_2L	0xC010	/* Data Seg. Prot. Reg. 2, Set 0, lower */
+#define DPR0_1U	0xC00C	/* Data Seg. Prot. Reg. 1, Set 0, upper */
+#define DPR0_1L	0xC008	/* Data Seg. Prot. Reg. 1, Set 0, lower */
+#define DPR0_0U	0xC004	/* Data Seg. Prot. Reg. 0, Set 0, upper */
+#define DPR0_0L	0xC000	/* Data Seg. Prot. Reg. 0, Set 0, lower */
+#define MMU_TFA	0x8018	/* MMU Translation Fault Address Register */
+#define MMU_TPX	0x8014	/* MMU MMU Translation Page Index Register */
+#define MMU_TPA	0x8010	/* MMU Translation Physical Address Register */
+#define MMU_TVA	0x800C	/* MMU Translation Virtual Address Register */
+#define MMU_ID	0x8008	/* MMU Module Identification Register */
+#define MMU_ASI	0x8004	/* MMU Address Space Identifier Register */
+#define MMU_CON	0x8000	/* MMU Configuration Register */
+
+/* LMB to FPI Bus Bridge (LFI) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SPLT           : 1;	/* Split Mode Functionality */
+		unsigned int                : 31;
+	} B;
+	int I;
+	unsigned int U;
+
+} LFI_CON_type;
+#define LFI_CON	(*( LFI_CON_type *) 0xF87FFF10u)	/* LFI Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int MOD_REV        : 8;	/* Module Revision Number */
+		/* const */ unsigned int MOD_ID         : 24;	/* Module Identification Number */
+	} B;
+	int I;
+	unsigned int U;
+
+} LFI_ID_type;
+#define LFI_ID	(*( LFI_ID_type *) 0xF87FFF08u)	/* LFI Identification Register */
+
+
+/* LMB Bus Control Unit (LCU) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 SRPN           : 8;	/* Service Request Priority Number. */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 TOS            : 2;	/* Type-of-Service Control. */
+		unsigned __sfrbit32 SRE            : 1;	/* Service Request Enable Control. */
+		/* const */ unsigned __sfrbit32 SRR            : 1;	/* Service Request Flag. */
+		unsigned __sfrbit32 CLRR           : 1;	/* Request Flag Clear Bit. */
+		unsigned __sfrbit32 SETR           : 1;	/* Request Flag Set Bit. */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} LCU_SRC_type;
+#define LCU_SRC	(*( LCU_SRC_type *) 0xF87FFEFCu)	/* LCU Service Request Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 LMBDAT         : 32;
+	} B;
+	int I;
+	unsigned int U;
+
+} LCU_EDAT_type;
+#define LCU_EDAT	(*( LCU_EDAT_type *) 0xF87FFE28u)	/* LCU Error Data Capture Register (64-bit register) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 LMBADR         : 32;
+	} B;
+	int I;
+	unsigned int U;
+
+} LCU_EADD_type;
+#define LCU_EADD	(*( LCU_EADD_type *) 0xF87FFE24u)	/* LCU Error Address Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 LOCK           : 1;	/* Capture Register Lock State. */
+		unsigned __sfrbit32                : 19;
+		unsigned __sfrbit32 ACK            : 2;	/* Captured LMB-Bus Acknowledge Code */
+		unsigned __sfrbit32 WR             : 1;	/* Captured LMB-Bus Write signal */
+		unsigned __sfrbit32 RD             : 1;	/* Captured LMB-Bus Read signal */
+		unsigned __sfrbit32 TAG            : 3;	/* Captured LMB-Bus TAG */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 OPC            : 4;	/* Captured LMB-Bus Opcode */
+	} B;
+	int I;
+	unsigned int U;
+
+} LCU_EATT_type;
+#define LCU_EATT	(*( LCU_EATT_type *) 0xF87FFE20u)	/* LCU Error Attribute Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 REV            : 8;	/* System Timer Module Revision Number. */
+		/* const */ unsigned __sfrbit32 MOD_32B        : 8;	/* Indicates a 32-bit ID register. */
+		/* const */ unsigned __sfrbit32 MOD            : 16;	/* System Timer Module Identification Number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} LCU_ID_type;
+#define LCU_ID	(*( LCU_ID_type *) 0xF87FFE08u)	/* LCU Identification Register */
+
+
+/* Program Memory Unit (PMU) */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 PCSZ           : 2;	/* 8KB Instruction cache */
+		/* const */ unsigned __sfrbit32                : 2;
+		/* const */ unsigned __sfrbit32 PMEMSZ         : 3;	/* 32KB Program memory */
+		/* const */ unsigned __sfrbit32                : 25;
+	} B;
+	int I;
+	unsigned int U;
+
+} PMU_CON2_type;
+#define PMU_CON2	(*( PMU_CON2_type *) 0xF87FFD18u)	/* PMU Control Register 2 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CCINV          : 1;	/* Code Cache Invalidate Control */
+		unsigned __sfrbit32                : 31;
+	} B;
+	int I;
+	unsigned int U;
+
+} PMU_CON1_type;
+#define PMU_CON1	(*( PMU_CON1_type *) 0xF87FFD14u)	/* PMU Control Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 CCBYP          : 1;	/* Instruction Cache Bypass */
+		unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} PMU_CON0_type;
+#define PMU_CON0	(*( PMU_CON0_type *) 0xF87FFD10u)	/* PMU Control Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MOD_REV        : 8;	/* Module Revision Number */
+		unsigned __sfrbit32 MOD_ID         : 24;	/* Module Identification Number */
+	} B;
+	int I;
+	unsigned int U;
+
+} PMU_ID_type;
+#define PMU_ID	(*( PMU_ID_type *) 0xF87FFD08u)	/* PMU Identification Register (read-only) */
+
+#define PMI_CON0	PMU_CON0
+#define PMI_CON1	PMU_CON1
+#define PMI_CON2	PMU_CON2
+
+/* Data Memory Unit (DMU) */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 LREATF         : 1;	/* Load range error asynchronous flag */
+		/* const */ unsigned __sfrbit32 SREATF         : 1;	/* Store range asynchronous error flag */
+		/* const */ unsigned __sfrbit32 LFEATF         : 1;	/* FPI-BUS load asynchronous error flag */
+		/* const */ unsigned __sfrbit32 SFEATF         : 1;	/* FPI-BUS store asynchronous error flag */
+		/* const */ unsigned __sfrbit32 LCEATF         : 1;	/* DCU register load asynchronous error flag */
+		/* const */ unsigned __sfrbit32 SCEATF         : 1;	/* DCU register store asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CRLEATF        : 1;	/* Cache refill load asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CRSEATF        : 1;	/* Cache refill store asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CWLEATF        : 1;	/* Cache writeback load asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CWSEATF        : 1;	/* Cache writeback store asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CFEATF         : 1;	/* Cache flush asynchronous error flag */
+		/* const */ unsigned __sfrbit32 CMEATF         : 1;	/* Cache management asynchronous error flag. */
+		/* const */ unsigned __sfrbit32                : 20;
+	} B;
+	int I;
+	unsigned int U;
+
+} DMU_ATR_type;
+#define DMU_ATR	(*( DMU_ATR_type *) 0xF87FFC20u)	/* DMU Asynchronous Trap Flag Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 LRESTF         : 1;	/* Load range error synchronous flag */
+		/* const */ unsigned __sfrbit32 SRESTF         : 1;	/* Store range synchronous error flag */
+		/* const */ unsigned __sfrbit32 LFESTF         : 1;	/* FPI-BUS load synchronous error flag */
+		/* const */ unsigned __sfrbit32 SFESTF         : 1;	/* FPI-BUS store synchronous error flag */
+		/* const */ unsigned __sfrbit32 LCESTF         : 1;	/* DCU register load synchronous error flag */
+		/* const */ unsigned __sfrbit32 SCESTF         : 1;	/* DCU register store synchronous error flag */
+		/* const */ unsigned __sfrbit32 CRLESTF        : 1;	/* Cache refill load synchronous error flag */
+		/* const */ unsigned __sfrbit32 CRSESTF        : 1;	/* Cache refill store synchronous error flag */
+		/* const */ unsigned __sfrbit32 CWLESTF        : 1;	/* Cache writeback load synchronous error flag */
+		/* const */ unsigned __sfrbit32 CWSESTF        : 1;	/* Cache writeback store synchronous error flag */
+		/* const */ unsigned __sfrbit32 CFESTF         : 1;	/* Cache flush synchronous error flag */
+		/* const */ unsigned __sfrbit32 CMESTF         : 1;	/* Cache management synchronous error flag. */
+		/* const */ unsigned __sfrbit32                : 20;
+	} B;
+	int I;
+	unsigned int U;
+
+} DMU_STR_type;
+#define DMU_STR	(*( DMU_STR_type *) 0xF87FFC18u)	/* DMU Synchronous Trap Flag Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 DCSZ           : 2;	/* Data Cache Size */
+		/* const */ unsigned __sfrbit32                : 2;
+		/* const */ unsigned __sfrbit32 DMEMSZ         : 3;	/* Data Total Memory Size */
+		/* const */ unsigned __sfrbit32                : 25;
+	} B;
+	int I;
+	unsigned int U;
+
+} DMU_CON_type;
+#define DMU_CON	(*( DMU_CON_type *) 0xF87FFC10u)	/* DMU Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 MOD_REV        : 8;	/* Module Revision Number */
+		/* const */ unsigned __sfrbit32 MOD_ID         : 24;	/* Module Identification Number */
+	} B;
+	int I;
+	unsigned int U;
+
+} DMU_ID_type;
+#define DMU_ID	(*( DMU_ID_type *) 0xF87FFC08u)	/* DMU Identification Register read-only) */
+
+
+/* Local Memory Unit (LMU) */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REV            : 8;	/* LMU Revision Number Value. */
+		/* const */ unsigned int MOD            : 8;	/* LMU Module Number Value. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} LMU_ID_type;
+#define LMU_ID	(*( LMU_ID_type *) 0xF8000410u)	/* LMU Modul Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int Forced_Refresh : 10;
+		unsigned int Refresh_request: 10;
+		unsigned int Slotted_Refresh: 10;
+		unsigned int                : 2;
+	} B;
+	int I;
+	unsigned int U;
+
+} LMU_REFRATE_type;
+#define LMU_REFRATE	(*( LMU_REFRATE_type *) 0xF8000408u)	/* LMU Refresh Rate Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 2;
+		unsigned int REFPRI         : 1;
+		unsigned int PREON          : 1;
+		unsigned int PREONP         : 1;
+		unsigned int PRESL          : 1;
+		unsigned int PRESLP         : 1;
+		unsigned int CLKGAT         : 1;
+		unsigned int                : 8;
+		unsigned int SDTB           : 1;
+		unsigned int SDTH           : 1;
+		unsigned int SDTW           : 1;
+		unsigned int SDTD           : 1;
+		unsigned int BTR2           : 1;
+		unsigned int BTR4           : 1;
+		unsigned int BTR8           : 1;
+		unsigned int                : 9;
+	} B;
+	int I;
+	unsigned int U;
+
+} LMU_MODE_type;
+#define LMU_MODE	(*( LMU_MODE_type *) 0xF8000400u)	/* LMU Mode Register */
+
+
+/* External Bus Unit (EBU_LMB) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Read access wait states */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+		unsigned __sfrbit32 WAITINV        : 1;	/* WAIT Level */
+		unsigned __sfrbit32 WAIT           : 2;	/* Variable wait-state insertion */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Byte control signal timing */
+		unsigned __sfrbit32 CMULT          : 3;	/* Wait cycle multiplier */
+		unsigned __sfrbit32 CFG32          : 1;	/* Boot memory data width */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BOOTCFG_type;
+#define EBU_BOOTCFG	(*( EBU_BOOTCFG_type *) 0xA0000004u)	/* External Boot Memory Configuration Word */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 OVERLAY        : 8;	/* Overlay chip select */
+		unsigned __sfrbit32                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_EMUOVL_type;
+#define EBU_EMUOVL	(*( EBU_EMUOVL_type *) 0xF8000178u)	/* Emulator Overlay Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_EMUBAP_type;
+#define EBU_EMUBAP	(*( EBU_EMUBAP_type *) 0xF8000170u)	/* Emulator Bus Access Parameter Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WR             : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_EMUBC_type;
+#define EBU_EMUBC	(*( EBU_EMUBC_type *) 0xF8000168u)	/* Emulator Bus Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate segment comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_EMUAS_type;
+#define EBU_EMUAS	(*( EBU_EMUAS_type *) 0xF8000160u)	/* Emulator Address Select Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP0_type;
+#define EBU_BUSAP0	(*( EBU_BUSAP0_type *) 0xF8000100u)	/* Bus Access Parameter Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP1_type;
+#define EBU_BUSAP1	(*( EBU_BUSAP1_type *) 0xF8000108u)	/* Bus Access Parameter Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP2_type;
+#define EBU_BUSAP2	(*( EBU_BUSAP2_type *) 0xF8000110u)	/* Bus Access Parameter Register 2 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP3_type;
+#define EBU_BUSAP3	(*( EBU_BUSAP3_type *) 0xF8000118u)	/* Bus Access Parameter Register 3 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP4_type;
+#define EBU_BUSAP4	(*( EBU_BUSAP4_type *) 0xF8000120u)	/* Bus Access Parameter Register 4 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP5_type;
+#define EBU_BUSAP5	(*( EBU_BUSAP5_type *) 0xF8000128u)	/* Bus Access Parameter Register 5 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DTACS          : 4;	/* Between different regions */
+		unsigned __sfrbit32 DTARDWR        : 4;	/* Between read and write accesses */
+		unsigned __sfrbit32 WRRECOVC       : 3;	/* After write accesses */
+		unsigned __sfrbit32 RDRECOVC       : 3;	/* After read accesses */
+		unsigned __sfrbit32 DATAC          : 2;	/* Write accesses */
+		unsigned __sfrbit32 BURSTC         : 3;	/* During burst accesses */
+		unsigned __sfrbit32 WAITWRC        : 3;	/* Programmed for wait accesses */
+		unsigned __sfrbit32 WAITRDC        : 3;	/* Programmed for read accesses */
+		unsigned __sfrbit32 CMDDELAY       : 3;	/* Programmed command */
+		unsigned __sfrbit32 AHOLDC         : 2;	/* Multiplexed accesses */
+		unsigned __sfrbit32 ADDRC          : 2;	/* Address Cycles */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSAP6_type;
+#define EBU_BUSAP6	(*( EBU_BUSAP6_type *) 0xF8000130u)	/* Bus Access Parameter Register 6 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON6_type;
+#define EBU_BUSCON6	(*( EBU_BUSCON6_type *) 0xF80000F0u)	/* Bus Configuration Register 6 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON5_type;
+#define EBU_BUSCON5	(*( EBU_BUSCON5_type *) 0xF80000E8u)	/* Bus Configuration Register 5 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON4_type;
+#define EBU_BUSCON4	(*( EBU_BUSCON4_type *) 0xF80000E0u)	/* Bus Configuration Register 4 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON3_type;
+#define EBU_BUSCON3	(*( EBU_BUSCON3_type *) 0xF80000D8u)	/* Bus Configuration Register 3 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON2_type;
+#define EBU_BUSCON2	(*( EBU_BUSCON2_type *) 0xF80000D0u)	/* Bus Configuration Register 2 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned __sfrbit32 PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON1_type;
+#define EBU_BUSCON1	(*( EBU_BUSCON1_type *) 0xF80000C8u)	/* Bus Configuration Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MULTMAP        : 7;	/* Multiplier map */
+		unsigned int                : 1;
+		unsigned __sfrbit32 WPRE           : 1;	/* Weak prefetch */
+		unsigned __sfrbit32 AALIGN         : 1;	/* Address alignment */
+		unsigned int                : 3;
+		unsigned __sfrbit32 CMULT          : 3;	/* Cycle multiplier */
+		unsigned __sfrbit32 ENDIAN         : 1;	/* Endian mode */
+		unsigned __sfrbit32 DLOAD          : 1;	/* Data upload */
+		unsigned int PRE            : 1;	/* Prefetch mechanism */
+		unsigned __sfrbit32 WAITINV        : 1;	/* Reversed polarity at WAIT */
+		unsigned __sfrbit32 BCGEN          : 2;	/* Signal timing mode */
+		unsigned __sfrbit32 PORTW          : 2;	/* Port width */
+		unsigned __sfrbit32 WAIT           : 2;	/* External wait state */
+		unsigned __sfrbit32 XCMDDELAY      : 2;	/* External command delay */
+		unsigned __sfrbit32 AGEN           : 3;	/* Address generation */
+		unsigned __sfrbit32 WRITE          : 1;	/* Write protection */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BUSCON0_type;
+#define EBU_BUSCON0	(*( EBU_BUSCON0_type *) 0xF80000C0u)	/* Bus Configuration Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL0_type;
+#define EBU_ADDRSEL0	(*( EBU_ADDRSEL0_type *) 0xF8000080u)	/* Address Select Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL1_type;
+#define EBU_ADDRSEL1	(*( EBU_ADDRSEL1_type *) 0xF8000088u)	/* Address Select Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL2_type;
+#define EBU_ADDRSEL2	(*( EBU_ADDRSEL2_type *) 0xF8000090u)	/* Address Select Register 3 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL3_type;
+#define EBU_ADDRSEL3	(*( EBU_ADDRSEL3_type *) 0xF8000098u)	/* Address Select Register 3 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL4_type;
+#define EBU_ADDRSEL4	(*( EBU_ADDRSEL4_type *) 0xF80000A0u)	/* Address Select Register 4 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL5_type;
+#define EBU_ADDRSEL5	(*( EBU_ADDRSEL5_type *) 0xF80000A8u)	/* Address Select Register 5 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REGENAB        : 1;	/* Memory Region */
+		unsigned __sfrbit32 ALTENAB        : 1;	/* Alternate Segment Comparison */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 MASK           : 4;	/* Address Mask */
+		unsigned __sfrbit32 ALTSEG         : 4;	/* Alternate Segment */
+		unsigned __sfrbit32 BASE           : 20;	/* Base Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ADDRSEL6_type;
+#define EBU_ADDRSEL6	(*( EBU_ADDRSEL6_type *) 0xF80000B0u)	/* Address Select Register 6 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 REFERR         : 1;	/* SDRAM Refresh Error */
+		/* const */ unsigned __sfrbit32 SDRM_BUSY      : 1;	/* SDRAM Busy */
+		/* const */ unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRSTAT_type;
+#define EBU_SDRSTAT1	(*( EBU_SDRSTAT_type *) 0xF8000078u)	/* EBU SDRAM Type 1 Status */
+#define EBU_SDRSTAT0	(*( EBU_SDRSTAT_type *) 0xF8000070u)	/* EBU SDRAM Type 0 Status */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 BURSTL         : 3;	/* Burst length */
+		unsigned __sfrbit32 BTYP           : 1;	/* Burst type */
+		unsigned __sfrbit32 CASLAT         : 3;	/* CAS latency */
+		unsigned __sfrbit32 OPMODE         : 7;	/* Operation Mode */
+		unsigned __sfrbit32                : 18;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMOD1_type;
+#define EBU_SDRMOD1	(*( EBU_SDRMOD1_type *) 0xF8000068u)	/* SDRAM Mode Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 BURSTL         : 3;	/* Burst length */
+		unsigned __sfrbit32 BTYP           : 1;	/* Burst type */
+		unsigned __sfrbit32 CASLAT         : 3;	/* CAS latency */
+		unsigned __sfrbit32 OPMODE         : 7;	/* Operation Mode */
+		unsigned __sfrbit32                : 18;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMOD0_type;
+#define EBU_SDRMOD0	(*( EBU_SDRMOD0_type *) 0xF8000060u)	/* SDRAM Mode Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CRAS           : 4;	/* Row to precharge delay counter */
+		unsigned __sfrbit32 CRFSH          : 4;	/* Initialization refresh commands counter */
+		unsigned __sfrbit32 CRSC           : 2;	/* Mode register setup time */
+		unsigned __sfrbit32 CRP            : 2;	/* Row precharge time counter */
+		unsigned __sfrbit32 AWIDTH         : 2;	/* Width of column address */
+		unsigned __sfrbit32 CRCD           : 2;	/* Row to column delay counter */
+		unsigned __sfrbit32 CRC            : 3;	/* Row cycle time counter */
+		unsigned __sfrbit32 PAGEM          : 3;	/* Mask for page tag */
+		unsigned __sfrbit32 BANKM          : 3;	/* Mask for bank tag */
+		unsigned __sfrbit32                : 7;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMCON1_type;
+#define EBU_SDRMCON1	(*( EBU_SDRMCON1_type *) 0xF8000058u)	/* SDRAM Control Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CRAS           : 4;	/* Row to precharge delay counter */
+		unsigned __sfrbit32 CRFSH          : 4;	/* Refresh commands counter */
+		unsigned __sfrbit32 CRSC           : 2;	/* Mode register setup time */
+		unsigned __sfrbit32 CRP            : 2;	/* Row precharge time counter */
+		unsigned __sfrbit32 AWIDTH         : 2;	/* Width of column address */
+		unsigned __sfrbit32 CRCD           : 2;	/* Row to column delay counter */
+		unsigned __sfrbit32 CRC            : 3;	/* Row cycle time counter */
+		unsigned __sfrbit32 PAGEM          : 3;	/* Mask for page tag */
+		unsigned __sfrbit32 BANKM          : 3;	/* Mask for bank tag */
+		unsigned __sfrbit32                : 7;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMCON0_type;
+#define EBU_SDRMCON0	(*( EBU_SDRMCON0_type *) 0xF8000050u)	/* SDRAM Control Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REFRESHC       : 6;	/* Refresh counter period */
+		unsigned __sfrbit32 REFRESHR       : 3;	/* Number of refresh commands */
+		unsigned __sfrbit32 SELFREXST      : 1;	/* Self refresh exit status */
+		unsigned __sfrbit32 SELFREX        : 1;	/* Self refresh exit */
+		unsigned __sfrbit32 SELFRENST      : 1;	/* Self refresh entry status */
+		unsigned __sfrbit32 SELFREN        : 1;	/* Self refresh entry */
+		unsigned __sfrbit32 AUTOSELFR      : 1;	/* Automatic self refresh */
+		unsigned __sfrbit32                : 18;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMREF1_type;
+#define EBU_SDRMREF1	(*( EBU_SDRMREF1_type *) 0xF8000048u)	/* SDRAM Refresh Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 REFRESHC       : 6;	/* Refresh counter period */
+		unsigned __sfrbit32 REFRESHR       : 3;	/* Number of refresh commands */
+		unsigned __sfrbit32 SELFREXST      : 1;	/* Self refresh exit status */
+		unsigned __sfrbit32 SELFREX        : 1;	/* Self refresh exit */
+		unsigned __sfrbit32 SELFRENST      : 1;	/* Self refresh entry status */
+		unsigned __sfrbit32 SELFREN        : 1;	/* Self refresh entry */
+		unsigned __sfrbit32 AUTOSELFR      : 1;	/* Automatic self refresh */
+		unsigned __sfrbit32                : 18;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_SDRMREF0_type;
+#define EBU_SDRMREF0	(*( EBU_SDRMREF0_type *) 0xF8000040u)	/* SDRAM Refresh Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 FETBLEN        : 4;	/* Fetch burst length */
+		unsigned __sfrbit32 FBBMSEL        : 1;	/* Flash burst buffer */
+		unsigned __sfrbit32 WAITFUNC       : 1;	/* Function of WAIT input */
+		unsigned __sfrbit32 EXTCLOCK       : 2;	/* Frequency of external clock */
+		unsigned __sfrbit32                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_BFCON_type;
+#define EBU_BFCON	(*( EBU_BFCON_type *) 0xF8000020u)	/* Burst Flash Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 EXTRECON       : 1;	/* External reconfiguration */
+		unsigned __sfrbit32 EXTSVM         : 1;	/* Perform master in */
+		unsigned __sfrbit32 EXTACC         : 1;	/* External access FPI-bus */
+		unsigned __sfrbit32 EXTLOCK        : 1;	/* Lock external bus */
+		unsigned __sfrbit32 ARBSYNC        : 1;	/* Arbitration evaluation */
+		unsigned __sfrbit32 ARBMODE        : 2;	/* Arbitration mode */
+		unsigned __sfrbit32 TOUTC          : 8;	/* Time-out control */
+		unsigned __sfrbit32 GLOBALCS       : 8;	/* Global chip select signal */
+		unsigned __sfrbit32 BUSCLK         : 2;	/* Clock generation */
+		unsigned __sfrbit32                : 6;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_CON_type;
+#define EBU_CON	(*( EBU_CON_type *) 0xF8000010u)	/* EBU Global Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 REV            : 8;	/* EBU Module Revision Number. */
+		/* const */ unsigned __sfrbit32 MOD            : 24;	/* EBU Module Identification Number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_ID_type;
+#define EBU_ID	(*( EBU_ID_type *) 0xF8000008u)	/* EBU Module ID Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DISR           : 1;	/* EBU module */
+		/* const */ unsigned __sfrbit32 DISS           : 1;	/* EBU disable status bit */
+		/* const */ unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} EBU_CLC_type;
+#define EBU_CLC	(*( EBU_CLC_type *) 0xF8000000u)	/* EBU Clock Control Register */
+
+
+/* CPU Slave Interface (CPS) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SRPN           : 8;	/* Service Request Priority Number. */
+		unsigned int                : 2;
+		unsigned int TOS            : 2;	/* Type-of-Service Control. */
+		unsigned int SRE            : 1;	/* Service Request Enable Control. */
+		/* const */ unsigned int SRR            : 1;	/* Service Request Flag. */
+		unsigned int CLRR           : 1;	/* Request Flag Clear Bit. */
+		unsigned int SETR           : 1;	/* Request Flag Set Bit. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} CPU_SRC_type;
+#define CPU_SRC0	(*( CPU_SRC_type *) 0xF7E0FFFCu)	/* CPU Service Request Control Register 0 */
+#define CPU_SRC1	(*( CPU_SRC_type *) 0xF7E0FFF8u)	/* CPU Service Request Control Register 1 */
+#define CPU_SRC2	(*( CPU_SRC_type *) 0xF7E0FFF4u)	/* CPU Service Request Control Register 2 */
+#define CPU_SRC3	(*( CPU_SRC_type *) 0xF7E0FFF0u)	/* CPU Service Request Control Register 3 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SBSRPN         : 8;	/* Service Request Priority Number. */
+		unsigned int                : 2;
+		unsigned int SBTOS          : 2;	/* Type-of-Service Control. */
+		unsigned int SBSRE          : 1;	/* Service Request Enable Control. */
+		/* const */ unsigned int SBSRR          : 1;	/* Service Request Flag. */
+		unsigned int SBCLRR         : 1;	/* Service Request Flag Clear Bit. */
+		unsigned int SBSETR         : 1;	/* Service Request Flag Set Bit. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} CPU_SRCSB_type;
+#define CPU_SRCSB	(*( CPU_SRCSB_type *) 0xF7E0FFBCu)	/* Software Break Service Request Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REV            : 8;	/* CPU Revision Number. */
+		/* const */ unsigned int MOD            : 8;	/* CPU Identification Number. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} CPU_ID_type;
+#define CPU_ID	(*( CPU_ID_type *) 0xF7E0FF18u)	/* CPU Identification Register */
+
+
+/* Ethernet Controller: Transmit Buffer */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 8;
+		unsigned int RTC            : 3;	/* Refill Threshold Code */
+		unsigned int                : 1;
+		unsigned int FTC            : 3;	/* Forward Threshold Code */
+		unsigned int                : 1;
+		unsigned int ITBS           : 8;	/* Individual Transmit Buffer Size */
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} TBCPR_type;
+#define TBCPR	(*( TBCPR_type *) 0xF200051Cu)	/* TB Channel Parameter Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int CHID           : 2;	/* Channel ID */
+		unsigned int                : 22;
+		unsigned int CMD            : 8;	/* Command */
+	} B;
+	int I;
+	unsigned int U;
+
+} TBCC_type;
+#define TBCC	(*( TBCC_type *) 0xF2000518u)	/* TB Channel Command Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int CHID           : 2;	/* Channel ID */
+		unsigned int                : 15;
+		unsigned int CMDF           : 1;	/* Command Failed */
+		unsigned int                : 14;
+	} B;
+	int I;
+	unsigned int U;
+
+} TBISR_type;
+#define TBISR	(*( TBISR_type *) 0xF2000514u)	/* TB Interrupt Status Register */
+
+
+/* Ethernet Controller: Receive Buffer */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int RBDBC          : 8;	/* RB Data Buffer Free Count */
+		unsigned int                : 8;
+		unsigned int RBAQC          : 6;	/* RB Action Queue Free Count */
+		unsigned int                : 10;
+	} B;
+	int I;
+	unsigned int U;
+
+} RBFPCNT_type;
+#define RBFPCNT	(*( RBFPCNT_type *) 0xF2000430u)	/* RB Free Pool Count Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int RBDBTH         : 8;	/* RBDB Threshold */
+		unsigned int                : 8;
+		unsigned int RBAQTH         : 6;	/* RBAQ Threshold */
+		unsigned int                : 10;
+	} B;
+	int I;
+	unsigned int U;
+
+} RBFPTH_type;
+#define RBFPTH	(*( RBFPTH_type *) 0xF2000424u)	/* RB Free Pool Threshold Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 2;
+		unsigned int FPMM           : 1;	/* Free Pool Monitor Mode */
+		unsigned int                : 2;
+		unsigned int IM             : 1;	/* Interrupt Mask */
+		unsigned int                : 26;
+	} B;
+	int I;
+	unsigned int U;
+
+} RBFPM_type;
+#define RBFPM	(*( RBFPM_type *) 0xF2000420u)	/* RB Free Pool Monitor Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int FTC            : 2;	/* Forward Threshold Code */
+		unsigned int                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} RBCBL_type;
+#define RBCBL	(*( RBCBL_type *) 0xF200041Cu)	/* RB Channel Burst Length Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int CHID           : 2;	/* Channel ID */
+		unsigned int                : 14;
+		unsigned int CMD            : 8;	/* Command */
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} RBCC_type;
+#define RBCC	(*( RBCC_type *) 0xF2000418u)	/* RB Channel Command Register */
+
+
+/* Ethernet Controller: MAC Controller */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32                : 23;
+		/* const */ unsigned __sfrbit32 MROLL          : 1;	/* Missed Error Counter Roll */
+		/* const */ unsigned __sfrbit32 CTRLX          : 1;	/* Control Frame Received */
+		/* const */ unsigned __sfrbit32 ALIGNE         : 1;	/* Alignment Error */
+		/* const */ unsigned __sfrbit32 CRCE           : 1;	/* CRC Error */
+		/* const */ unsigned __sfrbit32 OVER           : 1;	/* Overflow */
+		/* const */ unsigned __sfrbit32 LOE            : 1;	/* Long Error */
+		/* const */ unsigned __sfrbit32 RXPE           : 1;	/* Receive Parity Error */
+		/* const */ unsigned __sfrbit32 GOOD           : 1;	/* Good */
+		/* const */ unsigned __sfrbit32 RXHLTD         : 1;	/* Receive Halted */
+	} B;
+	int I;
+	unsigned int U;
+
+} MACRX_ISR_type;
+#define MACRX1ISR	(*( MACRX_ISR_type *) 0xF2000374u)	/* MAC Receive 1 Interrupt Status Register */
+#define MACRX0ISR	(*( MACRX_ISR_type *) 0xF200036Cu)	/* MAC Receive 0 Interrupt Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 23;
+		unsigned __sfrbit32 MROLL          : 1;	/* Missed Error Counter Roll */
+		unsigned __sfrbit32 CTRLX          : 1;	/* Control Frame Received */
+		unsigned __sfrbit32 ALIGNE         : 1;	/* Alignment Error */
+		unsigned __sfrbit32 CRCE           : 1;	/* CRC Error */
+		unsigned __sfrbit32 OVER           : 1;	/* Overflow */
+		unsigned __sfrbit32 LOE            : 1;	/* Long Error */
+		unsigned __sfrbit32 RXPE           : 1;	/* Receive Parity Error */
+		unsigned __sfrbit32 GOOD           : 1;	/* Good */
+		unsigned __sfrbit32 RXHLTD         : 1;	/* Receive Halted */
+	} B;
+	int I;
+	unsigned int U;
+
+} MACRX_IMR_type;
+#define MACRX1IMR	(*( MACRX_IMR_type *) 0xF2000370u)	/* MAC Receive 1 Interrupt Mask Register */
+#define MACRX0IMR	(*( MACRX_IMR_type *) 0xF2000368u)	/* MAC Receive 0 Interrupt Mask Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 TXCOLCNT       : 4;	/* Transmit Collision Count */
+		/* const */ unsigned __sfrbit32 XCOL           : 1;	/* Excessive Collision */
+		/* const */ unsigned __sfrbit32                : 1;
+		/* const */ unsigned __sfrbit32 TXDEF          : 1;	/* Transmit Deferred */
+		/* const */ unsigned __sfrbit32 PSE            : 1;	/* Paused */
+		/* const */ unsigned __sfrbit32 UNDER          : 1;	/* Underrun */
+		/* const */ unsigned __sfrbit32 XDEF           : 1;	/* Excessive Deferral */
+		/* const */ unsigned __sfrbit32 LCAR           : 1;	/* Lost Carrier */
+		/* const */ unsigned __sfrbit32 LCOL           : 1;	/* Late Collision */
+		/* const */ unsigned __sfrbit32 TXPE           : 1;	/* Transmit Parity Error */
+		/* const */ unsigned __sfrbit32 CMP            : 1;	/* Completion */
+		/* const */ unsigned __sfrbit32 TXHLTD         : 1;	/* Transmit Halted */
+		/* const */ unsigned __sfrbit32 SQERR          : 1;	/* Signal Quality Error */
+		/* const */ unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACTX_ISR_type;
+#define MACTX1ISR	(*( MACTX_ISR_type *) 0xF2000354u)	/* MAC Transmit 1 Interrupt Status Register */
+#define MACTX0ISR	(*( MACTX_ISR_type *) 0xF200034Cu)	/* MAC Transmit 0 Interrupt Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 4;
+		unsigned __sfrbit32 XCOL           : 1;	/* Excessive Collision */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 TXDEF          : 1;	/* Transmit Deferred */
+		unsigned __sfrbit32 PSE            : 1;	/* Paused */
+		unsigned __sfrbit32 UNDER          : 1;	/* Underrun */
+		unsigned __sfrbit32 XDEF           : 1;	/* Excessive Deferral */
+		unsigned __sfrbit32 LCAR           : 1;	/* Lost Carrier */
+		unsigned __sfrbit32 LCOL           : 1;	/* Late Collision */
+		unsigned __sfrbit32 TXPE           : 1;	/* Transmit Parity Error */
+		unsigned __sfrbit32 CMP            : 1;	/* Completion */
+		unsigned __sfrbit32 TXHLTD         : 1;	/* Transmit Halted */
+		unsigned __sfrbit32 SQERR          : 1;	/* Signal Quality Error */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACTX_IMR_type;
+#define MACTX1IMR	(*( MACTX_IMR_type *) 0xF2000350u)	/* MAC Transmit 1 Interrupt Mask Register */
+#define MACTX0IMR	(*( MACTX_IMR_type *) 0xF2000348u)	/* MAC Transmit 0 Interrupt Mask Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 RPSECNT        : 16;	/* Remote Pause Counter */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACRPSECNT_type;
+#define MACRPSECNT	(*( MACRPSECNT_type *) 0xF2000344u)	/* MAC Remote Pause Count Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 PSECNT         : 16;	/* Received Pause Counter */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACPSECNT_type;
+#define MACPSECNT	(*( MACPSECNT_type *) 0xF2000340u)	/* MAC Pause Count Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 MERRCNT        : 16;	/* Missed Error Counter */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACMERRCNT_type;
+#define MACMERRCNT	(*( MACMERRCNT_type *) 0xF200033Cu)	/* MAC Missed Error Count Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CEE            : 22;	/* CAM Entry Enable */
+		unsigned __sfrbit32                : 10;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACCAMCTRL1_type;
+#define MACCAMCTRL1	(*( MACCAMCTRL1_type *) 0xF2000338u)	/* MAC CAM Ctrl Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CAMDAT         : 32;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACCAMDATA_type;
+#define MACCAMDATA	(*( MACCAMDATA_type *) 0xF2000334u)	/* MAC CAM Data Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 ADDR           : 6;	/* Address */
+		/* const */ unsigned __sfrbit32                : 25;
+		/* const */ unsigned __sfrbit32 CAW            : 1;	/* CAM At Write */
+	} B;
+	int I;
+	unsigned int U;
+
+} MACCAMADDR_type;
+#define MACCAMADDR	(*( MACCAMADDR_type *) 0xF2000330u)	/* MAC CAM Address Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 ADDR           : 4;	/* Address */
+		unsigned __sfrbit32 PHYADDR        : 5;	/* PHY Address */
+		unsigned __sfrbit32 WR             : 1;	/* Write/Read */
+		unsigned __sfrbit32 BUSY           : 1;	/* Busy */
+		unsigned __sfrbit32                : 21;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACSMCTRL_type;
+#define MACSMCTRL	(*( MACSMCTRL_type *) 0xF200032Cu)	/* MAC Station Management Ctrl Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 SMD            : 16;	/* Station Management Data */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACSMDATA_type;
+#define MACSMDATA	(*( MACSMDATA_type *) 0xF2000328u)	/* MAC Station Management Data Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 5;
+		unsigned __sfrbit32 CTLFRX         : 1;	/* Control Frame Received */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 ALIGNE         : 1;	/* Alignment Error */
+		unsigned __sfrbit32 CRCE           : 1;	/* CRC Error */
+		unsigned __sfrbit32 OVER           : 1;	/* Overflow */
+		unsigned __sfrbit32 LOE            : 1;	/* Long Error */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 RXPE           : 1;	/* Receive Parity Error */
+		unsigned __sfrbit32 GOOD           : 1;	/* Good */
+		unsigned __sfrbit32 RXHLTD         : 1;	/* Receive Halted */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACRXSTAT_type;
+#define MACRXSTAT	(*( MACRXSTAT_type *) 0xF2000324u)	/* MAC Receive Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 RXEN           : 1;	/* Receive Enable */
+		unsigned __sfrbit32 RXHLT          : 1;	/* Receive Halt */
+		unsigned __sfrbit32 LOEN           : 1;	/* Long Enable */
+		unsigned __sfrbit32 SHEN           : 1;	/* Short Enable */
+		unsigned __sfrbit32 STRCRC         : 1;	/* Strip CRC */
+		unsigned __sfrbit32 PCTLP          : 1;	/* Pass Control Packets */
+		unsigned __sfrbit32 IGNCRC         : 1;	/* Ignore CRC */
+		unsigned __sfrbit32                : 25;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACRXCTRL_type;
+#define MACRXCTRL	(*( MACRXCTRL_type *) 0xF2000320u)	/* MAC Receive Ctrl Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 TXCOLCNT       : 4;	/* Transmit Collision Count */
+		unsigned __sfrbit32 XCOL           : 1;	/* Exzessive Collision */
+		unsigned __sfrbit32 TXDEF          : 1;	/* Transmit Deferred */
+		unsigned __sfrbit32 PSE            : 1;	/* Paused */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 UNDER          : 1;	/* Underrun */
+		unsigned __sfrbit32 XDEF           : 1;	/* Excessive Deferral */
+		unsigned __sfrbit32 LCAR           : 1;	/* Lost Carrier */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 LCOL           : 1;	/* Late Collision */
+		unsigned __sfrbit32 TXP            : 1;	/* Transmit Parity */
+		unsigned __sfrbit32 CMP            : 1;	/* Completion */
+		unsigned __sfrbit32 TXHLTD         : 1;	/* Transmit Halted */
+		unsigned __sfrbit32 SQERR          : 1;	/* Signal Quality Error */
+		unsigned __sfrbit32                : 15;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACTXSTAT_type;
+#define MACTXSTAT	(*( MACTXSTAT_type *) 0xF200031Cu)	/* MAC Transmit Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 TXEN           : 1;	/* Transmit Enable */
+		unsigned __sfrbit32 TXHLT          : 1;	/* Transmit Halt */
+		unsigned __sfrbit32 NOPAD          : 1;	/* No Pad */
+		unsigned __sfrbit32 NOCRC          : 1;	/* No CRC */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 NODEF          : 1;	/* No Defer */
+		unsigned __sfrbit32 SDPSE          : 1;	/* Send Pause */
+		unsigned __sfrbit32 MII10          : 1;	/* MII 10 Mbit/s Mode */
+		unsigned __sfrbit32                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACTXCTRL_type;
+#define MACTXCTRL	(*( MACTXCTRL_type *) 0xF2000318u)	/* MAC Transmit Ctrl Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 STACC          : 1;	/* Station Accept */
+		unsigned __sfrbit32 GRPACC         : 1;	/* Group Access */
+		unsigned __sfrbit32 BRDACC         : 1;	/* Broadcast Access */
+		unsigned __sfrbit32 NEGCAM         : 1;	/* Negative CAM */
+		unsigned __sfrbit32 CMPEN          : 1;	/* Compare Enable */
+		unsigned __sfrbit32                : 27;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACCAMCTRL0_type;
+#define MACCAMCTRL0	(*( MACCAMCTRL0_type *) 0xF2000314u)	/* MAC CAM Ctrl Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 HLTREQ         : 1;	/* Halt Request */
+		unsigned __sfrbit32 HLTIMM         : 1;	/* Halt Immediately */
+		unsigned __sfrbit32 RESET          : 1;	/* Reset */
+		unsigned __sfrbit32 FULLDUP        : 1;	/* Full Duplex */
+		unsigned __sfrbit32 MACLP          : 1;	/* MAC Loop */
+		/* const */ unsigned __sfrbit32                : 5;
+		/* const */ unsigned __sfrbit32 MROLL          : 1;	/* Missed Roll */
+		/* const */ unsigned __sfrbit32                : 21;
+	} B;
+	int I;
+	unsigned int U;
+
+} MACCTRL_type;
+#define MACCTRL	(*( MACCTRL_type *) 0xF2000310u)	/* MAC Ctrl Register */
+
+
+/* Ethernet Controller: Data Management Unit Transmit */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 CNT            : 32;	/* Counter */
+	} B;
+	int I;
+	unsigned int U;
+
+} DTFFCR_type;
+#define DTFFCR	(*( DTFFCR_type *) 0xF200023Cu)	/* DT FIFO Full CounterRegister */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CHNO           : 2;	/* Channel Number */
+		unsigned __sfrbit32 HTAB           : 1;	/* Hold Caused Transmit Abort */
+		unsigned __sfrbit32 TAB            : 1;	/* Transmit Abort */
+		unsigned __sfrbit32 HI             : 1;	/* Host Initiated Interrupt */
+		unsigned __sfrbit32 DESCRID        : 6;	/* Descriptor ID */
+		unsigned __sfrbit32 FORMAT         : 5;	/* Format */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} DTISFIFO_CH_type;
+#define DTISFIFO_CH	(*( DTISFIFO_CH_type *) 0xF2000238u)	/* DT Interrupt Status FIFO */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CHNO           : 2;	/* Channel Number */
+		unsigned __sfrbit32 CMDC           : 1;	/* Hold Caused Transmit Abort */
+		unsigned __sfrbit32                : 8;
+		unsigned __sfrbit32 FORMAT         : 5;	/* Format */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} DTISFIFO_CMD_type;
+#define DTISFIFO_CMD	(*( DTISFIFO_CMD_type *) 0xF2000238u)	/* DT Interrupt Status FIFO */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 16;
+		unsigned __sfrbit32 BL             : 4;	/* Burst Length */
+		unsigned __sfrbit32                : 12;
+	} B;
+	int I;
+	unsigned int U;
+
+} DTCONF3_type;
+#define DTCONF3	(*( DTCONF3_type *) 0xF200022Cu)	/* DT Configuration 3 Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 LBE            : 1;	/* Little/Big Endian Byte Swap */
+		unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} DTCONF_type;
+#define DTCONF	(*( DTCONF_type *) 0xF2000228u)	/* DT Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CMDC           : 1;	/* Command Completed */
+		unsigned __sfrbit32 TAB            : 1;	/* Transmit Abort */
+		unsigned __sfrbit32 HTAB           : 1;	/* Hold Caused Transmit Abort */
+		unsigned __sfrbit32                : 29;
+	} B;
+	int I;
+	unsigned int U;
+
+} DTIMR_type;
+#define DTIMR	(*( DTIMR_type *) 0xF2000224u)	/* DT Interrupt Mask Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 FTDA           : 30;	/* First Transmit Descriptor Address */
+	} B;
+	int I;
+	unsigned int U;
+
+} DTFTDA_type;
+#define DTFTDA	(*( DTFTDA_type *) 0xF2000220u)	/* DT First Tx Descriptor Address Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CHNO           : 2;	/* Channel Number */
+		unsigned __sfrbit32                : 22;
+		unsigned __sfrbit32 CMDX           : 8;	/* Command Transmit */
+	} B;
+	int I;
+	unsigned int U;
+
+} DTCMD_type;
+#define DTCMD	(*( DTCMD_type *) 0xF2000218u)	/* DT Command Register */
+
+
+/* Ethernet Controller: Data Management Unit Receive */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 ENA            : 1;	/* Enable Alignment */
+		unsigned __sfrbit32 LBE            : 1;	/* Little/Big Endian Byte Swap */
+		unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRCONF_type;
+#define DRCONF	(*( DRCONF_type *) 0xF2000134u)	/* DR Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CMDC           : 1;	/* Command Completed */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 SD             : 1;	/* Silent Discard */
+		unsigned __sfrbit32                : 5;
+		unsigned __sfrbit32 ILEN           : 1;	/* Invalid Length */
+		unsigned __sfrbit32 CRC            : 1;	/* CRC Error */
+		unsigned __sfrbit32 RFOD           : 1;	/* Receive Frame Overflow */
+		unsigned __sfrbit32 MFL            : 1;	/* Maximum Frame Length */
+		unsigned __sfrbit32 HRAB           : 1;	/* Hold Caused Receive Abort */
+		unsigned __sfrbit32 FE             : 1;	/* Frame End */
+		unsigned __sfrbit32 RAB            : 1;	/* Receive Abort */
+		unsigned __sfrbit32                : 17;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRIMR_type;
+#define DRIMR	(*( DRIMR_type *) 0xF2000130u)	/* DR Interrupt Mask Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 FRDA           : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRFRDA_type;
+#define DRFRDA	(*( DRFRDA_type *) 0xF200012Cu)	/* DR First Rx Descriptor Address Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 FM             : 2;	/* Frame Mode */
+		unsigned __sfrbit32                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRMOD_type;
+#define DRMOD	(*( DRMOD_type *) 0xF2000124u)	/* DR Mode Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CHNO           : 2;	/* Channel Number */
+		unsigned __sfrbit32                : 14;
+		unsigned __sfrbit32 CMDREC         : 8;	/* Command Completed */
+		unsigned __sfrbit32                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRCMD_type;
+#define DRCMD	(*( DRCMD_type *) 0xF2000120u)	/* DR Command Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 CNT            : 32;	/* Counter */
+	} B;
+	int I;
+	unsigned int U;
+
+} DRFFCR_type;
+#define DRFFCR	(*( DRFFCR_type *) 0xF200011Cu)	/* DR FIFO Full Counter Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int CHNO           : 2;	/* Channel Number */
+		unsigned int                : 5;
+		unsigned int SD             : 1;	/* Silent Discard */
+		unsigned int ILEN           : 1;	/* Invalid Length */
+		unsigned int CRC            : 1;	/* CRC Error */
+		unsigned int RFOD           : 1;	/* Receive Frame Overflow */
+		unsigned int MFL            : 1;	/* Maximum Frame Length */
+		unsigned int HRAB           : 1;	/* Hold Caused Receive Abort */
+		unsigned int FE             : 1;	/* Frame End */
+		unsigned int RAB            : 1;	/* Receive Abort */
+		unsigned int HI             : 1;	/* Host Initiated */
+		unsigned int DESCRID        : 6;	/* Descriptor ID */
+		unsigned int                : 4;
+		unsigned int FORMAT         : 5;	/* Format */
+		unsigned int                : 1;
+	} B;
+	int I;
+	unsigned int U;
+
+} DRISFIFO_CH_type;
+#define DRISFIFO_CH	(*( DRISFIFO_CH_type *) 0xF2000118u)	/* DRInterrupt Status FIFO */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CHNO           : 2;	/* Channel Number */
+		unsigned __sfrbit32                : 14;
+		unsigned __sfrbit32 CMDC           : 1;	/* Command Completed */
+		unsigned __sfrbit32                : 10;
+		unsigned __sfrbit32 FORMAT         : 5;	/* Format */
+	} B;
+	int I;
+	unsigned int U;
+
+} DRISFIFO_CMD_type;
+#define DRISFIFO_CMD	(*( DRISFIFO_CMD_type *) 0xF2000118u)	/* DRInterrupt Status FIFO */
+
+
+/* FPI Bus Controller Unit 0 (Fast FPI) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 FPIDAT         : 32;	/* Captured FPI-Bus Data (in case of a bus error). */
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU_EDAT_type;
+#define BCU0_EDAT	(*( BCU_EDAT_type *) 0xF2000028u)	/* BCU Error Data Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 FPIADR         : 32;	/* Captured FPI-Bus Address (in case of a bus error). */
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU_EADD_type;
+#define BCU0_EADD	(*( BCU_EADD_type *) 0xF2000024u)	/* BCU Error Address Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 ERRCNT         : 16;	/* Number of Bus Errors. */
+		unsigned __sfrbit32 TOUT           : 1;	/* State of FPI-Bus Time-Out Signal (active high). */
+		unsigned __sfrbit32 RDY            : 1;	/* State of FPI-Bus Ready Signal (active high). */
+		unsigned __sfrbit32 ABT            : 1;	/* State of FPI-Bus Abort Signal (active low). */
+		unsigned __sfrbit32 ACK            : 2;	/* State of FPI-Bus Acknowledge Signal. */
+		unsigned __sfrbit32 SVM            : 1;	/* State of FPI-Bus Supervisor Mode Signal (active high). */
+		unsigned __sfrbit32 WRN            : 1;	/* State of FPI-Bus Write Signal (active low). */
+		unsigned __sfrbit32 RDN            : 1;	/* State of FPI-Bus Read Signal (active low). */
+		unsigned __sfrbit32 TAG            : 4;	/* FPI-Bus Tag Number */
+		unsigned __sfrbit32 OPC            : 4;	/* FPI-Bus Operation Code */
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU_ECON_type;
+#define BCU0_ECON	(*( BCU_ECON_type *) 0xF2000020u)	/* BCU Error Control Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 TOUT           : 16;	/* Bus time-out value */
+		unsigned __sfrbit32 DBG            : 1;	/* Debug trace */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 PSE            : 1;	/* Power saving */
+		unsigned __sfrbit32 SPE            : 1;	/* Starvation protection */
+		unsigned __sfrbit32 PMS            : 1;	/* Priority mode select */
+		unsigned __sfrbit32                : 3;
+		unsigned __sfrbit32 SPC            : 8;	/* Starvation counter sample period */
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU0_CON_type;
+#define BCU0_CON	(*( BCU0_CON_type *) 0xF2000010u)	/* BCU Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 REV            : 8;	/* BCU Module Revision Number. */
+		/* const */ unsigned __sfrbit32 MOD            : 8;	/* BCU Module Identification Number. */
+		/* const */ unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU_ID_type;
+#define BCU0_ID	(*( BCU_ID_type *) 0xF2000008u)	/* BCU Identification Register */
+
+#define FBCU_CON	BCU0_CON
+
+/* ComDRAM */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SPBEN          : 1;	/* ComDRAM Scratchpad Buffer Enable Control */
+		unsigned int                : 31;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDRAM_MODE_type;
+#define COMDRAM_MODE	(*( COMDRAM_MODE_type *) 0xF01801A4u)	/* ComDRAM Mode Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int REFVAL         : 16;	/* Refresh Rate */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDRAM_REFCON_type;
+#define COMDRAM_REFCON	(*( COMDRAM_REFCON_type *) 0xF01801A0u)	/* ComDRAM Refresh Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 3;
+		unsigned int RSTCON         : 1;	/* ComDRAM Reset Control */
+		unsigned int                : 28;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDRAM_RST_type;
+#define COMDRAM_RST	(*( COMDRAM_RST_type *) 0xF0180040u)	/* ComDRAM Reset Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SPEN           : 1;	/* Suspend Enable Bit for OCDS */
+		unsigned int                : 31;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDRAM_OCDSS_type;
+#define COMDRAM_OCDSS	(*( COMDRAM_OCDSS_type *) 0xF0180004u)	/* ComDRAM OCDS Suspend Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int REGEN          : 1;	/* Switch the clock of the ComDRAM register */
+		unsigned int                : 4;
+		unsigned int EN             : 1;	/* Switch the clock of the ComDRAM */
+		unsigned int                : 26;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDRAM_CLC_type;
+#define COMDRAM_CLC	(*( COMDRAM_CLC_type *) 0xF0180000u)	/* ComDRAM Clock Register */
+
+
+/* Peripheral Control Processor (PCP) */
+#define PCP_RAM_BASE	0xF0010000	/* PCP Parameter Memory Start Address */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 CNT1           : 12;	/* Counter for BCOPY, COPY and EXIT */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 TOS            : 2;	/* Type Of Service */
+		unsigned __sfrbit32 SRPN           : 8;	/* Service Request Priority Number */
+		unsigned __sfrbit32 CPPN           : 8;	/* PCP Interrupt Priority Number */
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_GPR6_type;
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 Z              : 1;	/* Zero flag */
+		unsigned __sfrbit32 N              : 1;	/* Negative flag */
+		unsigned __sfrbit32 C              : 1;	/* Carry flag */
+		unsigned __sfrbit32 V              : 1;	/* Overflow flag */
+		unsigned __sfrbit32 CN1Z           : 1;	/* CNT1 = 0 flag */
+		unsigned __sfrbit32 IEN            : 1;	/* Enable Interrupt of Channel */
+		unsigned __sfrbit32 CEN            : 1;	/* Channel Enable */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 DPTR           : 8;	/* Data Pointer */
+		unsigned __sfrbit32 PCP_PC         : 16;	/* Program Counter */
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_GPR7_type;
+
+typedef volatile struct
+{
+	PCP_GPR7_type R7;	/* General Purpose Register R7 */
+	PCP_GPR6_type R6;	/* General Purpose Register R6 */
+	unsigned int  R5;	/* General Purpose Register R5 */
+	unsigned int  R4;	/* General Purpose Register R4 */
+	unsigned int  R3;	/* General Purpose Register R3 */
+	unsigned int  R2;	/* General Purpose Register R2 */
+	unsigned int  R1;	/* General Purpose Register R1 */
+	unsigned int  R0;	/* General Purpose Register R0 */
+
+} PCP_CONTEXT_type;
+/* PCP Channel n - full context */
+#define	PCP_CONTEXT(n)	(*(PCP_CONTEXT_type*) (PCP_RAM_BASE + sizeof(PCP_CONTEXT_type) * (n)))
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 SRPN           : 8;	/* Service Request Priority Number. */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 TOS            : 2;	/* Type-of-Service Control. */
+		unsigned __sfrbit32 SRE            : 1;	/* Service Request Enable Flag. */
+		unsigned __sfrbit32 SRR            : 1;	/* Service Request Flag. */
+		unsigned __sfrbit32                : 18;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_SRC_type;
+#define PCP_SRC0	(*( PCP_SRC_type *) 0xF0003FFCu)	/* PCP Service Request Control Register 0 */
+#define PCP_SRC1	(*( PCP_SRC_type *) 0xF0003FF8u)	/* PCP Service Request Control Register 1 */
+#define PCP_SRC2	(*( PCP_SRC_type *) 0xF0003FF4u)	/* PCP Service Request Control Register 2 */
+#define PCP_SRC3	(*( PCP_SRC_type *) 0xF0003FF0u)	/* PCP Service Request Control Register 3 */
+#define PCP_SRC4	(*( PCP_SRC_type *) 0xF0003FECu)	/* PCP Service Request Control Register 4 */
+#define PCP_SRC5	(*( PCP_SRC_type *) 0xF0003FE8u)	/* PCP Service Request Control Register 5 */
+#define PCP_SRC6	(*( PCP_SRC_type *) 0xF0003FE4u)	/* PCP Service Request Control Register 6 */
+#define PCP_SRC7	(*( PCP_SRC_type *) 0xF0003FE0u)	/* PCP Service Request Control Register 7 */
+#define PCP_SRC8	(*( PCP_SRC_type *) 0xF0003FDCu)	/* PCP Service Request Control Register 8 */
+#define PCP_SRC9	(*( PCP_SRC_type *) 0xF0003FD8u)	/* PCP Service Request Control Register 9 */
+#define PCP_SRC10	(*( PCP_SRC_type *) 0xF0003FD4u)	/* PCP Service Request Control Register 10 */
+#define PCP_SRC11	(*( PCP_SRC_type *) 0xF0003FD0u)	/* PCP Service Request Control Register 11 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 DCRO           : 1;	/* Disable Context Restore Optimization */
+		unsigned __sfrbit32 DNI            : 1;	/* Disable Nested Interrupts */
+		unsigned __sfrbit32 DCSO           : 1;	/* Disable Context Store Optimization */
+		unsigned __sfrbit32 TME            : 1;	/* Test Memory Error */
+		unsigned __sfrbit32 PCDE           : 1;	/* Prevent Channel Disable on Illegal Exit Instruction */
+		unsigned __sfrbit32                : 27;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_FTD_type;
+#define PCP_FTD	(*( PCP_FTD_type *) 0xF0003F30u)	/* PCP Feature Disable/Test Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 SSRN           : 8;	/* PCP Stalled Service Request Number */
+		/* const */ unsigned __sfrbit32 STOS           : 2;	/* PCP Stalled Type Of Service */
+		/* const */ unsigned __sfrbit32                : 5;
+		/* const */ unsigned __sfrbit32 ST             : 1;	/* PCP Stalled Status */
+		/* const */ unsigned __sfrbit32 SCHN           : 8;	/* PCP Stalled Channel Number */
+		/* const */ unsigned __sfrbit32                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_SSR_type;
+#define PCP_SSR	(*( PCP_SSR_type *) 0xF0003F2Cu)	/* PCP Stall Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 P0T            : 2;	/* PCP Interrupt Port 0 TOS Mapping */
+		/* const */ unsigned __sfrbit32 P1T            : 2;	/* PCP Interrupt Port 1 TOS Mapping */
+		/* const */ unsigned __sfrbit32 P2T            : 2;	/* PCP Interrupt Port 2 TOS Mapping */
+		/* const */ unsigned __sfrbit32 P3T            : 2;	/* PCP Interrupt Port 3 TOS Mapping */
+		/* const */ unsigned __sfrbit32 IP0E           : 1;	/* PCP Interrupt Port 0 Enable */
+		/* const */ unsigned __sfrbit32 IP1E           : 1;	/* PCP Interrupt Port 1 Enable */
+		/* const */ unsigned __sfrbit32 IP2E           : 1;	/* PCP Interrupt Port 2 Enable */
+		/* const */ unsigned __sfrbit32 IP3E           : 1;	/* PCP Interrupt Port 3 Enable */
+		/* const */ unsigned __sfrbit32                : 20;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_ICON_type;
+#define PCP_ICON	(*( PCP_ICON_type *) 0xF0003F28u)	/* PCP Interrupt Configuration Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 ITP            : 8;	/* PCP Interrupt Threshold Service Request Priority Number */
+		unsigned __sfrbit32                : 8;
+		unsigned __sfrbit32 ITL            : 4;	/* Interrupt Threshold Level */
+		unsigned __sfrbit32                : 12;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_ITR_type;
+#define PCP_ITR	(*( PCP_ITR_type *) 0xF0003F24u)	/* PCP Interrupt Threshold Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 CPPN           : 8;
+		/* const */ unsigned __sfrbit32 IE             : 1;
+		unsigned __sfrbit32                : 7;
+		/* const */ unsigned __sfrbit32 PIPN           : 8;
+		unsigned __sfrbit32 ARBCYC         : 2;
+		unsigned __sfrbit32 ONECYC         : 1;
+		unsigned __sfrbit32                : 5;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_ICR_type;
+#define PCP_ICR	(*( PCP_ICR_type *) 0xF0003F20u)	/* PCP Interrupt Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 BER            : 1;	/* Bus Error */
+		/* const */ unsigned __sfrbit32 IOP            : 1;	/* Invalid Opcode */
+		/* const */ unsigned __sfrbit32 DCR            : 1;	/* Disabled Channel Request */
+		/* const */ unsigned __sfrbit32 IAE            : 1;	/* Instruction Address Error */
+		/* const */ unsigned __sfrbit32 DBE            : 1;	/* Debug Event */
+		/* const */ unsigned __sfrbit32                : 1;
+		/* const */ unsigned __sfrbit32 CWD            : 1;	/* Channel Watchdog */
+		/* const */ unsigned __sfrbit32 PPC            : 1;	/* PRAM Partitioning Check */
+		/* const */ unsigned __sfrbit32 EPN            : 8;	/* Priority Number */
+		/* const */ unsigned __sfrbit32 PCPES_PC       : 16;	/* PC */
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_ES_type;
+#define PCP_ES	(*( PCP_ES_type *) 0xF0003F14u)	/* PCP Captured Error Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 EN             : 1;	/* PCP Enable Bit. */
+		unsigned __sfrbit32 RST            : 1;	/* PCP Reset Request. */
+		/* const */ unsigned __sfrbit32 RS             : 1;	/* Run / Stop Status Flag. */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 RCB            : 1;	/* Channel Start Mode Control. */
+		unsigned __sfrbit32 EIE            : 1;	/* ENDINIT Enable. */
+		unsigned __sfrbit32 CS             : 2;	/* Context Size Control. */
+		unsigned __sfrbit32 PPE            : 1;	/* PRAM Partitioning Enable */
+		unsigned __sfrbit32                : 2;
+		unsigned __sfrbit32 PPS            : 5;	/* PRAM Partition Size */
+		unsigned __sfrbit32 CWE            : 1;	/* Channel Watchdog Enable */
+		unsigned __sfrbit32 CWN            : 7;	/* Channel Watchdog Number */
+		unsigned __sfrbit32 ESR            : 8;	/* Error Service Request number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} PCP_CS_type;
+#define PCP_CS	(*( PCP_CS_type *) 0xF0003F10u)	/* PCP Control /Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned __sfrbit32 REV            : 8;	/* PCP Revision Number. */
+		/* const */ unsigned __sfrbit32 MOD            : 8;	/* PCP Identification Number. */
+		/* const */ unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCPMODID_type;
+#define PCPMODID	(*( PCPMODID_type *) 0xF0003F08u)	/* PCP Module Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32                : 15;
+		unsigned __sfrbit32 PCGDIS         : 1;	/* Clock Gating Disable Bit */
+		unsigned __sfrbit32                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCPCLC_type;
+#define PCPCLC	(*( PCPCLC_type *) 0xF0003F00u)	/* PCP Clock Control Register */
+
+
+/* Port 5 */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int AS1_0          : 1;	/* Port Alternate Function Selection 0, Bit 0. */
+		unsigned int AS1_1          : 1;	/* Port Alternate Function Selection 0, Bit 1. */
+		unsigned int AS1_2          : 1;	/* Port Alternate Function Selection 0, Bit 2. */
+		unsigned int AS1_3          : 1;	/* Port Alternate Function Selection 0, Bit 3. */
+		unsigned int AS1_4          : 1;	/* Port Alternate Function Selection 0, Bit 4. */
+		unsigned int AS1_5          : 1;	/* Port Alternate Function Selection 0, Bit 5. */
+		unsigned int AS1_6          : 1;	/* Port Alternate Function Selection 0, Bit 6. */
+		unsigned int AS1_7          : 1;	/* Port Alternate Function Selection 0, Bit 7. */
+		unsigned int AS1_8          : 1;	/* Port Alternate Function Selection 0, Bit 8. */
+		unsigned int AS1_9          : 1;	/* Port Alternate Function Selection 0, Bit 9. */
+		unsigned int AS1_10         : 1;	/* Port Alternate Function Selection 0, Bit 10. */
+		unsigned int AS1_11         : 1;	/* Port Alternate Function Selection 0, Bit 11. */
+		unsigned int AS1_12         : 1;	/* Port Alternate Function Selection 0, Bit 12. */
+		unsigned int AS1_13         : 1;	/* Port Alternate Function Selection 0, Bit 13. */
+		unsigned int AS1_14         : 1;	/* Port Alternate Function Selection 0, Bit 14. */
+		unsigned int AS1_15         : 1;	/* Port Alternate Function Selection 0, Bit 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_ALTSEL1_type;
+#define P5ALTSEL1	(*( P_ALTSEL1_type *) 0xF0002D48u)	/* Port 5 Alternate Function Select Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int AS0_0          : 1;	/* Port Alternate Function Selection 0, Bit 0. */
+		unsigned int AS0_1          : 1;	/* Port Alternate Function Selection 0, Bit 1. */
+		unsigned int AS0_2          : 1;	/* Port Alternate Function Selection 0, Bit 2. */
+		unsigned int AS0_3          : 1;	/* Port Alternate Function Selection 0, Bit 3. */
+		unsigned int AS0_4          : 1;	/* Port Alternate Function Selection 0, Bit 4. */
+		unsigned int AS0_5          : 1;	/* Port Alternate Function Selection 0, Bit 5. */
+		unsigned int AS0_6          : 1;	/* Port Alternate Function Selection 0, Bit 6. */
+		unsigned int AS0_7          : 1;	/* Port Alternate Function Selection 0, Bit 7. */
+		unsigned int AS0_8          : 1;	/* Port Alternate Function Selection 0, Bit 8. */
+		unsigned int AS0_9          : 1;	/* Port Alternate Function Selection 0, Bit 9. */
+		unsigned int AS0_10         : 1;	/* Port Alternate Function Selection 0, Bit 10. */
+		unsigned int AS0_11         : 1;	/* Port Alternate Function Selection 0, Bit 11. */
+		unsigned int AS0_12         : 1;	/* Port Alternate Function Selection 0, Bit 12. */
+		unsigned int AS0_13         : 1;	/* Port Alternate Function Selection 0, Bit 13. */
+		unsigned int AS0_14         : 1;	/* Port Alternate Function Selection 0, Bit 14. */
+		unsigned int AS0_15         : 1;	/* Port Alternate Function Selection 0, Bit 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_ALTSEL0_type;
+#define P5ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002D44u)	/* Port 5 Alternate Function Select Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DIR0           : 1;	/* Port Direction Control Bit 0. */
+		unsigned int DIR1           : 1;	/* Port Direction Control Bit 1. */
+		unsigned int DIR2           : 1;	/* Port Direction Control Bit 2. */
+		unsigned int DIR3           : 1;	/* Port Direction Control Bit 3. */
+		unsigned int DIR4           : 1;	/* Port Direction Control Bit 4. */
+		unsigned int DIR5           : 1;	/* Port Direction Control Bit 5. */
+		unsigned int DIR6           : 1;	/* Port Direction Control Bit 6. */
+		unsigned int DIR7           : 1;	/* Port Direction Control Bit 7. */
+		unsigned int DIR8           : 1;	/* Port Direction Control Bit 8. */
+		unsigned int DIR9           : 1;	/* Port Direction Control Bit 9. */
+		unsigned int DIR10          : 1;	/* Port Direction Control Bit 10. */
+		unsigned int DIR11          : 1;	/* Port Direction Control Bit 11. */
+		unsigned int DIR12          : 1;	/* Port Direction Control Bit 12. */
+		unsigned int DIR13          : 1;	/* Port Direction Control Bit 13. */
+		unsigned int DIR14          : 1;	/* Port Direction Control Bit 14. */
+		unsigned int DIR15          : 1;	/* Port Direction Control Bit 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_DIR_type;
+#define P5DIR	(*( P_DIR_type *) 0xF0002D18u)	/* Port 5 Direction Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int INP0           : 1;	/* Port Data Input 0. */
+		unsigned int INP1           : 1;	/* Port Data Input 1. */
+		unsigned int INP2           : 1;	/* Port Data Input 2. */
+		unsigned int INP3           : 1;	/* Port Data Input 3. */
+		unsigned int INP4           : 1;	/* Port Data Input 4. */
+		unsigned int INP5           : 1;	/* Port Data Input 5. */
+		unsigned int INP6           : 1;	/* Port Data Input 6. */
+		unsigned int INP7           : 1;	/* Port Data Input 7. */
+		unsigned int INP8           : 1;	/* Port Data Input 8. */
+		unsigned int INP9           : 1;	/* Port Data Input 9. */
+		unsigned int INP10          : 1;	/* Port Data Input 10. */
+		unsigned int INP11          : 1;	/* Port Data Input 11. */
+		unsigned int INP12          : 1;	/* Port Data Input 12. */
+		unsigned int INP13          : 1;	/* Port Data Input 13. */
+		unsigned int INP14          : 1;	/* Port Data Input 14. */
+		unsigned int INP15          : 1;	/* Port Data Input 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_INP_type;
+#define P5INP	(*( P_INP_type *) 0xF0002D14u)	/* Port 5 Data Input Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int OUT0           : 1;	/* Port Data Output 0. */
+		unsigned int OUT1           : 1;	/* Port Data Output 1. */
+		unsigned int OUT2           : 1;	/* Port Data Output 2. */
+		unsigned int OUT3           : 1;	/* Port Data Output 3. */
+		unsigned int OUT4           : 1;	/* Port Data Output 4. */
+		unsigned int OUT5           : 1;	/* Port Data Output 5. */
+		unsigned int OUT6           : 1;	/* Port Data Output 6. */
+		unsigned int OUT7           : 1;	/* Port Data Output 7. */
+		unsigned int OUT8           : 1;	/* Port Data Output 8. */
+		unsigned int OUT9           : 1;	/* Port Data Output 9. */
+		unsigned int OUT10          : 1;	/* Port Data Output 10. */
+		unsigned int OUT11          : 1;	/* Port Data Output 11. */
+		unsigned int OUT12          : 1;	/* Port Data Output 12. */
+		unsigned int OUT13          : 1;	/* Port Data Output 13. */
+		unsigned int OUT14          : 1;	/* Port Data Output 14. */
+		unsigned int OUT15          : 1;	/* Port Data Output 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_type;
+#define P5OUT	(*( P_type *) 0xF0002D10u)	/* Port 5 Data Output Register */
+
+
+/* Port 4 */
+#define P4ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002C44u)	/* Port 4 Alternate Function Select Register 0 */
+#define P4DIR	(*( P_DIR_type *) 0xF0002C18u)	/* Port 4 Direction Register */
+#define P4INP	(*( P_INP_type *) 0xF0002C14u)	/* Port 4 Data Input Register */
+#define P4OUT	(*( P_type *) 0xF0002C10u)	/* Port 4 Data Output Register */
+
+/* Port 3 */
+#define P3ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002B44u)	/* Port 3 Alternate Function Select Register 0 */
+#define P3DIR	(*( P_DIR_type *) 0xF0002B18u)	/* Port 3 Direction Register */
+#define P3INP	(*( P_INP_type *) 0xF0002B14u)	/* Port 3 Data Input Register */
+#define P3OUT	(*( P_type *) 0xF0002B10u)	/* Port 3 Data Output Register */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int OD0            : 1;	/* Port Open-Drain Output Control Bit 0. */
+		unsigned int OD1            : 1;	/* Port Open-Drain Output Control Bit 1. */
+		unsigned int OD2            : 1;	/* Port Open-Drain Output Control Bit 2. */
+		unsigned int OD3            : 1;	/* Port Open-Drain Output Control Bit 3. */
+		unsigned int OD4            : 1;	/* Port Open-Drain Output Control Bit 4. */
+		unsigned int OD5            : 1;	/* Port Open-Drain Output Control Bit 5. */
+		unsigned int OD6            : 1;	/* Port Open-Drain Output Control Bit 6. */
+		unsigned int OD7            : 1;	/* Port Open-Drain Output Control Bit 7. */
+		unsigned int OD8            : 1;	/* Port Open-Drain Output Control Bit 8. */
+		unsigned int OD9            : 1;	/* Port Open-Drain Output Control Bit 9. */
+		unsigned int OD10           : 1;	/* Port Open-Drain Output Control Bit 10. */
+		unsigned int OD11           : 1;	/* Port Open-Drain Output Control Bit 11. */
+		unsigned int OD12           : 1;	/* Port Open-Drain Output Control Bit 12. */
+		unsigned int OD13           : 1;	/* Port Open-Drain Output Control Bit 13. */
+		unsigned int OD14           : 1;	/* Port Open-Drain Output Control Bit 14. */
+		unsigned int OD15           : 1;	/* Port Open-Drain Output Control Bit 15. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} P_OD_type;
+#define P3OD	(*( P_OD_type *) 0xF0002B1Cu)	/* Port 3 Open Drain Control Register */
+
+
+/* Port 2 */
+#define P2ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002A44u)	/* Port 2 Alternate Function Select Register 0 */
+#define P2DIR	(*( P_DIR_type *) 0xF0002A18u)	/* Port 2 Direction Register */
+#define P2INP	(*( P_INP_type *) 0xF0002A14u)	/* Port 2 Data Input Register */
+#define P2OUT	(*( P_type *) 0xF0002A10u)	/* Port 2 Data Output Register */
+
+/* Port 1 */
+#define P1ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002944u)	/* Port 1 Alternate Function Select Register 0 */
+#define P1OD	(*( P_OD_type *) 0xF000291Cu)	/* Port 1 Open Drain Control Register */
+#define P1DIR	(*( P_DIR_type *) 0xF0002918u)	/* Port 1 Direction Register */
+#define P1INP	(*( P_INP_type *) 0xF0002914u)	/* Port 1 Data Input Register */
+#define P1OUT	(*( P_type *) 0xF0002910u)	/* Port 1 Data Output Register */
+
+/* Port 0 */
+#define P0ALTSEL1	(*( P_ALTSEL1_type *) 0xF0002848u)	/* Port 0 Alternate Function Select Register 1 */
+#define P0ALTSEL0	(*( P_ALTSEL0_type *) 0xF0002844u)	/* Port 0 Alternate Function Select Register 0 */
+#define P0DIR	(*( P_DIR_type *) 0xF0002818u)	/* Port 0 Direction Register */
+#define P0INP	(*( P_INP_type *) 0xF0002814u)	/* Port 0 Data Input Register */
+#define P0OUT	(*( P_type *) 0xF0002810u)	/* Port 0 Data Output Register */
+
+/* Service Request Unit */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SRPN           : 8;	/* Service request node priority number */
+		unsigned int                : 2;
+		unsigned int TOS            : 2;	/* Type of service for node */
+		unsigned int SRE            : 1;	/* Service request node enable */
+		/* const */ unsigned int SRR            : 1;	/* Service Request Node Service Request Bit */
+		unsigned int CLRR           : 1;	/* Service Request Node Request Clear Bit */
+		unsigned int SETR           : 1;	/* Service Request Node Request Set Bit */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SRC_type;
+#define DTSRC	(*( SRC_type *) 0xF0000D30u)	/* DT Service Request Control Register */
+#define DRSRC	(*( SRC_type *) 0xF0000D2Cu)	/* DR Service Request Control Register */
+#define TBSRC	(*( SRC_type *) 0xF0000D28u)	/* TB Service Request Control Register */
+#define RBSRC1	(*( SRC_type *) 0xF0000D24u)	/* RB Service Request Control 1 Register */
+#define RBSRC0	(*( SRC_type *) 0xF0000D20u)	/* RB Service Request Control 0 Register */
+#define MACRXPSRC	(*( SRC_type *) 0xF0000D1Cu)	/* MAC Rx PCP Service Request Control Register */
+#define MACTXPSRC	(*( SRC_type *) 0xF0000D18u)	/* MAC Tx PCP Service Request Control Register */
+#define MACRXCSRC	(*( SRC_type *) 0xF0000D14u)	/* MAC Rx CPU Service Request Control Register */
+#define MACTXCSRC	(*( SRC_type *) 0xF0000D10u)	/* MAC Tx CPU Service Request Control Register */
+#define PCI_SW_SRC31	(*( SRC_type *) 0xF0000CFCu)	/* Service Request Control Reg. for PCI Software Interrupt 31 */
+#define PCI_SW_SRC30	(*( SRC_type *) 0xF0000CF8u)	/* Service Request Control Reg. for PCI Software Interrupt 30 */
+#define PCI_SW_SRC29	(*( SRC_type *) 0xF0000CF4u)	/* Service Request Control Reg. for PCI Software Interrupt 29 */
+#define PCI_SW_SRC28	(*( SRC_type *) 0xF0000CF0u)	/* Service Request Control Reg. for PCI Software Interrupt 28 */
+#define PCI_SW_SRC27	(*( SRC_type *) 0xF0000CECu)	/* Service Request Control Reg. for PCI Software Interrupt 27 */
+#define PCI_SW_SRC26	(*( SRC_type *) 0xF0000CE8u)	/* Service Request Control Reg. for PCI Software Interrupt 26 */
+#define PCI_SW_SRC25	(*( SRC_type *) 0xF0000CE4u)	/* Service Request Control Reg. for PCI Software Interrupt 25 */
+#define PCI_SW_SRC24	(*( SRC_type *) 0xF0000CE0u)	/* Service Request Control Reg. for PCI Software Interrupt 24 */
+#define PCI_SW_SRC23	(*( SRC_type *) 0xF0000CDCu)	/* Service Request Control Reg. for PCI Software Interrupt 23 */
+#define PCI_SW_SRC22	(*( SRC_type *) 0xF0000CD8u)	/* Service Request Control Reg. for PCI Software Interrupt 22 */
+#define PCI_SW_SRC21	(*( SRC_type *) 0xF0000CD4u)	/* Service Request Control Reg. for PCI Software Interrupt 21 */
+#define PCI_SW_SRC20	(*( SRC_type *) 0xF0000CD0u)	/* Service Request Control Reg. for PCI Software Interrupt 20 */
+#define PCI_SW_SRC19	(*( SRC_type *) 0xF0000CCCu)	/* Service Request Control Reg. for PCI Software Interrupt 19 */
+#define PCI_SW_SRC18	(*( SRC_type *) 0xF0000CC8u)	/* Service Request Control Reg. for PCI Software Interrupt 18 */
+#define PCI_SW_SRC17	(*( SRC_type *) 0xF0000CC4u)	/* Service Request Control Reg. for PCI Software Interrupt 17 */
+#define PCI_SW_SRC16	(*( SRC_type *) 0xF0000CC0u)	/* Service Request Control Reg. for PCI Software Interrupt 16 */
+#define PCI_SW_SRC15	(*( SRC_type *) 0xF0000CBCu)	/* Service Request Control Reg. for PCI Software Interrupt 15 */
+#define PCI_SW_SRC14	(*( SRC_type *) 0xF0000CB8u)	/* Service Request Control Reg. for PCI Software Interrupt 14 */
+#define PCI_SW_SRC13	(*( SRC_type *) 0xF0000CB4u)	/* Service Request Control Reg. for PCI Software Interrupt 13 */
+#define PCI_SW_SRC12	(*( SRC_type *) 0xF0000CB0u)	/* Service Request Control Reg. for PCI Software Interrupt 12 */
+#define PCI_SW_SRC11	(*( SRC_type *) 0xF0000CACu)	/* Service Request Control Reg. for PCI Software Interrupt 11 */
+#define PCI_SW_SRC10	(*( SRC_type *) 0xF0000CA8u)	/* Service Request Control Reg. for PCI Software Interrupt 10 */
+#define PCI_SW_SRC9	(*( SRC_type *) 0xF0000CA4u)	/* Service Request Control Reg. for PCI Software Interrupt 9 */
+#define PCI_SW_SRC8	(*( SRC_type *) 0xF0000CA0u)	/* Service Request Control Reg. for PCI Software Interrupt 8 */
+#define PCI_SW_SRC7	(*( SRC_type *) 0xF0000C9Cu)	/* Service Request Control Reg. for PCI Software Interrupt 7 */
+#define PCI_SW_SRC6	(*( SRC_type *) 0xF0000C98u)	/* Service Request Control Reg. for PCI Software Interrupt 6 */
+#define PCI_SW_SRC5	(*( SRC_type *) 0xF0000C94u)	/* Service Request Control Reg. for PCI Software Interrupt 5 */
+#define PCI_SW_SRC4	(*( SRC_type *) 0xF0000C90u)	/* Service Request Control Reg. for PCI Software Interrupt 4 */
+#define PCI_SW_SRC3	(*( SRC_type *) 0xF0000C8Cu)	/* Service Request Control Reg. for PCI Software Interrupt 3 */
+#define PCI_SW_SRC2	(*( SRC_type *) 0xF0000C88u)	/* Service Request Control Reg. for PCI Software Interrupt 2 */
+#define PCI_SW_SRC1	(*( SRC_type *) 0xF0000C84u)	/* Service Request Control Reg. for PCI Software Interrupt 1 */
+#define PCI_SW_SRC0	(*( SRC_type *) 0xF0000C80u)	/* Service Request Control Reg. for PCI Software Interrupt 0 */
+#define EINT_SRC23	(*( SRC_type *) 0xF0000C7Cu)	/* Service Request Control Reg. for Ext.Interrupt 23 */
+#define EINT_SRC22	(*( SRC_type *) 0xF0000C78u)	/* Service Request Control Reg. for Ext.Interrupt 22 */
+#define EINT_SRC21	(*( SRC_type *) 0xF0000C74u)	/* Service Request Control Reg. for Ext.Interrupt 21 */
+#define EINT_SRC20	(*( SRC_type *) 0xF0000C70u)	/* Service Request Control Reg. for Ext.Interrupt 20 */
+#define EINT_SRC19	(*( SRC_type *) 0xF0000C6Cu)	/* Service Request Control Reg. for Ext.Interrupt 19 */
+#define EINT_SRC18	(*( SRC_type *) 0xF0000C68u)	/* Service Request Control Reg. for Ext.Interrupt 18 */
+#define EINT_SRC17	(*( SRC_type *) 0xF0000C64u)	/* Service Request Control Reg. for Ext.Interrupt 17 */
+#define EINT_SRC16	(*( SRC_type *) 0xF0000C60u)	/* Service Request Control Reg. for Ext.Interrupt 16 */
+#define EINT_SRC15	(*( SRC_type *) 0xF0000C5Cu)	/* Service Request Control Reg. for Ext.Interrupt 15 */
+#define EINT_SRC14	(*( SRC_type *) 0xF0000C58u)	/* Service Request Control Reg. for Ext.Interrupt 14 */
+#define EINT_SRC13	(*( SRC_type *) 0xF0000C54u)	/* Service Request Control Reg. for Ext.Interrupt 13 */
+#define EINT_SRC12	(*( SRC_type *) 0xF0000C50u)	/* Service Request Control Reg. for Ext.Interrupt 12 */
+#define EINT_SRC11	(*( SRC_type *) 0xF0000C4Cu)	/* Service Request Control Reg. for Ext.Interrupt 11 */
+#define EINT_SRC10	(*( SRC_type *) 0xF0000C48u)	/* Service Request Control Reg. for Ext.Interrupt 10 */
+#define EINT_SRC9	(*( SRC_type *) 0xF0000C44u)	/* Service Request Control Reg. for Ext.Interrupt 9 */
+#define EINT_SRC8	(*( SRC_type *) 0xF0000C40u)	/* Service Request Control Reg. for Ext.Interrupt 8 */
+#define EINT_SRC7	(*( SRC_type *) 0xF0000C3Cu)	/* Service Request Control Reg. for Ext.Interrupt 7 */
+#define EINT_SRC6	(*( SRC_type *) 0xF0000C38u)	/* Service Request Control Reg. for Ext.Interrupt 6 */
+#define EINT_SRC5	(*( SRC_type *) 0xF0000C34u)	/* Service Request Control Reg. for Ext.Interrupt 5 */
+#define EINT_SRC4	(*( SRC_type *) 0xF0000C30u)	/* Service Request Control Reg. for Ext.Interrupt 4 */
+#define EINT_SRC3	(*( SRC_type *) 0xF0000C2Cu)	/* Service Request Control Reg. for Ext.Interrupt 3 */
+#define EINT_SRC2	(*( SRC_type *) 0xF0000C28u)	/* Service Request Control Reg. for Ext.Interrupt 2 */
+#define EINT_SRC1	(*( SRC_type *) 0xF0000C24u)	/* Service Request Control Reg. for Ext.Interrupt 1 */
+#define EINT_SRC0	(*( SRC_type *) 0xF0000C20u)	/* Service Request Control Reg. for Ext.Interrupt 0 */
+#define PCI_SRC	(*( SRC_type *) 0xF0000C0Cu)	/* Service Request Control Reg. for PCI Interrupt */
+#define BCU0_SRC	(*( SRC_type *) 0xF0000C04u)	/* Service Request Control Reg. for BCU0 Interrupt */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int EXI16FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI17FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI18FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI19FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI20FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI21FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI22FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI23FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} FEN1_type;
+#define FEN1	(*( FEN1_type *) 0xF0000C1Cu)	/* Filter Enable Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int EXI0FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI1FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI2FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI3FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI4FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI5FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI6FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI7FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI8FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI9FE         : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI10FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI11FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI12FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI13FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI14FE        : 2;	/* External Interrupt Filter Enable Field */
+		unsigned int EXI15FE        : 2;	/* External Interrupt Filter Enable Field */
+	} B;
+	int I;
+	unsigned int U;
+
+} FEN0_type;
+#define FEN0	(*( FEN0_type *) 0xF0000C18u)	/* Filter Enable Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int EXI16ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI17ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI18ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI19ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI20ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI21ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI22ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI23ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} TES1_type;
+#define TES1	(*( TES1_type *) 0xF0000C14u)	/* Trigger Edge Select Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int EXI0ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI1ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI2ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI3ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI4ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI5ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI6ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI7ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI8ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI9ES         : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI10ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI11ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI12ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI13ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI14ES        : 2;	/* External Interrupt Edge Selection Field */
+		unsigned int EXI15ES        : 2;	/* External Interrupt Edge Selection Field */
+	} B;
+	int I;
+	unsigned int U;
+
+} TES0_type;
+#define TES0	(*( TES0_type *) 0xF0000C10u)	/* Trigger Edge Select Register 0 */
+
+
+/* MultiMediaCard Interface */
+#define MMCI_SRC	(*( SRC_type *) 0xF0000BFCu)	/* MMC Interface Service Request Control Register */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int COMMAND        : 8;	/* MMCI Command and Status Interface */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} MMCI_CMD_type;
+#define MMCI_CMD	(*( MMCI_CMD_type *) 0xF0000B14u)	/* MMC Interface Command Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DATA           : 8;	/* MMCI Data Interface */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} MMCI_DAT_type;
+#define MMCI_DAT	(*( MMCI_DAT_type *) 0xF0000B10u)	/* MMC Interface Data Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REV            : 8;	/* Module Revision Number Value. */
+		/* const */ unsigned int MOD            : 8;	/* 16-Bit Module ID. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MMCI_ID_type;
+#define MMCI_ID	(*( MMCI_ID_type *) 0xF0000B08u)	/* MMC Interface Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* Module Disable Request Bit */
+		/* const */ unsigned int DISS           : 1;	/* Module Disable Status Bit */
+		unsigned int SPEN           : 1;	/* Module Suspend Enable Bit */
+		unsigned int EDIS           : 1;	/* External Request Disable */
+		unsigned int SBWE           : 1;	/* Module Suspend Bit Write Enable */
+		unsigned int                : 27;
+	} B;
+	int I;
+	unsigned int U;
+
+} MMCI_CLC_type;
+#define MMCI_CLC	(*( MMCI_CLC_type *) 0xF0000B00u)	/* MMC Interface Clock Control Register */
+
+
+/* Synchronous Serial Channel */
+#define SSC_ESRC	(*( SRC_type *) 0xF0000AFCu)	/* SSC Error Service Request Control Register */
+#define SSC_RSRC	(*( SRC_type *) 0xF0000AF8u)	/* SSC Receive Service Request Control Register */
+#define SSC_TSRC	(*( SRC_type *) 0xF0000AF4u)	/* SSC Transmit Service Request Control Register */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RB_VALUE       : 16;	/* Receive Data Register Value. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_RB_type;
+#define SSC_RB	(*( SSC_RB_type *) 0xF0000A24u)	/* SSC Receive Buffer Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int TB_VALUE       : 16;	/* Transmit Data Register Value. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_TB_type;
+#define SSC_TB	(*( SSC_TB_type *) 0xF0000A20u)	/* SSC Transmit Buffer Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int BR_VALUE       : 16;	/* Baud Rate Timer/Reload Register Value. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_BR_type;
+#define SSC_BR	(*( SSC_BR_type *) 0xF0000A14u)	/* SSC Baud Rate Timer Reload Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int BC             : 4;	/* Bit Count Field. */
+		unsigned int                : 4;
+		unsigned int TE             : 1;	/* Transmit Error Flag. */
+		unsigned int RE             : 1;	/* Receive Error Flag. */
+		unsigned int PE             : 1;	/* Phase Error Flag. */
+		unsigned int BE             : 1;	/* Baud Rate Error Flag. */
+		/* const */ unsigned int BSY            : 1;	/* Busy Flag. */
+		unsigned int                : 1;
+		unsigned int MS             : 1;	/* Master Select Bit. */
+		unsigned int EN             : 1;	/* Enable Bit = 0. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_CON_OM_type;
+#define SSC_CON_OM	(*( SSC_CON_OM_type *) 0xF0000A10u)	/* SSC Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int BM             : 4;	/* SSC Data Width Selection. */
+		unsigned int HB             : 1;	/* SSC Heading Control Bit. */
+		unsigned int PH             : 1;	/* SSC Clock Phase Control Bit. */
+		unsigned int PO             : 1;	/* SSC Clock Polarity Control Bit. */
+		unsigned int LB             : 1;	/* Loop-back Bit. */
+		unsigned int TEN            : 1;	/* Transmit Error Enable Bit. */
+		unsigned int REN            : 1;	/* Receive Error Enable Bit. */
+		unsigned int PEN            : 1;	/* Phase Error Enable Bit. */
+		unsigned int BEN            : 1;	/* Baud Rate Error Enable Bit. */
+		unsigned int AREN           : 1;	/* Automatic Reset Enable Bit. */
+		unsigned int                : 1;
+		unsigned int MS             : 1;	/* Master Select Bit. */
+		unsigned int EN             : 1;	/* Enable Bit = 0. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_CON_PM_type;
+#define SSC0_CON_PM	(*( SSC_CON_PM_type *) 0xF0000A10u)	/* SSC0 Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int MOD_REV        : 8;	/* Module Revision Number Value. */
+		/* const */ unsigned int MOD_NUMBER     : 8;	/* Module Identification Number Value. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_ID_type;
+#define SSC_ID	(*( SSC_ID_type *) 0xF0000A08u)	/* SSC Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* SSC Disable Request Bit */
+		/* const */ unsigned int DISS           : 1;	/* SSC Disable Status Bit */
+		unsigned int SPEN           : 1;	/* SSC Suspend Enable Bit */
+		unsigned int EDIS           : 1;	/* SSC External Request Disable */
+		unsigned int SBWE           : 1;	/* SSC Suspend Bit Write Enable */
+		unsigned int FSOE           : 1;	/* SSC Fast Shut-Off Enable Bit */
+		unsigned int                : 2;
+		unsigned int RMC            : 8;	/* SSC Clock Divider for Normal Mode */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} SSC_CLC_type;
+#define SSC_CLC	(*( SSC_CLC_type *) 0xF0000A00u)	/* SSC Clock Control Register */
+
+
+/* _16X50 */
+#define _16X50_SRC	(*( SRC_type *) 0xF00009FCu)	/* _16X50 Interrupt Service Request Control Register */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SPVAL          : 16;	/* Scratch Pad Data */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_SR_type;
+#define _16X50_SR	(*( _16X50_SR_type *) 0xF000093Cu)	/* _16X50 Scratchpad Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int XOFF_VAL       : 16;	/* XOFF2 Data Byte */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_XOFF_type;
+#define _16X50_XOFF2	(*( _16X50_XOFF_type *) 0xF000093Cu)	/* _16X50 XOFF Character 2 Reg. */
+#define _16X50_XOFF1	(*( _16X50_XOFF_type *) 0xF0000938u)	/* _16X50 XOFF Character 1 Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int DCTS           : 1;	/* Delta Clear to Send */
+		/* const */ unsigned int DDSR           : 1;	/* Delta Data Set Ready */
+		/* const */ unsigned int TERI           : 1;	/* Trailing Edge Ring Indicator */
+		/* const */ unsigned int DDCD           : 1;	/* Delta Data Carry Detect */
+		/* const */ unsigned int CTS            : 1;	/* Clear To Send */
+		/* const */ unsigned int DSR            : 1;	/* Data Set Ready */
+		/* const */ unsigned int RI             : 1;	/* Ring Indicator */
+		/* const */ unsigned int DCD            : 1;	/* Data Carry Detect */
+		/* const */ unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_MSR_type;
+#define _16X50_MSR	(*( _16X50_MSR_type *) 0xF0000938u)	/* _16X50 Modem Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int DR             : 1;	/* Receive Data Ready */
+		/* const */ unsigned int OE             : 1;	/* Overrun Error */
+		/* const */ unsigned int PE             : 1;	/* Parity Error */
+		/* const */ unsigned int FE             : 1;	/* Framing Error */
+		/* const */ unsigned int BI             : 1;	/* Break Interrupt */
+		/* const */ unsigned int THRE           : 1;	/* Transmitter Holding Register Empty */
+		/* const */ unsigned int TEMT           : 1;	/* Transmitter Empty */
+		/* const */ unsigned int FIFOERR        : 1;	/* FIFO Data Error */
+		/* const */ unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_LSR_type;
+#define _16X50_LSR	(*( _16X50_LSR_type *) 0xF0000934u)	/* _16X50 Line Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int XON_VAL        : 16;	/* XOFF2 Data Byte */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_XON_type;
+#define _16X50_XON2	(*( _16X50_XON_type *) 0xF0000934u)	/* _16X50 XON Character 2 Reg. */
+#define _16X50_XON1	(*( _16X50_XON_type *) 0xF0000930u)	/* _16X50 XON Character 1 Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DTR            : 1;	/* DTR Output Control */
+		unsigned int RTS            : 1;	/* RTS Output Control */
+		unsigned int OUT1           : 1;	/* OUT1 Control */
+		unsigned int OUT2           : 1;	/* OUT2 Output Control */
+		unsigned int LOOP           : 1;	/* Loop-Back Mode Control */
+		unsigned int                : 2;
+		unsigned int XOFFS          : 1;	/* XOFF Status Flag */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_MCR_type;
+#define _16X50_MCR	(*( _16X50_MCR_type *) 0xF0000930u)	/* _16X50 Modem Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int WLS            : 2;	/* Word Length Select */
+		unsigned int STB            : 1;	/* Number of Stop Bits */
+		unsigned int PEN            : 1;	/* Parity Enable Control */
+		unsigned int EPS            : 1;	/* Even Parity Select */
+		unsigned int SP             : 1;	/* Stick Parity Control */
+		unsigned int SB             : 1;	/* Set Break Control */
+		unsigned int DLAB           : 1;	/* Divisor Latch Access Bit */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_LCR_type;
+#define _16X50_LCR	(*( _16X50_LCR_type *) 0xF000092Cu)	/* _16X50 Line Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int NINT           : 1;	/* No Interrupt Pending */
+		/* const */ unsigned int ID             : 5;	/* Interrupt ID */
+		/* const */ unsigned int FIFOE          : 2;	/* FIFO Enable Status */
+		/* const */ unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_ISR_type;
+#define _16X50_ISR	(*( _16X50_ISR_type *) 0xF0000928u)	/* _16X50 Interrupt Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int FIFOEN         : 1;	/* FIFO Enable */
+		unsigned int CLRR           : 1;	/* Reset Receive FIFO */
+		unsigned int CLRT           : 1;	/* Reset Transmit FIFO */
+		unsigned int DMA1           : 1;	/* Set DMA Mode 1 */
+		unsigned int TFTL           : 2;	/* Transmit FIFO Interrupt Trigger Level */
+		unsigned int RFTL           : 2;	/* Receive FIFO Interrupt Trigger Level */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_FCR_type;
+#define _16X50_FCR	(*( _16X50_FCR_type *) 0xF0000928u)	/* _16X50 FIFO Control Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SFCMODE        : 4;	/* Software Flow Control Mode Select */
+		unsigned int EFEN           : 1;	/* Enhanced Function Enable */
+		unsigned int                : 1;
+		unsigned int ARTSFEN        : 1;	/* Automatic RTS Flow Enable */
+		unsigned int ACTSFEN        : 1;	/* Automatic CTS Flow Enable */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_EFR_type;
+#define _16X50_EFR	(*( _16X50_EFR_type *) 0xF0000928u)	/* _16X50 Enhanced Feature Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int ERBFI          : 1;	/* Enable Receive Buffer Register Interrupt */
+		unsigned int ETBEI          : 1;	/* Enable Transmit Holding Register Empty Interrupt */
+		unsigned int ELSI           : 1;	/* Enable Receive Line Status Interrupt */
+		unsigned int EDSSI          : 1;	/* Enable Modem Status Interrupt */
+		unsigned int                : 1;
+		unsigned int EXOFFI         : 1;	/* Enable XOFF Interrupt */
+		unsigned int ERTSI          : 1;	/* Enable RTS Interrupt */
+		unsigned int ECTSI          : 1;	/* Enable CTS Interrupt */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_IER_type;
+#define _16X50_IER	(*( _16X50_IER_type *) 0xF0000924u)	/* _16X50 Interrupt Enable Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DLMSB          : 8;	/* Divisor Latch MSB Value */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_DLM_MSB_type;
+#define _16X50_DLM_MSB	(*( _16X50_DLM_MSB_type *) 0xF0000924u)	/* _16X50 Divisor Latch MSB */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int TXDATA         : 8;	/* Transmit Data */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_THR_type;
+#define _16X50_THR	(*( _16X50_THR_type *) 0xF0000920u)	/* _16X50 Transmit Holding Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RXDATA         : 8;	/* Transmit Data */
+		/* const */ unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_RHR_type;
+#define _16X50_RHR	(*( _16X50_RHR_type *) 0xF0000920u)	/* _16X50 Receive Holding Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DLLSB          : 8;	/* Divisor Latch LSB Value */
+		unsigned int                : 24;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_DLM_LSB_type;
+#define _16X50_DLM_LSB	(*( _16X50_DLM_LSB_type *) 0xF0000920u)	/* _16X50 Divisor Latch LSB */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int MOD_REV        : 8;	/* Module Revision Number Value. */
+		/* const */ unsigned int MOD_NUMBER     : 8;	/* Module Identification Number Value. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_ID_type;
+#define _16X50_ID	(*( _16X50_ID_type *) 0xF0000908u)	/* _16X50 Module ID Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* Module Disable Request Bit */
+		/* const */ unsigned int DISS           : 1;	/* Module Disable Status Bit */
+		unsigned int SPEN           : 1;	/* Module Suspend Enable Bit */
+		unsigned int EDIS           : 1;	/* External Request Disable */
+		unsigned int SBWE           : 1;	/* Module Suspend Bit Write Enable */
+		unsigned int FSOE           : 1;	/* Fast Shut-Off Enable Bit */
+		unsigned int                : 2;
+		unsigned int RMC            : 8;	/* 8-Bit Clock Divider Value in RUN Mode */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} _16X50_CLC_type;
+#define _16X50_CLC	(*( _16X50_CLC_type *) 0xF0000900u)	/* _16X50 Clock Control Register */
+
+
+/* Asynchronous Serial Interface with FIFO */
+#define ASC_TBSRC	(*( SRC_type *) 0xF00008FCu)	/* ASC Transmit Buffer Service Request Control Register */
+#define ASC_ESRC	(*( SRC_type *) 0xF00008F8u)	/* ASC Error Service Request Control Register */
+#define ASC_RSRC	(*( SRC_type *) 0xF00008F4u)	/* ASC Receive Service Request Control Register */
+#define ASC_TSRC	(*( SRC_type *) 0xF00008F0u)	/* ASC Transmit Service Request Control Register */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RXFFL          : 4;	/* Receive FIFO Filling Level */
+		/* const */ unsigned int                : 4;
+		/* const */ unsigned int TXFFL          : 1;	/* Transmit FIFO Filling Level */
+		/* const */ unsigned int                : 23;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_FSTAT_type;
+#define ASC_FSTAT	(*( ASC_FSTAT_type *) 0xF0000848u)	/* ASC FIFO Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int TXFEN          : 1;	/* Transmit FIFO Enable */
+		unsigned int TXFFLU         : 1;	/* Transmit FIFO Flush */
+		unsigned int TXTMEN         : 1;	/* Transmit FIFO Transparent Mode Enable */
+		unsigned int                : 5;
+		unsigned int TXFITL         : 4;	/* Transmit FIFO Interrupt Trigger Level */
+		unsigned int                : 20;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_TXFCON_type;
+#define ASC_TXFCON	(*( ASC_TXFCON_type *) 0xF0000844u)	/* ASC Transmit FIFO Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int RXFEN          : 1;	/* Receive FIFO Enable */
+		unsigned int RXFFLU         : 1;	/* Receive FIFO Flush */
+		unsigned int RXTMEN         : 1;	/* Receive FIFO Transparent Mode Enable */
+		unsigned int                : 5;
+		unsigned int RXFITL         : 4;	/* Receive FIFO Interrupt Trigger Level */
+		unsigned int                : 20;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_RXFCON_type;
+#define ASC_RXFCON	(*( ASC_RXFCON_type *) 0xF0000840u)	/* ASC Receive FIFO Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RD_VALUE       : 9;	/* Receive Data Register Value */
+		/* const */ unsigned int                : 23;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_RBUF_type;
+#define ASC_RBUF	(*( ASC_RBUF_type *) 0xF0000824u)	/* ASC Receive Buffer Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int TD_VALUE       : 9;	/* Transmit Data Register Value. */
+		unsigned int                : 23;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_TBUF_type;
+#define ASC_TBUF	(*( ASC_TBUF_type *) 0xF0000820u)	/* ASC Transmit Buffer Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int PW_VALUE       : 8;	/* IrDA Pulse Width Value. */
+		unsigned int IRPW           : 1;	/* IrDA Pulse Width Select Bit. */
+		unsigned int                : 23;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_PMW_type;
+#define ASC_PMW	(*( ASC_PMW_type *) 0xF000081Cu)	/* ASC IrDA Pulse Mode and Width Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int FD_VALUE       : 9;	/* Fractional Divider Register Value. */
+		unsigned int                : 23;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_FDV_type;
+#define ASC_FDV	(*( ASC_FDV_type *) 0xF0000818u)	/* ASC Fractional Divider Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int BR_VALUE       : 13;	/* Baud Rate Timer Reload Register Value. */
+		unsigned int                : 19;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_BG_type;
+#define ASC_BG	(*( ASC_BG_type *) 0xF0000814u)	/* ASC Baudrate Timer Reload Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int M              : 3;	/* ASC Mode Control. */
+		unsigned int STP            : 1;	/* Number of Stop Bits Selection (asynchronous operation). */
+		unsigned int REN            : 1;	/* Receiver Enable Bit. */
+		unsigned int PEN            : 1;	/* Parity Check Enable Bit / RXD Invert in IrDA Mode (asynchronous operation). */
+		unsigned int FEN            : 1;	/* Framing Check Enable Bit (asynchronous operation). */
+		unsigned int OEN            : 1;	/* Overrun Check Enable Bit. */
+		unsigned int PE             : 1;	/* Parity Error Flag. */
+		unsigned int FE             : 1;	/* Framing Error Flag. */
+		unsigned int OE             : 1;	/* Overrun Error Flag. */
+		unsigned int FDE            : 1;	/* Fractional Divider Enable Bit. */
+		unsigned int ODD            : 1;	/* Parity Selection Bit. */
+		unsigned int BRS            : 1;	/* Baud Rate Selection Bit. */
+		unsigned int LB             : 1;	/* Loopback Mode Enable Bit. */
+		unsigned int R              : 1;	/* Baud-rate Generator Run Bit. */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_CON_type;
+#define ASC_CON	(*( ASC_CON_type *) 0xF0000810u)	/* ASC Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int MOD_REV        : 8;	/* ASC Revision Number Value. */
+		/* const */ unsigned int MOD_NUMBER     : 8;	/* ASC Module Number Value. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_ID_type;
+#define ASC_ID	(*( ASC_ID_type *) 0xF0000808u)	/* ASC Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* ASC Disable Request Bit */
+		/* const */ unsigned int DISS           : 1;	/* ASC Disable Status Bit */
+		unsigned int SPEN           : 1;	/* ASC Suspend Enable Bit */
+		unsigned int EDIS           : 1;	/* ASC External Request Disable */
+		unsigned int SBWE           : 1;	/* ASC Suspend Bit Write Enable */
+		unsigned int FSOE           : 1;	/* ASC Fast Shut-Off Enable. */
+		unsigned int                : 2;
+		unsigned int RMC            : 8;	/* ASC Clock Divider for Normal Mode */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} ASC_CLC_type;
+#define ASC_CLC	(*( ASC_CLC_type *) 0xF0000800u)	/* ASC Clock Control Register */
+
+
+/* General Purpose Timer Unit 1 */
+#define GPTU1_SRC0	(*( SRC_type *) 0xF00007FCu)	/* GPTU1 Service Request Control Register 0 */
+#define GPTU1_SRC1	(*( SRC_type *) 0xF00007F8u)	/* GPTU1 Service Request Control Register 1 */
+#define GPTU1_SRC2	(*( SRC_type *) 0xF00007F4u)	/* GPTU1 Service Request Control Register 2 */
+#define GPTU1_SRC3	(*( SRC_type *) 0xF00007F0u)	/* GPTU1 Service Request Control Register 3 */
+#define GPTU1_SRC4	(*( SRC_type *) 0xF00007ECu)	/* GPTU1 Service Request Control Register 4 */
+#define GPTU1_SRC5	(*( SRC_type *) 0xF00007E8u)	/* GPTU1 Service Request Control Register 5 */
+#define GPTU1_SRC6	(*( SRC_type *) 0xF00007E4u)	/* GPTU1 Service Request Control Register 6 */
+#define GPTU1_SRC7	(*( SRC_type *) 0xF00007E0u)	/* GPTU1 Service Request Control Register 7 */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SSR7           : 4;	/* GPTU Service Request Node 7 Source Selection */
+		unsigned int SSR6           : 4;	/* GPTU Service Request Node 6 Source Selection */
+		unsigned int SSR5           : 4;	/* GPTU Service Request Node 5 Source Selection */
+		unsigned int SSR4           : 4;	/* GPTU Service Request Node 4 Source Selection */
+		unsigned int SSR3           : 4;	/* GPTU Service Request Node 3 Source Selection */
+		unsigned int SSR2           : 4;	/* GPTU Service Request Node 2 Source Selection */
+		unsigned int SSR1           : 4;	/* GPTU Service Request Node 1 Source Selection */
+		unsigned int SSR0           : 4;	/* GPTU Service Request Node 0 Source Selection */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_SRSEL_type;
+#define GPTU1_SRSEL	(*( GPTU_SRSEL_type *) 0xF00007DCu)	/* GPTU1 Service Request Source Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0ARUN         : 1;	/* Timer T0D Run Control. */
+		unsigned int T0BRUN         : 1;	/* Timer T0B Run Control. */
+		unsigned int T0CRUN         : 1;	/* Timer T0C Run Control. */
+		unsigned int T0DRUN         : 1;	/* Timer T0D Run Control. */
+		unsigned int T1ARUN         : 1;	/* Timer T1A Run Control. */
+		unsigned int T1BRUN         : 1;	/* Timer T1B Run Control. */
+		unsigned int T1CRUN         : 1;	/* Timer T1C Run Control. */
+		unsigned int T1DRUN         : 1;	/* Timer T1D Run Control. */
+		/* const */ unsigned int T2ARUN         : 1;	/* Timer T2A Run Status Bit. */
+		unsigned int T2ASETR        : 1;	/* Timer T2A Run Set Bit. */
+		unsigned int T2ACLRR        : 1;	/* Timer T2A Run Clear Bit. */
+		unsigned int                : 1;
+		/* const */ unsigned int T2BRUN         : 1;	/* Timer T2B Run Status Bit. */
+		unsigned int T2BSETR        : 1;	/* Timer T2B Run Set Bit. */
+		unsigned int T2BCLRR        : 1;	/* Timer T2B Run Clear Bit. */
+		unsigned int                : 17;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T012RUN_type;
+#define GPTU1_T012RUN	(*( GPTU_T012RUN_type *) 0xF0000760u)	/* GPTU1 Timer T0,T1,T2 Run Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2ARC1         : 16;	/* T2A Reload/Capture Value */
+		unsigned int T2BRC1         : 16;	/* T2B Reload/Capture Value */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2RC1_type;
+#define GPTU1_T2RC1	(*( GPTU_T2RC1_type *) 0xF000075Cu)	/* GPTU1 Timer T2 Reload/ Capture Register 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2ARC0         : 16;	/* T2A Reload/Capture Value */
+		unsigned int T2BRC0         : 16;	/* T2B Reload/Capture Value */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2RC0_type;
+#define GPTU1_T2RC0	(*( GPTU_T2RC0_type *) 0xF0000758u)	/* GPTU1 Timer T2 Reload/ Capture Register 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2A            : 16;	/* T2A Contents */
+		unsigned int T2B            : 16;	/* T2B Contents */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2_type;
+#define GPTU1_T2	(*( GPTU_T2_type *) 0xF0000754u)	/* GPTU1 Timer T2 Count Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T1RA           : 8;
+		unsigned int T1RB           : 8;
+		unsigned int T1RC           : 8;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T1RCBA_type;
+#define GPTU1_T1RCBA	(*( GPTU_T1RCBA_type *) 0xF0000750u)	/* GPTU1 Timer T1 Reload Reg. T1RC,T1RB,T1RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T1RA           : 8;
+		unsigned int T1RB           : 8;
+		unsigned int T1RC           : 8;
+		unsigned int T1RD           : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T1RDCBA_type;
+#define GPTU1_T1RDCBA	(*( GPTU_T1RDCBA_type *) 0xF000074Cu)	/* GPTU1 Timer T1 Reload Reg. T1RD,T1RC,T1RB,T1RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T1A            : 8;
+		unsigned int T1B            : 8;
+		unsigned int T1C            : 8;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T1CBA_type;
+#define GPTU1_T1CBA	(*( GPTU_T1CBA_type *) 0xF0000748u)	/* GPTU1 Timer T1 Count Reg. T1RC,T1RB,T1RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T1A            : 8;
+		unsigned int T1B            : 8;
+		unsigned int T1C            : 8;
+		unsigned int T1D            : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T1DCBA_type;
+#define GPTU1_T1DCBA	(*( GPTU_T1DCBA_type *) 0xF0000744u)	/* GPTU1 Timer T1 Count Reg. T1RD,T1RC,T1RB,T1RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0RA           : 8;
+		unsigned int T0RB           : 8;
+		unsigned int T0RC           : 8;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T0RCBA_type;
+#define GPTU1_T0RCBA	(*( GPTU_T0RCBA_type *) 0xF0000740u)	/* GPTU1 Timer T0 Reload Register (T0RC,T0RB,T0RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0RA           : 8;
+		unsigned int T0RB           : 8;
+		unsigned int T0RC           : 8;
+		unsigned int T0RD           : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T0RDCBA_type;
+#define GPTU1_T0RDCBA	(*( GPTU_T0RDCBA_type *) 0xF000073Cu)	/* GPTU1 Timer T0 Reload Reg. T0RD,T0RC,T0RB,T0RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0A            : 8;
+		unsigned int T0B            : 8;
+		unsigned int T0C            : 8;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T0CBA_type;
+#define GPTU1_T0CBA	(*( GPTU_T0CBA_type *) 0xF0000738u)	/* GPTU1 Timer T0 Count Register (T0C,T0B,T0A) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0A            : 8;
+		unsigned int T0B            : 8;
+		unsigned int T0C            : 8;
+		unsigned int T0D            : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T0DCBA_type;
+#define GPTU1_T0DCBA	(*( GPTU_T0DCBA_type *) 0xF0000734u)	/* GPTU1 Timer T0 Count Register (T0RD,T0RC,T0RB, T0RA) */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int OUT0           : 1;	/* GPTU Output State Bit 0 */
+		/* const */ unsigned int OUT1           : 1;	/* GPTU Output State Bit 1 */
+		/* const */ unsigned int OUT2           : 1;	/* GPTU Output State Bit 2 */
+		/* const */ unsigned int OUT3           : 1;	/* GPTU Output State Bit 3 */
+		/* const */ unsigned int OUT4           : 1;	/* GPTU Output State Bit 4 */
+		/* const */ unsigned int OUT5           : 1;	/* GPTU Output State Bit 5 */
+		/* const */ unsigned int OUT6           : 1;	/* GPTU Output State Bit 6 */
+		/* const */ unsigned int OUT7           : 1;	/* GPTU Output State Bit 7 */
+		unsigned int CLRO0          : 1;	/* GPTU Output 0 Clear Bit */
+		unsigned int CLRO1          : 1;	/* GPTU Output 1 Clear Bit */
+		unsigned int CLRO2          : 1;	/* GPTU Output 2 Clear Bit */
+		unsigned int CLRO3          : 1;	/* GPTU Output 3 Clear Bit */
+		unsigned int CLRO4          : 1;	/* GPTU Output 4 Clear Bit */
+		unsigned int CLRO5          : 1;	/* GPTU Output 5 Clear Bit */
+		unsigned int CLRO6          : 1;	/* GPTU Output 6 Clear Bit */
+		unsigned int CLRO7          : 1;	/* GPTU Output 7 Clear Bit */
+		unsigned int SETO0          : 1;	/* GPTU Output 0 Set Bit */
+		unsigned int SETO1          : 1;	/* GPTU Output 1 Set Bit */
+		unsigned int SETO2          : 1;	/* GPTU Output 2 Set Bit */
+		unsigned int SETO3          : 1;	/* GPTU Output 3 Set Bit */
+		unsigned int SETO4          : 1;	/* GPTU Output 4 Set Bit */
+		unsigned int SETO5          : 1;	/* GPTU Output 5 Set Bit */
+		unsigned int SETO6          : 1;	/* GPTU Output 6 Set Bit */
+		unsigned int SETO7          : 1;	/* GPTU Output 7 Set Bit */
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_OUT_type;
+#define GPTU1_OUT	(*( GPTU_OUT_type *) 0xF0000730u)	/* GPTU1 Output Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int GTSO0          : 3;	/* GPTU Output 0 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO1          : 3;	/* GPTU Output 1 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO2          : 3;	/* GPTU Output 2 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO3          : 3;	/* GPTU Output 3 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO4          : 3;	/* GPTU Output 4 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO5          : 3;	/* GPTU Output 5 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO6          : 3;	/* GPTU Output 6 Source Selection */
+		unsigned int                : 1;
+		unsigned int GTSO7          : 3;	/* GPTU Output 7 Source Selection */
+		unsigned int                : 1;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_OSEL_type;
+#define GPTU1_OSEL	(*( GPTU_OSEL_type *) 0xF000072Cu)	/* GPTU1 Output Source Selection Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2AECNT        : 2;	/* Timer T2A External Count Input Active Edge Selection */
+		unsigned int T2AESTR        : 2;	/* Timer T2A External Start Input Active Edge Selection */
+		unsigned int T2AESTP        : 2;	/* Timer T2A External Stop Input Active Edge Selection */
+		unsigned int T2AEUD         : 2;	/* Timer T2A External Up/Down Input Active Edge Selection */
+		unsigned int T2AECLR        : 2;	/* Timer T2A External Clear Input Active Edge Selection */
+		unsigned int T2AERC0        : 2;	/* Timer T2A External Reload/Capture 0 Input Active Edge Selection */
+		unsigned int T2AERC1        : 2;	/* Timer T2A External Reload/Capture 1 Input Active Edge Selection */
+		unsigned int                : 2;
+		unsigned int T2BECNT        : 2;	/* Timer T2B External Count Input Active Edge Selection */
+		unsigned int T2BESTR        : 2;	/* Timer T2B External Start Input Active Edge Selection */
+		unsigned int T2BESTP        : 2;	/* Timer T2B External Stop Input Active Edge Selection */
+		unsigned int T2BEUD         : 2;	/* Timer T2B External Up/Down Input Active Edge Selection */
+		unsigned int T2BECLR        : 2;	/* Timer T2B External Clear Input Active Edge Selection */
+		unsigned int T2BERC0        : 2;	/* Timer T2B External Reload/Capture 0 Input Active Edge Selection */
+		unsigned int T2BERC1        : 2;	/* Timer T2B External Reload/Capture 1 Input Active Edge Selection */
+		unsigned int                : 2;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2ES_type;
+#define GPTU1_T2ES	(*( GPTU_T2ES_type *) 0xF0000728u)	/* GPTU1 Timer T2 External Input Edge Selection Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2BICNT        : 3;	/* Timer T2B External Count Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BISTR        : 3;	/* Timer T2B External Start Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BISTP        : 3;	/* Timer T2B External Stop Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BIUD         : 3;	/* Timer T2B External Up/Down Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BICLR        : 3;	/* Timer T2B External Clear Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BIRC0        : 3;	/* Timer T2B External Reload/Capture 0 Input Selection */
+		unsigned int                : 1;
+		unsigned int T2BIRC1        : 3;	/* Timer T2B External Reload/Capture 1 Input Selection */
+		unsigned int                : 5;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2BIS_type;
+#define GPTU1_T2BIS	(*( GPTU_T2BIS_type *) 0xF0000724u)	/* GPTU1 Timer T2B External Input Selection Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2AICNT        : 3;	/* Timer T2A External Count Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AISTR        : 3;	/* Timer T2A External Start Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AISTP        : 3;	/* Timer T2A External Stop Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AIUD         : 3;	/* Timer T2A External Up/Down Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AICLR        : 3;	/* Timer T2A External Clear Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AIRC0        : 3;	/* Timer T2A External Reload/Capture 0 Input Selection */
+		unsigned int                : 1;
+		unsigned int T2AIRC1        : 3;	/* Timer T2A External Reload/Capture 1 Input Selection */
+		unsigned int                : 5;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2AIS_type;
+#define GPTU1_T2AIS	(*( GPTU_T2AIS_type *) 0xF0000720u)	/* GPTU1 Timer T2/T2A External Input Selection Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2AMRC0        : 3;	/* Timer T2A Reload/Capture 0 Mode Control */
+		unsigned int                : 1;
+		unsigned int T2AMRC1        : 3;	/* Timer T2A Reload/Capture 1 Mode Control */
+		unsigned int                : 9;
+		unsigned int T2BMRC0        : 3;	/* Timer T2B Reload/Capture 0 Mode Control */
+		unsigned int                : 1;
+		unsigned int T2BMRC1        : 3;	/* Timer T2B Reload/Capture 1 Mode Control */
+		unsigned int                : 9;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2RCCON_type;
+#define GPTU1_T2RCCON	(*( GPTU_T2RCCON_type *) 0xF000071Cu)	/* GPTU1 Timer T2 Reload/ Capture Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T2ACSRC        : 2;	/* Timer T2A Count Input Source Control */
+		unsigned int T2ACDIR        : 2;	/* Timer T2A Direction Control */
+		unsigned int T2ACCLR        : 2;	/* Timer T2A Clear Control */
+		unsigned int T2ACOV         : 2;	/* Timer T2A Overflow/Underflow Generation Control */
+		unsigned int T2ACOS         : 1;	/* Timer T2A One-Shot Control. */
+		unsigned int                : 3;
+		unsigned int T2ADIR         : 1;	/* Timer T2A Direction Status Bit. */
+		unsigned int                : 2;
+		unsigned int T2SPLIT        : 1;	/* Timer T2 Split Control. */
+		unsigned int T2BCSRC        : 2;	/* Timer T2B Count Input Source Control. */
+		unsigned int T2BCDIR        : 2;	/* Timer T2B Direction Control. */
+		unsigned int T2BCCLR        : 2;	/* Timer T2B Clear Control. */
+		unsigned int T2BCOV         : 2;	/* Timer T2B Overflow/Underflow Generation Control. */
+		unsigned int T2BCOS         : 1;	/* Timer T2B One-Shot Control. */
+		unsigned int                : 3;
+		unsigned int T2BDIR         : 1;	/* Timer T2B Direction Status Bit. */
+		unsigned int                : 3;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T2CON_type;
+#define GPTU1_T2CON	(*( GPTU_T2CON_type *) 0xF0000718u)	/* GPTU1 Timer T2 Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SOUT00         : 2;	/* T0 Output 0 Source Selection */
+		unsigned int SOUT01         : 2;	/* T0 Output 1 Source Selection */
+		unsigned int STRG00         : 2;	/* T0 Trigger Output 0 Source Selection */
+		unsigned int STRG01         : 2;	/* T0 Trigger Output 1 Source Selection */
+		unsigned int SSR00          : 2;	/* T0 Service Request 0 Source Selection */
+		unsigned int SSR01          : 2;	/* T0 Service Request 1 Source Selection */
+		unsigned int                : 4;
+		unsigned int SOUT10         : 2;	/* T1 Output 0 Source Selection */
+		unsigned int SOUT11         : 2;	/* T1 Output 1 Source Selection */
+		unsigned int STRG10         : 2;	/* T1 Trigger Output 0 Source Selection */
+		unsigned int STRG11         : 2;	/* T1 Trigger Output 1 Source Selection */
+		unsigned int SSR10          : 2;	/* T1 Service Request 0 Source Selection */
+		unsigned int SSR11          : 2;	/* T1 Service Request 1 Source Selection. */
+		unsigned int                : 4;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T01OTS_type;
+#define GPTU1_T01OTS	(*( GPTU_T01OTS_type *) 0xF0000714u)	/* GPTU1 Timers T0,T1 Output, Trigger and Service Req.Reg */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int T0AINS         : 2;	/* T0A Input Selection */
+		unsigned int T0BINS         : 2;	/* T0B Input Selection */
+		unsigned int T0CINS         : 2;	/* T0C Input Selection */
+		unsigned int T0DINS         : 2;	/* T0D Input Selection */
+		unsigned int T1AINS         : 2;	/* T1A Input Selection */
+		unsigned int T1BINS         : 2;	/* T1B Input Selection */
+		unsigned int T1CINS         : 2;	/* T1C Input Selection */
+		unsigned int T1DINS         : 2;	/* T1D Input Selection */
+		unsigned int T0AREL         : 1;	/* T0A Reload Source Selection */
+		unsigned int T0BREL         : 1;	/* T0B Reload Source Selection */
+		unsigned int T0CREL         : 1;	/* T0C Reload Source Selection */
+		unsigned int T0DREL         : 1;	/* T0D Reload Source Selection */
+		unsigned int T1AREL         : 1;	/* T1A Reload Source Selection */
+		unsigned int T1BREL         : 1;	/* T1B Reload Source Selection */
+		unsigned int T1CREL         : 1;	/* T1C Reload Source Selection */
+		unsigned int T1DREL         : 1;	/* T1D Reload Source Selection */
+		unsigned int T0INC          : 1;	/* T0 Carry Input Selection */
+		unsigned int T1INC          : 1;	/* T1 Carry Input Selection */
+		unsigned int                : 2;
+		unsigned int T01IN0         : 2;	/* T0 and T1 Global Input CNT0 Selection */
+		unsigned int T01IN1         : 2;	/* T0 and T1 Global Input CNT1 Selection */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_T01IRS_type;
+#define GPTU1_T01IRS	(*( GPTU_T01IRS_type *) 0xF0000710u)	/* GPTU1 Timers T0,T1 Input and Reload Source Selection Reg. */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int MOD_REV        : 8;	/* GPTU Module Revision Number. */
+		/* const */ unsigned int MOD_32B        : 8;	/* Indicates 32-bit Module GPTUx_ID format */
+		/* const */ unsigned int MOD_NUMBER     : 16;	/* GPTU Module Identification Number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_ID_type;
+#define GPTU1_ID	(*( GPTU_ID_type *) 0xF0000708u)	/* GPTU1 Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* GPTU Disable Request Bit */
+		/* const */ unsigned int DISS           : 1;	/* GPTU Disable Status Bit */
+		unsigned int SPEN           : 1;	/* GPTU Suspend Enable Bit */
+		unsigned int EDIS           : 1;	/* GPTU External Request Disable */
+		unsigned int SBWE           : 1;	/* GPTU Suspend Bit Write Enable */
+		unsigned int FSOE           : 1;	/* GPTU Fast Shut-Off Enable. */
+		unsigned int                : 2;
+		unsigned int RMC            : 8;	/* GPTU Clock Divider for Normal Mode */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} GPTU_CLC_type;
+#define GPTU1_CLC	(*( GPTU_CLC_type *) 0xF0000700u)	/* GPTU1 Clock Control Register */
+
+
+/* General Purpose Timer Unit 0 */
+#define GPTU0_SRC0	(*( SRC_type *) 0xF00006FCu)	/* GPTU0 Service Request Control Register 0 */
+#define GPTU0_SRC1	(*( SRC_type *) 0xF00006F8u)	/* GPTU0 Service Request Control Register 1 */
+#define GPTU0_SRC2	(*( SRC_type *) 0xF00006F4u)	/* GPTU0 Service Request Control Register 2 */
+#define GPTU0_SRC3	(*( SRC_type *) 0xF00006F0u)	/* GPTU0 Service Request Control Register 3 */
+#define GPTU0_SRC4	(*( SRC_type *) 0xF00006ECu)	/* GPTU0 Service Request Control Register 4 */
+#define GPTU0_SRC5	(*( SRC_type *) 0xF00006E8u)	/* GPTU0 Service Request Control Register 5 */
+#define GPTU0_SRC6	(*( SRC_type *) 0xF00006E4u)	/* GPTU0 Service Request Control Register 6 */
+#define GPTU0_SRC7	(*( SRC_type *) 0xF00006E0u)	/* GPTU0 Service Request Control Register 7 */
+#define GPTU0_SRSEL	(*( GPTU_SRSEL_type *) 0xF00006DCu)	/* GPTU0 Service Request Source Register */
+#define GPTU0_T012RUN	(*( GPTU_T012RUN_type *) 0xF0000660u)	/* GPTU0 Timer T0,T1,T2 Run Control Register */
+#define GPTU0_T2RC1	(*( GPTU_T2RC1_type *) 0xF000065Cu)	/* GPTU0 Timer T2 Reload/ Capture Register 1 */
+#define GPTU0_T2RC0	(*( GPTU_T2RC0_type *) 0xF0000658u)	/* GPTU0 Timer T2 Reload/ Capture Register 0 */
+#define GPTU0_T2	(*( GPTU_T2_type *) 0xF0000654u)	/* GPTU0 Timer T2 Count Register */
+#define GPTU0_T1RCBA	(*( GPTU_T1RCBA_type *) 0xF0000650u)	/* GPTU0 Timer T1 Reload Reg. T1RC,T1RB,T1RA) */
+#define GPTU0_T1RDCBA	(*( GPTU_T1RDCBA_type *) 0xF000064Cu)	/* GPTU0 Timer T1 Reload Reg. T1RD,T1RC,T1RB,T1RA) */
+#define GPTU0_T1CBA	(*( GPTU_T1CBA_type *) 0xF0000648u)	/* GPTU0 Timer T1 Count Reg. T1RC,T1RB,T1RA) */
+#define GPTU0_T1DCBA	(*( GPTU_T1DCBA_type *) 0xF0000644u)	/* GPTU0 Timer T1 Count Reg. T1RD,T1RC,T1RB,T1RA) */
+#define GPTU0_T0RCBA	(*( GPTU_T0RCBA_type *) 0xF0000640u)	/* GPTU0 Timer T0 Reload Register (T0RC,T0RB,T0RA) */
+#define GPTU0_T0RDCBA	(*( GPTU_T0RDCBA_type *) 0xF000063Cu)	/* GPTU0 Timer T0 Reload Reg. T0RD,T0RC,T0RB,T0RA) */
+#define GPTU0_T0CBA	(*( GPTU_T0CBA_type *) 0xF0000638u)	/* GPTU0 Timer T0 Count Register (T0C,T0B,T0A) */
+#define GPTU0_T0DCBA	(*( GPTU_T0DCBA_type *) 0xF0000634u)	/* GPTU0 Timer T0 Count Register (T0RD,T0RC,T0RB, T0RA) */
+#define GPTU0_OUT	(*( GPTU_OUT_type *) 0xF0000630u)	/* GPTU0 Output Register */
+#define GPTU0_OSEL	(*( GPTU_OSEL_type *) 0xF000062Cu)	/* GPTU0 Output Source Selection Register */
+#define GPTU0_T2ES	(*( GPTU_T2ES_type *) 0xF0000628u)	/* GPTU0 Timer T2 External Input Edge Selection Register */
+#define GPTU0_T2BIS	(*( GPTU_T2BIS_type *) 0xF0000624u)	/* GPTU0 Timer T2B External Input Selection Register */
+#define GPTU0_T2AIS	(*( GPTU_T2AIS_type *) 0xF0000620u)	/* GPTU0 Timer T2/T2A External Input Selection Register */
+#define GPTU0_T2RCCON	(*( GPTU_T2RCCON_type *) 0xF000061Cu)	/* GPTU0 Timer T2 Reload/ Capture Control Register */
+#define GPTU0_T2CON	(*( GPTU_T2CON_type *) 0xF0000618u)	/* GPTU0 Timer T2 Control Register */
+#define GPTU0_T01OTS	(*( GPTU_T01OTS_type *) 0xF0000614u)	/* GPTU0 Timers T0,T1 Output, Trigger and Service Req.Reg */
+#define GPTU0_T01IRS	(*( GPTU_T01IRS_type *) 0xF0000610u)	/* GPTU0 Timers T0,T1 Input and Reload Source Selection Reg. */
+#define GPTU0_ID	(*( GPTU_ID_type *) 0xF0000608u)	/* GPTU0 Identification Register */
+#define GPTU0_CLC	(*( GPTU_CLC_type *) 0xF0000600u)	/* GPTU0 Clock Control Register */
+
+/* Cerberus and JTAG */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 12;
+		unsigned int CON0           : 1;	/* Controls the associated mcdssg_con_o[0]signal. */
+		unsigned int CON1           : 1;	/* Controls the associated mcdssg_con_o[1]signal. */
+		unsigned int CON2           : 1;	/* Controls the associated mcdssg_con_o[2]signal. */
+		unsigned int CON3           : 1;	/* Controls the associated mcdssg_con_o[3]signal. */
+		unsigned int SSS0           : 1;	/* Status of suspend source 0 */
+		unsigned int SSS1           : 1;	/* Status of suspend source 1 */
+		unsigned int                : 6;
+		unsigned int SOS            : 1;	/* Status of the suspend output. */
+		unsigned int SDS            : 1;	/* Status of the delayed suspend output. */
+		unsigned int                : 6;
+	} B;
+	int I;
+	unsigned int U;
+
+} MCDSSG_type;
+#define MCDSSG	(*( MCDSSG_type *) 0xF0000474u)	/* Multi-Core Debug Suspend signal generation */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int BSCPU          : 1;	/* Break source switch */
+		unsigned int BSPCP          : 1;	/* Break source switch */
+		unsigned int                : 1;
+		unsigned int BTCPU          : 1;	/* Break target switch */
+		unsigned int BTPCP          : 1;	/* Break target switch */
+		unsigned int                : 1;
+		unsigned int BSP            : 1;	/* Break source input pins */
+		unsigned int                : 1;
+		unsigned int BTP            : 1;	/* Break target output pins */
+		unsigned int                : 5;
+		unsigned int BSSCPU         : 1;	/* Status of break source */
+		unsigned int BSSPCP         : 1;	/* Status of break source */
+		unsigned int BBS0           : 1;	/* Status of break bus */
+		unsigned int BBS1           : 1;	/* Status of break bus */
+		unsigned int                : 14;
+	} B;
+	int I;
+	unsigned int U;
+
+} MCDBBS_type;
+#define MCDBBS	(*( MCDBBS_type *) 0xF0000470u)	/* Multi-Core Debug Break bus switch status and control */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int RW_DISABLE     : 1;	/* RW mode protection: */
+		unsigned int RW_DIS_P       : 1;	/* Bit protection:RW_DISABLE */
+		unsigned int RW_ENABLED     : 1;	/* Used by user program for security. */
+		unsigned int RW_EN_P        : 1;	/* Bit protection:RW_ENABLED */
+		/* const */ unsigned int CRSYNC         : 1;	/* Read sync bit for Communication Mode. */
+		/* const */ unsigned int CWSYNC         : 1;	/* Write sync bit for Communication Mode. */
+		unsigned int CW_ACK         : 1;	/* Write request acknowledge in Communication Mode. */
+		/* const */ unsigned int COM_SYNC       : 1;	/* High level sync bit for Communication Mode. */
+		/* const */ unsigned int DBG_ON         : 1;	/* External debugger */
+		/* const */ unsigned int CLNT_ON        : 1;	/* Client */
+		unsigned int                : 2;
+		/* const */ unsigned int CHANNEL        : 1;	/* Selects the addressed CPU (monitor)in Communication Mode. */
+		unsigned int                : 19;
+	} B;
+	int I;
+	unsigned int U;
+
+} IOSR_type;
+#define IOSR	(*( IOSR_type *) 0xF000046Cu)	/* Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int COMDATA        : 32;
+	} B;
+	int I;
+	unsigned int U;
+
+} COMDATA_type;
+#define COMDATA	(*( COMDATA_type *) 0xF0000468u)	/* Communication Mode Data Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REVISION       : 8;	/* Module revision */
+		/* const */ unsigned int MODULE         : 8;	/* Cerberus_FPI Module ID */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} JDPID_type;
+#define JDPID	(*( JDPID_type *) 0xF0000408u)	/* Module ID and Revision */
+
+#define CBS_MCDBBS	MCDBBS
+
+/* System Timer */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SYSTIMERBITS   : 24;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} SYSTIM7_type;
+#define SYSTIM7	(*( SYSTIM7_type *) 0xF000032Cu)	/* System Timer Bits 55:32 Capture Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SYSTIMERBITS   : 24;
+		unsigned int                : 8;
+	} B;
+	int I;
+	unsigned int U;
+
+} SYSTIM6_type;
+#define SYSTIM6	(*( SYSTIM6_type *) 0xF0000328u)	/* System Timer Bits 55:32 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SYSTIMERBITS   : 32;
+	} B;
+	int I;
+	unsigned int U;
+
+} SYSTIM_type;
+#define SYSTIM5	(*( SYSTIM_type *) 0xF0000324u)	/* System Timer Bits 51:20 */
+#define SYSTIM4	(*( SYSTIM_type *) 0xF0000320u)	/* System Timer Bits 47:16 */
+#define SYSTIM3	(*( SYSTIM_type *) 0xF000031Cu)	/* System Timer Bits 43:12 */
+#define SYSTIM2	(*( SYSTIM_type *) 0xF0000318u)	/* System Timer Bits 39:8 */
+#define SYSTIM1	(*( SYSTIM_type *) 0xF0000314u)	/* System Timer Bits 35:4 */
+#define SYSTIM0	(*( SYSTIM_type *) 0xF0000310u)	/* System Timer Bits 31:0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REV            : 8;	/* System Timer Module Revision Number. */
+		/* const */ unsigned int MOD_32B        : 8;	/* Indicates a 32-bit ID register. */
+		/* const */ unsigned int MOD            : 16;	/* System Timer Module Identification Number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} STM_ID_type;
+#define STM_ID	(*( STM_ID_type *) 0xF0000308u)	/* System Timer Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DISR           : 1;	/* STM Disable Request Bit. */
+		/* const */ unsigned int DISS           : 1;	/* STM Disable Status Bit. */
+		/* const */ unsigned int                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} STM_CLC_type;
+#define STM_CLC	(*( STM_CLC_type *) 0xF0000300u)	/* System Timer Clock Control Register */
+
+#define SYSTIME_HIGH	SYSTIM7.U
+#define SYSTIME_LOW	SYSTIM0.U
+
+/* FPI Bus Control Unit 1 (Slow FPI Bus) */
+#define BCU1_SRC	(*( SRC_type *) 0xF00002FCu)	/* BCU Service Request Control Register */
+#define BCU1_EDAT	(*( BCU_EDAT_type *) 0xF0000228u)	/* BCU Error Data Capture Register */
+#define BCU1_EADD	(*( BCU_EADD_type *) 0xF0000224u)	/* BCU Error Address Capture Register */
+#define BCU1_ECON	(*( BCU_ECON_type *) 0xF0000220u)	/* BCU Error Control Capture Register */
+#define BCU1_ID	(*( BCU_ID_type *) 0xF0000208u)	/* BCU Identification Register */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned __sfrbit32 TOUT           : 16;	/* Bus time-out value */
+		unsigned __sfrbit32 DBG            : 1;	/* Debug trace */
+		unsigned __sfrbit32                : 1;
+		unsigned __sfrbit32 PSE            : 1;	/* Power saving */
+		unsigned __sfrbit32 SPE            : 1;	/* Starvation protection */
+		unsigned __sfrbit32                : 4;
+		unsigned __sfrbit32 SPC            : 8;	/* Starvation counter sample period */
+	} B;
+	int I;
+	unsigned int U;
+
+} BCU1_CON_type;
+#define BCU1_CON	(*( BCU1_CON_type *) 0xF0000210u)	/* S_BCU Control Register */
+
+#define SBCU_CON	BCU1_CON
+
+/* System Control Unit */
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RIX            : 3;	/* Redesign Index */
+		/* const */ unsigned int                : 12;
+		/* const */ unsigned int LC             : 1;	/* Laser Correction Flag */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} RTID_type;
+#define RTID	(*( RTID_type *) 0xF0000078u)	/* Redesign Tracing Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int CHREV          : 8;	/* Chip Revision Number */
+		/* const */ unsigned int CHID           : 8;	/* Chip Identification Number */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} CHIPID_type;
+#define CHIPID	(*( CHIPID_type *) 0xF0000074u)	/* Chip Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int DEPT           : 5;	/* Department Identification Number. */
+		/* const */ unsigned int MANUF          : 11;	/* Manufacturer Identification number. */
+		/* const */ unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} MANID_type;
+#define MANID	(*( MANID_type *) 0xF0000070u)	/* Manufacturer Identification Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SMRW           : 8;	/* Secondary Maximum Read Wait State */
+		unsigned int PMRW           : 8;	/* Primary Maximum Read Wait State */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} FFI_CON_type;
+#define FFI_CON	(*( FFI_CON_type *) 0xF0000058u)	/* FFI Bridge Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int ETEN           : 1;	/* Emulation Trace Enable */
+		unsigned int ETSEL          : 2;	/* Emulation Trace Select */
+		unsigned int                : 29;
+	} B;
+	int I;
+	unsigned int U;
+
+} MCDTRC_type;
+#define MCDTRC	(*( MCDTRC_type *) 0xF0000050u)	/* Trace Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int CBEN           : 1;	/* Cardbus Compliance Enable. */
+		unsigned int                : 31;
+	} B;
+	int I;
+	unsigned int U;
+
+} GSCON_type;
+#define GSCON	(*( GSCON_type *) 0xF0000048u)	/* General System Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int PLL1_LOCK      : 1;	/* State of PLL1 Lock Signal. */
+		/* const */ unsigned int PLL1_2EN       : 1;	/* PLL1 2nd Output Clock Enable */
+		/* const */ unsigned int PLL1_2SEL      : 1;	/* PLL1 2nd Output Clock Ratio */
+		unsigned int                : 1;
+		/* const */ unsigned int PLL1_BP        : 1;	/* PLL1 Bypass Mode Select */
+		/* const */ unsigned int PLL1_VCOBP     : 1;	/* PLL1 VCO Bypass Mode Select */
+		/* const */ unsigned int PLL1_VCOSEL    : 2;	/* PLL1 VCO Range Select */
+		unsigned int PLL1_KDIV      : 4;	/* PLL1 K-Divider */
+		unsigned int                : 4;
+		/* const */ unsigned int PLL1_NDIV      : 6;	/* PLL1 N-Divider */
+		unsigned int                : 10;
+	} B;
+	int I;
+	unsigned int U;
+
+} PLL1_CLC_type;
+#define PLL1_CLC	(*( PLL1_CLC_type *) 0xF0000040u)	/* PLL1 Clock Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int REQSLP         : 2;	/* Idle Mode and Sleep Mode Request Bits. */
+		/* const */ unsigned int                : 6;
+		/* const */ unsigned int PMST           : 3;	/* Power Management State Machine Status. */
+		/* const */ unsigned int                : 21;
+	} B;
+	int I;
+	unsigned int U;
+
+} PMG_CSR_type;
+#define PMG_CSR	(*( PMG_CSR_type *) 0xF0000034u)	/* Power Management Control and Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int DSRE           : 1;	/* Deep Sleep Request Bit. */
+		unsigned int DSREQ          : 1;	/* HRST Reset Enable during Deep Sleep Mode. */
+		unsigned int                : 30;
+	} B;
+	int I;
+	unsigned int U;
+
+} PMG_CON_type;
+#define PMG_CON	(*( PMG_CON_type *) 0xF0000030u)	/* Power Management Control Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int NMIEXT         : 1;	/* External NMI Flag. */
+		/* const */ unsigned int NMIPLL1        : 1;	/* PLL NMI Flag. */
+		/* const */ unsigned int NMIWDT         : 1;	/* Watchdog Timer NMI Flag. */
+		/* const */ unsigned int                : 29;
+	} B;
+	int I;
+	unsigned int U;
+
+} NMISR_type;
+#define NMISR	(*( NMISR_type *) 0xF000002Cu)	/* NMI Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int WDTAE          : 1;	/* Watchdog Access Error Status Flag. */
+		/* const */ unsigned int WDTOE          : 1;	/* Watchdog Overflow Error Status Flag. */
+		/* const */ unsigned int WDTIS          : 1;	/* Watchdog Input Clock Status Flag. */
+		/* const */ unsigned int WDTDS          : 1;	/* Watchdog Enable/Disable Status Flag. */
+		/* const */ unsigned int WDTTO          : 1;	/* Watchdog Time-Out Mode Flag. */
+		/* const */ unsigned int WDTPR          : 1;	/* Watchdog Prewarning Mode Flag. */
+		/* const */ unsigned int                : 10;
+		/* const */ unsigned int WDTTIM         : 16;	/* The current value of the WDT counter. */
+	} B;
+	int I;
+	unsigned int U;
+
+} WDTSR_type;
+#define WDTSR	(*( WDTSR_type *) 0xF0000028u)	/* Watchdog Timer Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int                : 2;
+		unsigned int WDTIR          : 1;	/* Watchdog Timer Input Frequency Request Control Bit. */
+		unsigned int WDTDR          : 1;	/* Watchdog Timer Disable Request Control Bit. */
+		unsigned int                : 28;
+	} B;
+	int I;
+	unsigned int U;
+
+} WDTCON1_type;
+#define WDTCON1	(*( WDTCON1_type *) 0xF0000024u)	/* Watchdog Timer Control Reg. 1 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int ENDINIT        : 1;	/* End-of-Initialization Control Bit. */
+		unsigned int WDTLCK         : 1;	/* Lock bit to Control Access to WDT_CON0. */
+		unsigned int WDTHPW0        : 2;	/* Hardware Password 0. */
+		unsigned int WDTHPW1        : 4;	/* Hardware Password 1. */
+		unsigned int WDTPW          : 8;	/* User-Definable Password Field for Access to WDT_CON0. */
+		unsigned int WDTREL         : 16;	/* Reload Value for the Watchdog Timer. */
+	} B;
+	int I;
+	unsigned int U;
+
+} WDTCON0_type;
+#define WDTCON0	(*( WDTCON0_type *) 0xF0000020u)	/* Watchdog Timer Control Reg. 0 */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int RSSTM          : 1;	/* System Timer Reset Status. */
+		/* const */ unsigned int                : 1;
+		/* const */ unsigned int RSEXT          : 1;	/* HRST Line State during last Reset. */
+		/* const */ unsigned int                : 9;
+		/* const */ unsigned int CFG_P0         : 3;	/* Boot SW Configuration Bits */
+		/* const */ unsigned int HW_CFG         : 4;	/* Boot Configuration Selection. */
+		/* const */ unsigned int HW_OCDS_E      : 1;	/* State of OCDS_E Pin. */
+		/* const */ unsigned int HW_BRK_IN      : 1;	/* State of BRK_IN Pin. */
+		/* const */ unsigned int                : 6;
+		/* const */ unsigned int PWORST         : 1;	/* Power-On Reset Flag. */
+		/* const */ unsigned int HDRST          : 1;	/* Hard Reset Flag. */
+		/* const */ unsigned int SFTRST         : 1;	/* Soft Reset Flag. */
+		/* const */ unsigned int WDTRST         : 1;	/* Watchdog Reset Flag. */
+		/* const */ unsigned int PWDRST         : 1;	/* Power Down / Wake-Up Reset Flag. */
+	} B;
+	int I;
+	unsigned int U;
+
+} RSTSR_type;
+#define RSTSR	(*( RSTSR_type *) 0xF0000014u)	/* Reset Status Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int RRSTM          : 1;	/* Reset Request for the System Timer */
+		unsigned int                : 1;
+		unsigned int RREXT          : 1;	/* Reset Request for External Devices */
+		unsigned int                : 9;
+		/* const */ unsigned int BTSW_CFG       : 3;	/* Boot SW Configuration Bits */
+		unsigned int SW_CFG         : 4;	/* Software Boot Value for the Boot Configuration Signals. */
+		unsigned int SW_OCDS_E      : 1;	/* Software Boot Value for the OCDS Enable Signal. */
+		unsigned int SW_BRK_IN      : 1;	/* Software Boot Value for the Break Signal. */
+		unsigned int                : 3;
+		unsigned int SWBOOT         : 1;	/* Software Boot Configuration Selection. */
+		unsigned int                : 7;
+	} B;
+	int I;
+	unsigned int U;
+
+} RSTREQ_type;
+#define RSTREQ	(*( RSTREQ_type *) 0xF0000010u)	/* Reset Request Register */
+
+typedef volatile union
+{
+	struct
+	{ 
+		/* const */ unsigned int REV_NUMBER     : 8;	/* SCU Module Revision Number. */
+		/* const */ unsigned int MOD_32B        : 8;	/* Indicates a 32-bit ID register. */
+		/* const */ unsigned int MOD_NUMBER     : 16;	/* SCU Module Identification Number. */
+	} B;
+	int I;
+	unsigned int U;
+
+} SCU_ID_type;
+#define SCU_ID	(*( SCU_ID_type *) 0xF0000008u)	/* SCU Identification Register */
+
+#define PLL_CLC	PLL1_CLC
+#define WDT_CON0	WDTCON0
+#define WDT_CON1	WDTCON1
+
+/* PCI SoftwareInterrupt Request Register Space (in SCU) */
+typedef volatile union
+{
+	struct
+	{ 
+		unsigned int SRPN           : 8;	/* Service Request Priority Number */
+		unsigned int                : 2;
+		unsigned int TOS            : 2;	/* Type of Service Control */
+		unsigned int SRE            : 1;	/* Service Request Enable */
+		/* const */ unsigned int SRR            : 1;	/* Service Request Flag */
+		unsigned int CLRR           : 1;	/* Request Clear Bit */
+		unsigned int SETR           : 1;	/* Request Set Bit */
+		unsigned int                : 16;
+	} B;
+	int I;
+	unsigned int U;
+
+} PCI_SW_IRQ_type;
+#define PCI_SW_IRQ31	(*( PCI_SW_IRQ_type *) 0xF00001FCu)	/* PCI Software Interrupt Request 31 */
+#define PCI_SW_IRQ30	(*( PCI_SW_IRQ_type *) 0xF00001F8u)	/* PCI Software Interrupt Request 30 */
+#define PCI_SW_IRQ29	(*( PCI_SW_IRQ_type *) 0xF00001F4u)	/* PCI Software Interrupt Request 29 */
+#define PCI_SW_IRQ28	(*( PCI_SW_IRQ_type *) 0xF00001F0u)	/* PCI Software Interrupt Request 28 */
+#define PCI_SW_IRQ27	(*( PCI_SW_IRQ_type *) 0xF00001ECu)	/* PCI Software Interrupt Request 27 */
+#define PCI_SW_IRQ26	(*( PCI_SW_IRQ_type *) 0xF00001E8u)	/* PCI Software Interrupt Request 26 */
+#define PCI_SW_IRQ25	(*( PCI_SW_IRQ_type *) 0xF00001E4u)	/* PCI Software Interrupt Request 25 */
+#define PCI_SW_IRQ24	(*( PCI_SW_IRQ_type *) 0xF00001E0u)	/* PCI Software Interrupt Request 24 */
+#define PCI_SW_IRQ23	(*( PCI_SW_IRQ_type *) 0xF00001DCu)	/* PCI Software Interrupt Request 23 */
+#define PCI_SW_IRQ22	(*( PCI_SW_IRQ_type *) 0xF00001D8u)	/* PCI Software Interrupt Request 22 */
+#define PCI_SW_IRQ21	(*( PCI_SW_IRQ_type *) 0xF00001D4u)	/* PCI Software Interrupt Request 21 */
+#define PCI_SW_IRQ20	(*( PCI_SW_IRQ_type *) 0xF00001D0u)	/* PCI Software Interrupt Request 20 */
+#define PCI_SW_IRQ19	(*( PCI_SW_IRQ_type *) 0xF00001CCu)	/* PCI Software Interrupt Request 19 */
+#define PCI_SW_IRQ18	(*( PCI_SW_IRQ_type *) 0xF00001C8u)	/* PCI Software Interrupt Request 18 */
+#define PCI_SW_IRQ17	(*( PCI_SW_IRQ_type *) 0xF00001C4u)	/* PCI Software Interrupt Request 17 */
+#define PCI_SW_IRQ16	(*( PCI_SW_IRQ_type *) 0xF00001C0u)	/* PCI Software Interrupt Request 16 */
+#define PCI_SW_IRQ15	(*( PCI_SW_IRQ_type *) 0xF00001BCu)	/* PCI Software Interrupt Request 15 */
+#define PCI_SW_IRQ14	(*( PCI_SW_IRQ_type *) 0xF00001B8u)	/* PCI Software Interrupt Request 14 */
+#define PCI_SW_IRQ13	(*( PCI_SW_IRQ_type *) 0xF00001B4u)	/* PCI Software Interrupt Request 13 */
+#define PCI_SW_IRQ12	(*( PCI_SW_IRQ_type *) 0xF00001B0u)	/* PCI Software Interrupt Request 12 */
+#define PCI_SW_IRQ11	(*( PCI_SW_IRQ_type *) 0xF00001ACu)	/* PCI Software Interrupt Request 11 */
+#define PCI_SW_IRQ10	(*( PCI_SW_IRQ_type *) 0xF00001A8u)	/* PCI Software Interrupt Request 10 */
+#define PCI_SW_IRQ9	(*( PCI_SW_IRQ_type *) 0xF00001A4u)	/* PCI Software Interrupt Request 9 */
+#define PCI_SW_IRQ8	(*( PCI_SW_IRQ_type *) 0xF00001A0u)	/* PCI Software Interrupt Request 8 */
+#define PCI_SW_IRQ7	(*( PCI_SW_IRQ_type *) 0xF000019Cu)	/* PCI Software Interrupt Request 7 */
+#define PCI_SW_IRQ6	(*( PCI_SW_IRQ_type *) 0xF0000198u)	/* PCI Software Interrupt Request 6 */
+#define PCI_SW_IRQ5	(*( PCI_SW_IRQ_type *) 0xF0000194u)	/* PCI Software Interrupt Request 5 */
+#define PCI_SW_IRQ4	(*( PCI_SW_IRQ_type *) 0xF0000190u)	/* PCI Software Interrupt Request 4 */
+#define PCI_SW_IRQ3	(*( PCI_SW_IRQ_type *) 0xF000018Cu)	/* PCI Software Interrupt Request 3 */
+#define PCI_SW_IRQ2	(*( PCI_SW_IRQ_type *) 0xF0000188u)	/* PCI Software Interrupt Request 2 */
+#define PCI_SW_IRQ1	(*( PCI_SW_IRQ_type *) 0xF0000184u)	/* PCI Software Interrupt Request 1 */
+#define PCI_SW_IRQ0	(*( PCI_SW_IRQ_type *) 0xF0000180u)	/* PCI Software Interrupt Request 0 */
+
+#endif /*_REGTC11IB_H*/

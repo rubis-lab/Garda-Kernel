@@ -1,0 +1,1376 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc2296a -H sfr/regtc1797.sfr -c99 --dep-file=.MAIN.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=MAIN.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o MAIN.src ..\\MAIN.c"
+	.compiler_name		"ctc"
+	.name	"MAIN"
+
+	
+$TC131
+	.sdecl	'.zrodata.MAIN.__const_01058e21',data,rom
+	.sect	'.zrodata.MAIN.__const_01058e21'
+	.align	2
+__const_01058e21:	.type	object
+	.size	__const_01058e21,4
+	.word	17141281
+	.sdecl	'.zrodata.MAIN.__const_00020003',data,rom
+	.sect	'.zrodata.MAIN.__const_00020003'
+	.align	2
+__const_00020003:	.type	object
+	.size	__const_00020003,4
+	.word	131075
+	
+	.sdecl	'.text.MAIN.MAIN_vInit',code,cluster('MAIN_vInit')
+	.sect	'.text.MAIN.MAIN_vInit'
+	.align	2
+	
+	.global	MAIN_vInit
+
+; ..\MAIN.c	     1  //****************************************************************************
+; ..\MAIN.c	     2  // @Module        Project Settings
+; ..\MAIN.c	     3  // @Filename      MAIN.c
+; ..\MAIN.c	     4  // @Project       DAVE_SG.dav
+; ..\MAIN.c	     5  //----------------------------------------------------------------------------
+; ..\MAIN.c	     6  // @Controller    Infineon TC1797
+; ..\MAIN.c	     7  //
+; ..\MAIN.c	     8  // @Compiler      Tasking 3.1
+; ..\MAIN.c	     9  //
+; ..\MAIN.c	    10  // @Codegenerator 1.0
+; ..\MAIN.c	    11  //
+; ..\MAIN.c	    12  // @Description   This file contains the project initialization function.
+; ..\MAIN.c	    13  //
+; ..\MAIN.c	    14  //----------------------------------------------------------------------------
+; ..\MAIN.c	    15  // @Date          2013-11-20 13:40:30
+; ..\MAIN.c	    16  //
+; ..\MAIN.c	    17  //****************************************************************************
+; ..\MAIN.c	    18  
+; ..\MAIN.c	    19  // USER CODE BEGIN (MAIN_General,1)
+; ..\MAIN.c	    20  
+; ..\MAIN.c	    21  // USER CODE END
+; ..\MAIN.c	    22  
+; ..\MAIN.c	    23  
+; ..\MAIN.c	    24  
+; ..\MAIN.c	    25  //****************************************************************************
+; ..\MAIN.c	    26  // @Project Includes
+; ..\MAIN.c	    27  //****************************************************************************
+; ..\MAIN.c	    28  
+; ..\MAIN.c	    29  #include "MAIN.h"
+; ..\MAIN.c	    30  
+; ..\MAIN.c	    31  // USER CODE BEGIN (MAIN_General,2)
+; ..\MAIN.c	    32  #include <sfr/regtc1797.sfr>
+; ..\MAIN.c	    33  #include "constants.h"
+; ..\MAIN.c	    34  #include "configs.h"
+; ..\MAIN.c	    35  #include "user_main.h"
+; ..\MAIN.c	    36  
+; ..\MAIN.c	    37  // USER CODE END
+; ..\MAIN.c	    38  
+; ..\MAIN.c	    39  
+; ..\MAIN.c	    40  //****************************************************************************
+; ..\MAIN.c	    41  // @Macros
+; ..\MAIN.c	    42  //****************************************************************************
+; ..\MAIN.c	    43  
+; ..\MAIN.c	    44  // USER CODE BEGIN (MAIN_General,3)
+; ..\MAIN.c	    45  
+; ..\MAIN.c	    46  // USER CODE END
+; ..\MAIN.c	    47  
+; ..\MAIN.c	    48  
+; ..\MAIN.c	    49  //****************************************************************************
+; ..\MAIN.c	    50  // @Defines
+; ..\MAIN.c	    51  //****************************************************************************
+; ..\MAIN.c	    52  
+; ..\MAIN.c	    53  #define RESET_INDICATOR     ((SCU_RSTSTAT.U & ((uword)(0x0001001B))))
+; ..\MAIN.c	    54  #define WATCHDOG_RESET      ((uword)0x00000008)
+; ..\MAIN.c	    55  #define SOFTWARE_RESET      ((uword)0x00000010)
+; ..\MAIN.c	    56  #define ESR0_RESET          ((uword)0x00000001)
+; ..\MAIN.c	    57  #define ESR1_RESET          ((uword)0x00000002)
+; ..\MAIN.c	    58  #define POWERON_RESET       ((uword)0x00010000)
+; ..\MAIN.c	    59  
+; ..\MAIN.c	    60  // USER CODE BEGIN (MAIN_General,4)
+; ..\MAIN.c	    61  
+; ..\MAIN.c	    62  // USER CODE END
+; ..\MAIN.c	    63  
+; ..\MAIN.c	    64  
+; ..\MAIN.c	    65  //****************************************************************************
+; ..\MAIN.c	    66  // @Typedefs
+; ..\MAIN.c	    67  //****************************************************************************
+; ..\MAIN.c	    68  
+; ..\MAIN.c	    69  // USER CODE BEGIN (MAIN_General,5)
+; ..\MAIN.c	    70  
+; ..\MAIN.c	    71  // USER CODE END
+; ..\MAIN.c	    72  
+; ..\MAIN.c	    73  
+; ..\MAIN.c	    74  //****************************************************************************
+; ..\MAIN.c	    75  // @Imported Global Variables
+; ..\MAIN.c	    76  //****************************************************************************
+; ..\MAIN.c	    77  
+; ..\MAIN.c	    78  // USER CODE BEGIN (MAIN_General,6)
+; ..\MAIN.c	    79  
+; ..\MAIN.c	    80  // USER CODE END
+; ..\MAIN.c	    81  
+; ..\MAIN.c	    82  
+; ..\MAIN.c	    83  //****************************************************************************
+; ..\MAIN.c	    84  // @Global Variables
+; ..\MAIN.c	    85  //****************************************************************************
+; ..\MAIN.c	    86  volatile unsigned int DummyToForceRead; 
+; ..\MAIN.c	    87  
+; ..\MAIN.c	    88  // USER CODE BEGIN (MAIN_General,7)
+; ..\MAIN.c	    89  
+; ..\MAIN.c	    90  // USER CODE END
+; ..\MAIN.c	    91  
+; ..\MAIN.c	    92  
+; ..\MAIN.c	    93  //****************************************************************************
+; ..\MAIN.c	    94  // @External Prototypes
+; ..\MAIN.c	    95  //****************************************************************************
+; ..\MAIN.c	    96  
+; ..\MAIN.c	    97  // USER CODE BEGIN (MAIN_General,8)
+; ..\MAIN.c	    98  
+; ..\MAIN.c	    99  // USER CODE END
+; ..\MAIN.c	   100  
+; ..\MAIN.c	   101  
+; ..\MAIN.c	   102  //****************************************************************************
+; ..\MAIN.c	   103  // @Prototypes Of Local Functions
+; ..\MAIN.c	   104  //****************************************************************************
+; ..\MAIN.c	   105  
+; ..\MAIN.c	   106  // USER CODE BEGIN (MAIN_General,9)
+; ..\MAIN.c	   107  
+; ..\MAIN.c	   108  // USER CODE END
+; ..\MAIN.c	   109  
+; ..\MAIN.c	   110  
+; ..\MAIN.c	   111  //****************************************************************************
+; ..\MAIN.c	   112  // @Function      void MAIN_vInit(void) 
+; ..\MAIN.c	   113  //
+; ..\MAIN.c	   114  //----------------------------------------------------------------------------
+; ..\MAIN.c	   115  // @Description   This function initializes the microcontroller.
+; ..\MAIN.c	   116  //
+; ..\MAIN.c	   117  //----------------------------------------------------------------------------
+; ..\MAIN.c	   118  // @Returnvalue   None
+; ..\MAIN.c	   119  //
+; ..\MAIN.c	   120  //----------------------------------------------------------------------------
+; ..\MAIN.c	   121  // @Parameters    None
+; ..\MAIN.c	   122  //
+; ..\MAIN.c	   123  //----------------------------------------------------------------------------
+; ..\MAIN.c	   124  // @Date          2013-11-20
+; ..\MAIN.c	   125  //
+; ..\MAIN.c	   126  //****************************************************************************
+; ..\MAIN.c	   127  
+; ..\MAIN.c	   128  // USER CODE BEGIN (Init,1)
+; ..\MAIN.c	   129  
+; ..\MAIN.c	   130  // USER CODE END
+; ..\MAIN.c	   131  
+; ..\MAIN.c	   132  void MAIN_vInit(void)
+; Function MAIN_vInit
+.L14:
+MAIN_vInit:	.type	func
+
+; ..\MAIN.c	   133  {
+; ..\MAIN.c	   134    // USER CODE BEGIN (Init,2)
+; ..\MAIN.c	   135  
+; ..\MAIN.c	   136    // USER CODE END
+; ..\MAIN.c	   137  
+; ..\MAIN.c	   138    //// -----------------------------------------------------------------------
+; ..\MAIN.c	   139    //// Begin of Important Settings for the Start-Up File
+; ..\MAIN.c	   140    //// -----------------------------------------------------------------------
+; ..\MAIN.c	   141    ///  All following settings must be set in the start-up file. You can use 
+; ..\MAIN.c	   142    ///  DAvE's project file (*.dpt) to include this register values into your 
+; ..\MAIN.c	   143    ///  compiler EDE.
+; ..\MAIN.c	   144  
+; ..\MAIN.c	   145      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   146      ///  System Peripheral Bus Control Unit (SBCU):
+; ..\MAIN.c	   147      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   148      ///  SBCU starvation protection is enabled
+; ..\MAIN.c	   149      ///  the debug trace is enabled. Error information is captured in 
+; ..\MAIN.c	   150      ///  register SBCU_EADD, SBCU_EDAT and SBCU_ECON
+; ..\MAIN.c	   151      ///  sample period of request for starvation protection: 64
+; ..\MAIN.c	   152      ///  SBCU bus time-out value: 65536 cycles
+; ..\MAIN.c	   153  
+; ..\MAIN.c	   154      //// this register must be set in the start-up file
+; ..\MAIN.c	   155      //// SBCU_CON.U  = 0x4009FFFF;
+; ..\MAIN.c	   156  
+; ..\MAIN.c	   157      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   158      ///  LMB External Bus Unit (EBU):
+; ..\MAIN.c	   159      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   160      ///  - enable the EBU module clock
+; ..\MAIN.c	   161      ///  - disable EndInit Protection of the CLC Register
+; ..\MAIN.c	   162      ///  - request EBU to run off input clock divided by 1
+; ..\MAIN.c	   163  
+; ..\MAIN.c	   164      //// this register must be set in the start-up file
+; ..\MAIN.c	   165      //// EBU_CLC.U  = 0x00010000;
+; ..\MAIN.c	   166  
+; ..\MAIN.c	   167      ///  External Arbitration:
+; ..\MAIN.c	   168      ///  - EBU is disabled
+; ..\MAIN.c	   169  
+; ..\MAIN.c	   170      //// this register must be set in the start-up file
+; ..\MAIN.c	   171      //// EBU_MODCON.U  = 0x00000000;
+; ..\MAIN.c	   172  
+; ..\MAIN.c	   173      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   174      ///  Data Memory Interface (DMI):
+; ..\MAIN.c	   175      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   176      ///  - No Data Cache
+; ..\MAIN.c	   177      ///  - 128 Kbyte Data Memory
+; ..\MAIN.c	   178  
+; ..\MAIN.c	   179      //// this register must be set in the start-up file
+; ..\MAIN.c	   180      //// DMI_CON.U  = 0x08000802;
+; ..\MAIN.c	   181  
+; ..\MAIN.c	   182      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   183      ///  Program Memory Interface (PMI):
+; ..\MAIN.c	   184      ///  ---------------------------------------------------------------------
+; ..\MAIN.c	   185      ///  - No Instruction Cache
+; ..\MAIN.c	   186      ///  - 40 Kbyte Program Memory
+; ..\MAIN.c	   187  
+; ..\MAIN.c	   188      //// this register must be set in the start-up file
+; ..\MAIN.c	   189      //// PMI_CON2.U  = 0x02800284;
+; ..\MAIN.c	   190  
+; ..\MAIN.c	   191    //// -----------------------------------------------------------------------
+; ..\MAIN.c	   192    //// End of Important Settings for the Start-Up File
+; ..\MAIN.c	   193    //// -----------------------------------------------------------------------
+; ..\MAIN.c	   194  
+; ..\MAIN.c	   195    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   196    ///  Clock System:
+; ..\MAIN.c	   197    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   198    ///  - external clock frequency: 20.00 MHz
+; ..\MAIN.c	   199    ///  - input divider (PDIV): 2
+; ..\MAIN.c	   200    ///  - PLL operation (VCOBYP = 0)
+; ..\MAIN.c	   201    ///  - VCO range: 700 MHz - 800 MHz
+; ..\MAIN.c	   202    ///  - feedback divider (NDIV): 72
+; ..\MAIN.c	   203    ///  - the VCO output frequency is: 720.00 MHz
+; ..\MAIN.c	   204    ///  - output divider (KDIV): 4
+; ..\MAIN.c	   205    ///  - CPU clock: 180.00 MHz
+; ..\MAIN.c	   206    ///  - the ratio fcpu /ffpi is  2 / 1
+; ..\MAIN.c	   207    ///  - the ratio fcpu /flmb is  1 / 1
+; ..\MAIN.c	   208    ///  - the ratio fcpu /fpcp is  1 / 1
+; ..\MAIN.c	   209    ///  - system clock: 90.00 MHz
+; ..\MAIN.c	   210  
+; ..\MAIN.c	   211  
+; ..\MAIN.c	   212      if (!SCU_PLLSTAT.B.PWDSTAT)
+	lea	a15,0xf0000514
+	ld.bu	d15,[a15]
+.L69:
+	jnz.t	d15:1,.L2				; predicted taken
+.L70:
+
+; ..\MAIN.c	   213      {
+; ..\MAIN.c	   214        MAIN_vResetENDINIT();
+	lea	a12,0xf00005f0
+	ld.w	d15,[a12]
+	insert	d4,d15,#0,#0,#1
+	call	MAIN_vWriteWDTCON0
+	lea	a13,0xf00005f0
+.L3:
+	ld.bu	d15,[a13]
+	jnz.t	d15:0,.L3				; predicted taken
+.L71:
+
+; ..\MAIN.c	   215        SCU_CCUCON0.U  = 0x00000001; // set FPI,LMB and PCP dividers
+	mov	d15,#1
+	st.w	0xf0000530,d15
+.L72:
+
+; ..\MAIN.c	   216        SCU_PLLCON0.B.VCOBYP  = 1; // set VCO bypass (goto Prescaler Mode)
+	lea	a14,0xf0000518
+	ld.bu	d15,[a14]
+.L73:
+	or	d15,#1
+	st.b	[a14],d15
+
+; ..\MAIN.c	   217        while (!SCU_PLLSTAT.B.VCOBYST);// wait for prescaler mode
+.L4:
+	ld.bu	d15,[a15]
+.L74:
+	jz.t	d15:0,.L4				; predicted taken
+.L75:
+
+; ..\MAIN.c	   218        SCU_PLLCON0.U  = 0x01058E21; // set P,N divider, connect OSC
+	ld.w	d15,__const_01058e21
+.L76:
+	st.w	0xf0000518,d15
+.L77:
+
+; ..\MAIN.c	   219        SCU_PLLCON1.U  = 0x00020003; // set K1,K2 divider
+	ld.w	d15,__const_00020003
+.L78:
+	st.w	0xf000051c,d15
+.L79:
+
+; ..\MAIN.c	   220        MAIN_vSetENDINIT();
+	ld.w	d15,[a12]
+	or	d4,d15,#1
+	call	MAIN_vWriteWDTCON0
+
+; ..\MAIN.c	   221        while (SCU_PLLSTAT.B.VCOLOCK == 0);// wait for LOCK
+.L5:
+	ld.bu	d15,[a15]
+.L80:
+	jz.t	d15:2,.L5				; predicted taken
+.L81:
+
+; ..\MAIN.c	   222        MAIN_vResetENDINIT();
+	ld.w	d15,[a12]
+	insert	d4,d15,#0,#0,#1
+	call	MAIN_vWriteWDTCON0
+.L6:
+	ld.bu	d15,[a13]
+	jnz.t	d15:0,.L6				; predicted taken
+.L82:
+
+; ..\MAIN.c	   223        SCU_PLLCON0.B.VCOBYP  = 0; // Reset VCO bypass (Leave Prescaler Mode)
+	ld.bu	d15,[a14]
+.L83:
+	insert	d15,d15,#0,#0,#1
+	st.b	[a14],d15
+.L84:
+
+; ..\MAIN.c	   224        MAIN_vSetENDINIT();
+	ld.w	d15,[a12]
+	or	d4,d15,#1
+	call	MAIN_vWriteWDTCON0
+.L2:
+
+; ..\MAIN.c	   225      }
+; ..\MAIN.c	   226  
+; ..\MAIN.c	   227    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   228    ///  Interrupt System:
+; ..\MAIN.c	   229    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   230    ///  - four arbitration cycles (max. 255 interrupt sources)
+; ..\MAIN.c	   231    ///  - two clocks per arbitration cycle
+; ..\MAIN.c	   232  
+; ..\MAIN.c	   233    MTCR(0xFE2C, 0x00000000);      // load CPU interrupt control register
+	mov	d15,#0
+	lea	a15,0xf00005f0
+.L85:
+	mtcr	#65068,d15
+	isync
+.L86:
+
+; ..\MAIN.c	   234    ISYNC();
+	isync
+.L87:
+
+; ..\MAIN.c	   235  
+; ..\MAIN.c	   236    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   237    ///  Peripheral Control Processor (PCP):
+; ..\MAIN.c	   238    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   239    ///  - stop the PCP internal clock when PCP is idle
+; ..\MAIN.c	   240  
+; ..\MAIN.c	   241    ///  - use Full Context save area (R[0] - R[7])
+; ..\MAIN.c	   242    ///  - start progam counter as left by last invocation
+; ..\MAIN.c	   243    ///  - channel watchdog is disabled
+; ..\MAIN.c	   244    ///  - maximum channel number checking is disabled
+; ..\MAIN.c	   245  
+; ..\MAIN.c	   246    MAIN_vResetENDINIT();
+	ld.w	d15,[a15]
+	insert	d4,d15,#0,#0,#1
+	call	MAIN_vWriteWDTCON0
+.L7:
+	ld.bu	d15,[a15]
+	jnz.t	d15:0,.L7				; predicted taken
+.L88:
+
+; ..\MAIN.c	   247    PCP_CLC.U      = 0x00000000;   // load PCP clock control register
+	mov	d15,#0
+	movh.a	a2,#61444
+	st.w	[a2]@los(0xf0043f00),d15
+.L89:
+
+; ..\MAIN.c	   248    PCP_CS.U       = 0x00000200;   // load PCP control and status register
+	mov	d15,#512
+	st.w	[a2]@los(0xf0043f10),d15
+.L90:
+
+; ..\MAIN.c	   249    MAIN_vSetENDINIT();
+	ld.w	d15,[a15]
+	or	d4,d15,#1
+	call	MAIN_vWriteWDTCON0
+.L91:
+
+; ..\MAIN.c	   250  
+; ..\MAIN.c	   251    ///  - four arbitration cycles (max. 255 PCP channels)
+; ..\MAIN.c	   252    ///  - two clocks per arbitration cycle
+; ..\MAIN.c	   253    PCP_ICR.U      = 0x00000000;   // load PCP interrupt control register
+	mov	d15,#0
+	movh.a	a2,#61444
+	st.w	[a2]@los(0xf0043f20),d15
+.L92:
+
+; ..\MAIN.c	   254  
+; ..\MAIN.c	   255    ///  - the PCP warning mechanism is disabled
+; ..\MAIN.c	   256    PCP_ITR.U      = 0x00000000;   // load PCP interrupt threshold register
+	st.w	[a2]@los(0xf0043f24),d15
+.L93:
+
+; ..\MAIN.c	   257  
+; ..\MAIN.c	   258    ///  - type of service of PCP node 4 is CPU interrupt
+; ..\MAIN.c	   259    PCP_SRC4.U     = 0x00001000;   // load service request control register 4
+	mov	d15,#4096
+	st.w	[a2]@los(0xf0043fec),d15
+.L94:
+
+; ..\MAIN.c	   260  
+; ..\MAIN.c	   261    ///  - type of service of PCP node 5 is CPU interrupt
+; ..\MAIN.c	   262    PCP_SRC5.U     = 0x00001000;   // load service request control register 5
+	st.w	[a2]@los(0xf0043fe8),d15
+.L95:
+
+; ..\MAIN.c	   263  
+; ..\MAIN.c	   264    ///  - type of service of PCP node 6 is CPU interrupt
+; ..\MAIN.c	   265    PCP_SRC6.U     = 0x00001000;   // load service request control register 6
+	st.w	[a2]@los(0xf0043fe4),d15
+.L96:
+
+; ..\MAIN.c	   266  
+; ..\MAIN.c	   267    ///  - type of service of PCP node 7 is CPU interrupt
+; ..\MAIN.c	   268    PCP_SRC7.U     = 0x00001000;   // load service request control register 7
+	st.w	[a2]@los(0xf0043fe0),d15
+.L97:
+
+; ..\MAIN.c	   269  
+; ..\MAIN.c	   270    ///  - type of service of PCP node 8 is CPU interrupt
+; ..\MAIN.c	   271    PCP_SRC8.U     = 0x00001000;   // load service request control register 8
+	st.w	[a2]@los(0xf0043fdc),d15
+.L98:
+
+; ..\MAIN.c	   272  
+; ..\MAIN.c	   273    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   274    ///  Configuration of the DMA Module Clock:
+; ..\MAIN.c	   275    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   276    ///  - enable the DMA module
+; ..\MAIN.c	   277  
+; ..\MAIN.c	   278    MAIN_vResetENDINIT();
+	ld.w	d15,[a15]
+	insert	d4,d15,#0,#0,#1
+	call	MAIN_vWriteWDTCON0
+.L8:
+	ld.bu	d15,[a15]
+	jnz.t	d15:0,.L8				; predicted taken
+.L99:
+
+; ..\MAIN.c	   279    DMA_CLC.U      = 0x00000008;   // DMA clock control register
+	mov	d15,#8
+	st.w	0xf0003c00,d15
+.L100:
+
+; ..\MAIN.c	   280    DummyToForceRead  = DMA_CLC.U; // read it back to ensure it is read
+	ld.w	d15,0xf0003c00
+.L101:
+	st.w	DummyToForceRead,d15
+.L102:
+
+; ..\MAIN.c	   281    MAIN_vSetENDINIT();
+	ld.w	d15,[a15]
+	or	d4,d15,#1
+	call	MAIN_vWriteWDTCON0
+.L103:
+
+; ..\MAIN.c	   282  
+; ..\MAIN.c	   283    //   -----------------------------------------------------------------------
+; ..\MAIN.c	   284    //   Initialization of the Peripherals:
+; ..\MAIN.c	   285    //   -----------------------------------------------------------------------
+; ..\MAIN.c	   286    //   initializes the MultiCAN Controller 
+; ..\MAIN.c	   287    CAN_vInit();
+	call	CAN_vInit
+.L104:
+
+; ..\MAIN.c	   288  
+; ..\MAIN.c	   289  
+; ..\MAIN.c	   290    // USER CODE BEGIN (Init,3)
+; ..\MAIN.c	   291  
+; ..\MAIN.c	   292    // USER CODE END
+; ..\MAIN.c	   293  
+; ..\MAIN.c	   294    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   295    ///  System Start Conditions:
+; ..\MAIN.c	   296    ///  -----------------------------------------------------------------------
+; ..\MAIN.c	   297  
+; ..\MAIN.c	   298    //// - the CPU interrupt system is globally disabled
+; ..\MAIN.c	   299    DISABLE();
+	disable
+.L105:
+
+; ..\MAIN.c	   300  
+; ..\MAIN.c	   301    //// - the PCP interrupt system is globally disabled
+; ..\MAIN.c	   302  
+; ..\MAIN.c	   303  
+; ..\MAIN.c	   304    // USER CODE BEGIN (Init,4)
+; ..\MAIN.c	   305  
+; ..\MAIN.c	   306    // USER CODE END
+; ..\MAIN.c	   307  
+; ..\MAIN.c	   308  } //  End of function MAIN_vInit
+	ret
+.L44:
+	
+__MAIN_vInit_function_end:
+	.size	MAIN_vInit,__MAIN_vInit_function_end-MAIN_vInit
+.L32:
+	; End of function
+	
+	.sdecl	'.text.MAIN.MAIN_vWriteWDTCON0',code,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.text.MAIN.MAIN_vWriteWDTCON0'
+	.align	2
+	
+	.global	MAIN_vWriteWDTCON0
+
+; ..\MAIN.c	   309  
+; ..\MAIN.c	   310  
+; ..\MAIN.c	   311  //****************************************************************************
+; ..\MAIN.c	   312  // @Function      void MAIN_vWriteWDTCON0(uword uwValue) 
+; ..\MAIN.c	   313  //
+; ..\MAIN.c	   314  //----------------------------------------------------------------------------
+; ..\MAIN.c	   315  // @Description   This function writes the parameter uwValue to the WDT_CON0 
+; ..\MAIN.c	   316  //                register which is password protected. 
+; ..\MAIN.c	   317  //
+; ..\MAIN.c	   318  //----------------------------------------------------------------------------
+; ..\MAIN.c	   319  // @Returnvalue   None
+; ..\MAIN.c	   320  //
+; ..\MAIN.c	   321  //----------------------------------------------------------------------------
+; ..\MAIN.c	   322  // @Parameters    uwValue: 
+; ..\MAIN.c	   323  //                Value for the WDTCON0 register
+; ..\MAIN.c	   324  //
+; ..\MAIN.c	   325  //----------------------------------------------------------------------------
+; ..\MAIN.c	   326  // @Date          2013-11-20
+; ..\MAIN.c	   327  //
+; ..\MAIN.c	   328  //****************************************************************************
+; ..\MAIN.c	   329  
+; ..\MAIN.c	   330  // USER CODE BEGIN (WriteWDTCON0,1)
+; ..\MAIN.c	   331  
+; ..\MAIN.c	   332  // USER CODE END
+; ..\MAIN.c	   333  
+; ..\MAIN.c	   334  void MAIN_vWriteWDTCON0(uword uwValue)
+; Function MAIN_vWriteWDTCON0
+.L16:
+MAIN_vWriteWDTCON0:	.type	func
+
+; ..\MAIN.c	   335  {
+; ..\MAIN.c	   336    uword uwDummy;
+; ..\MAIN.c	   337  
+; ..\MAIN.c	   338    uwDummy        = WDT_CON0.U;  
+	lea	a15,0xf00005f0
+	ld.w	d15,[a15]
+.L48:
+
+; ..\MAIN.c	   339    uwDummy |=  0x000000F0;       //  set HWPW1 = 1111b
+; ..\MAIN.c	   340  
+; ..\MAIN.c	   341    if(WDT_CON1.B.DR)
+	or	d15,#240
+	lea	a2,0xf00005f4
+	ld.bu	d0,[a2]
+.L58:
+	jz.t	d0:3,.L9				; prediction unknown
+.L59:
+
+; ..\MAIN.c	   342    {
+; ..\MAIN.c	   343      uwDummy |=  0x00000008;     //  set HWPW0 = WDTDR
+	or	d15,#8
+.L60:
+	j	.L10
+.L9:
+
+; ..\MAIN.c	   344    }
+; ..\MAIN.c	   345    else
+; ..\MAIN.c	   346    {
+; ..\MAIN.c	   347      uwDummy &= ~0x00000008;     //  set HWPW0 = WDTDR
+	insert	d15,d15,#0,#3,#1
+.L10:
+
+; ..\MAIN.c	   348    }
+; ..\MAIN.c	   349    if(WDT_CON1.B.IR)
+	ld.bu	d0,[a2]
+.L61:
+	jz.t	d0:2,.L11				; prediction unknown
+.L62:
+
+; ..\MAIN.c	   350    {
+; ..\MAIN.c	   351      uwDummy |=  0x00000004;     //  set HWPW0 = WDTIR
+	or	d15,#4
+.L63:
+	j	.L12
+.L11:
+
+; ..\MAIN.c	   352    }
+; ..\MAIN.c	   353    else
+; ..\MAIN.c	   354    {
+; ..\MAIN.c	   355      uwDummy &= ~0x00000004;     //  set HWPW0 = WDTIR
+	insert	d15,d15,#0,#2,#1
+.L12:
+
+; ..\MAIN.c	   356    }
+; ..\MAIN.c	   357  
+; ..\MAIN.c	   358    uwDummy &= ~0x00000002;       //  set WDTLCK = 0
+; ..\MAIN.c	   359    WDT_CON0.U =  uwDummy;          //  unlock access
+	insert	d15,d15,#0,#1,#1
+	st.w	[a15],d15
+.L64:
+
+; ..\MAIN.c	   360  
+; ..\MAIN.c	   361    uwValue  |=  0x000000F2;      //  set HWPW1 = 1111b and WDTLCK = 1
+	or	d15,d4,#242
+.L49:
+
+; ..\MAIN.c	   362    uwValue  &= ~0x0000000C;      //  set HWPW0 = 00b
+; ..\MAIN.c	   363    WDT_CON0.U  =  uwValue;         //  write access and lock
+	insert	d15,d15,#0,#2,#2
+	st.w	[a15],d15
+.L47:
+
+; ..\MAIN.c	   364  
+; ..\MAIN.c	   365  } //  End of function MAIN_vWriteWDTCON0
+	ret
+.L40:
+	
+__MAIN_vWriteWDTCON0_function_end:
+	.size	MAIN_vWriteWDTCON0,__MAIN_vWriteWDTCON0_function_end-MAIN_vWriteWDTCON0
+.L27:
+	; End of function
+	
+	.sdecl	'.text.MAIN.main',code,cluster('main')
+	.sect	'.text.MAIN.main'
+	.align	2
+	
+	.global	main
+
+; ..\MAIN.c	   366  
+; ..\MAIN.c	   367  
+; ..\MAIN.c	   368  //****************************************************************************
+; ..\MAIN.c	   369  // @Function      sword main(void) 
+; ..\MAIN.c	   370  //
+; ..\MAIN.c	   371  //----------------------------------------------------------------------------
+; ..\MAIN.c	   372  // @Description   This is the main function.
+; ..\MAIN.c	   373  //
+; ..\MAIN.c	   374  //----------------------------------------------------------------------------
+; ..\MAIN.c	   375  // @Returnvalue   Returns an sword value
+; ..\MAIN.c	   376  //
+; ..\MAIN.c	   377  //----------------------------------------------------------------------------
+; ..\MAIN.c	   378  // @Parameters    None
+; ..\MAIN.c	   379  //
+; ..\MAIN.c	   380  //----------------------------------------------------------------------------
+; ..\MAIN.c	   381  // @Date          2013-11-20
+; ..\MAIN.c	   382  //
+; ..\MAIN.c	   383  //****************************************************************************
+; ..\MAIN.c	   384  
+; ..\MAIN.c	   385  // USER CODE BEGIN (Main,1)
+; ..\MAIN.c	   386  
+; ..\MAIN.c	   387  // USER CODE END
+; ..\MAIN.c	   388  
+; ..\MAIN.c	   389  void main(void)
+; Function main
+.L18:
+main:	.type	func
+
+; ..\MAIN.c	   390  {
+; ..\MAIN.c	   391    // USER CODE BEGIN (Main,2)
+; ..\MAIN.c	   392    init_hardware();
+	call	init_hardware
+.L110:
+
+; ..\MAIN.c	   393    user_main();
+	j	user_main
+.L45:
+	
+__main_function_end:
+	.size	main,__main_function_end-main
+.L37:
+	; End of function
+	
+	.sdecl	'.zbss.MAIN.DummyToForceRead',data,cluster('DummyToForceRead')
+	.sect	'.zbss.MAIN.DummyToForceRead'
+	.global	DummyToForceRead
+	.align	2
+DummyToForceRead:	.type	object
+	.size	DummyToForceRead,4
+	.space	4
+	.calls	'MAIN_vInit','MAIN_vWriteWDTCON0'
+	.calls	'MAIN_vInit','CAN_vInit'
+	.calls	'main','init_hardware'
+	.calls	'main','user_main'
+	.calls	'MAIN_vInit','',0
+	.calls	'MAIN_vWriteWDTCON0','',0
+	.extern	CAN_vInit
+	.extern	_Errno
+	.extern	init_hardware
+	.extern	user_main
+	.calls	'main','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L20:
+	.word	1768
+	.half	3
+	.word	.L21
+	.byte	4
+.L19:
+	.byte	1
+	.byte	'..\\MAIN.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L22
+	.byte	2
+	.byte	'endinit_clear',0,3,1,159,1,13,1,1,3
+	.byte	'int',0,4,5,4
+	.byte	'x',0,1,159,1,31
+	.word	177
+	.byte	5,0,2
+	.byte	'endinit_set',0,3,1,169,1,13,1,1,4
+	.byte	'x',0,1,169,1,29
+	.word	177
+	.byte	5,0,2
+	.byte	'nops',0,3,1,143,2,13,1,1,6
+	.byte	'void',0,7
+	.word	243
+	.byte	4
+	.byte	'cnt',0,1,143,2,24
+	.word	249
+	.byte	5,0,8
+	.byte	'__mtcr',0,1,1,1,1,9
+	.word	177
+	.byte	9
+	.word	177
+	.byte	0,10
+	.byte	'__isync',0,1,1,1,1,10
+	.byte	'__disable',0,1,1,1,1
+.L41:
+	.byte	3
+	.byte	'unsigned int',0,4,7,11
+	.byte	'CAN_vInit',0,2,129,1,6,1,1,1,1,12
+	.word	155
+	.byte	13
+	.word	184
+	.byte	5,0,12
+	.word	197
+	.byte	13
+	.word	217
+	.byte	5,0,12
+	.word	230
+	.byte	13
+	.word	254
+	.byte	5,0,11
+	.byte	'init_hardware',0,3,93,6,1,1,1,1,11
+	.byte	'user_main',0,4,24,6,1,1,1,1,14
+	.byte	'__prof_adm',0,5,1,1
+	.word	249
+	.byte	15,1,7
+	.word	450
+	.byte	14
+	.byte	'__codeptr',0,5,1,1
+	.word	452
+	.byte	16,6,145,19,18,4,17,6,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,18
+	.byte	'CNT1',0,4
+	.word	487
+	.byte	12,20,2,35,0,19,4
+	.word	487
+	.byte	2,18,2,35,0,18
+	.byte	'TOS',0,4
+	.word	487
+	.byte	2,16,2,35,0,18
+	.byte	'SRPN',0,4
+	.word	487
+	.byte	8,8,2,35,0,18
+	.byte	'CPPN',0,4
+	.word	487
+	.byte	8,0,2,35,0,0,20
+	.byte	'B',0,4
+	.word	481
+	.byte	2,35,0,20
+	.byte	'I',0,4
+	.word	177
+	.byte	2,35,0,20
+	.byte	'U',0,4
+	.word	320
+	.byte	2,35,0,0,21
+	.word	475
+	.byte	14
+	.byte	'PCP_GPR6_type',0,6,158,19,3
+	.word	612
+	.byte	16,6,160,19,18,4,17,6,162,19,2,4,18
+	.byte	'Z',0,4
+	.word	487
+	.byte	1,31,2,35,0,18
+	.byte	'N',0,4
+	.word	487
+	.byte	1,30,2,35,0,18
+	.byte	'C',0,4
+	.word	487
+	.byte	1,29,2,35,0,18
+	.byte	'V',0,4
+	.word	487
+	.byte	1,28,2,35,0,18
+	.byte	'CNZ',0,4
+	.word	487
+	.byte	1,27,2,35,0,18
+	.byte	'IEN',0,4
+	.word	487
+	.byte	1,26,2,35,0,18
+	.byte	'CEN',0,4
+	.word	487
+	.byte	1,25,2,35,0,19,4
+	.word	487
+	.byte	1,24,2,35,0,18
+	.byte	'DPTR',0,4
+	.word	487
+	.byte	8,16,2,35,0,19,4
+	.word	487
+	.byte	16,0,2,35,0,0,20
+	.byte	'B',0,4
+	.word	646
+	.byte	2,35,0,20
+	.byte	'I',0,4
+	.word	177
+	.byte	2,35,0,20
+	.byte	'U',0,4
+	.word	320
+	.byte	2,35,0,0,21
+	.word	640
+	.byte	14
+	.byte	'PCP_GPR7_type',0,6,178,19,3
+	.word	822
+	.byte	3
+	.byte	'unsigned char',0,1,8,14
+	.byte	'ubyte',0,7,69,24
+	.word	850
+	.byte	3
+	.byte	'unsigned short int',0,2,7,14
+	.byte	'ushort',0,7,71,24
+	.word	881
+	.byte	14
+	.byte	'uword',0,7,73,24
+	.word	320
+	.byte	14
+	.byte	'_iob_flag_t',0,8,75,25
+	.word	881
+	.byte	14
+	.byte	'uint16_t',0,9,24,33
+	.word	881
+	.byte	14
+	.byte	'uint32_t',0,9,26,33
+	.word	320
+	.byte	16,1,75,9,64,17,1,76,5,64,20
+	.byte	'pcxi',0,4
+	.word	320
+	.byte	2,35,0,20
+	.byte	'psw',0,4
+	.word	320
+	.byte	2,35,4,20
+	.byte	'a10',0,4
+	.word	249
+	.byte	2,35,8,20
+	.byte	'a11',0,4
+	.word	249
+	.byte	2,35,12,20
+	.byte	'd8',0,4
+	.word	320
+	.byte	2,35,16,20
+	.byte	'd9',0,4
+	.word	320
+	.byte	2,35,20,20
+	.byte	'd10',0,4
+	.word	320
+	.byte	2,35,24,20
+	.byte	'd11',0,4
+	.word	320
+	.byte	2,35,28,20
+	.byte	'a12',0,4
+	.word	320
+	.byte	2,35,32,20
+	.byte	'a13',0,4
+	.word	320
+	.byte	2,35,36,20
+	.byte	'a14',0,4
+	.word	320
+	.byte	2,35,40,20
+	.byte	'a15',0,4
+	.word	320
+	.byte	2,35,44,20
+	.byte	'd12',0,4
+	.word	320
+	.byte	2,35,48,20
+	.byte	'd13',0,4
+	.word	320
+	.byte	2,35,52,20
+	.byte	'd14',0,4
+	.word	320
+	.byte	2,35,56,20
+	.byte	'd15',0,4
+	.word	320
+	.byte	2,35,60,0,20
+	.byte	'u',0,64
+	.word	991
+	.byte	2,35,0,17,1,94,5,64,20
+	.byte	'pcxi',0,4
+	.word	320
+	.byte	2,35,0,22,1,1,9
+	.word	249
+	.byte	0,7
+	.word	1234
+	.byte	20
+	.byte	'pc',0,4
+	.word	1243
+	.byte	2,35,4,20
+	.byte	'a2',0,4
+	.word	320
+	.byte	2,35,8,20
+	.byte	'a3',0,4
+	.word	320
+	.byte	2,35,12,20
+	.byte	'd0',0,4
+	.word	320
+	.byte	2,35,16,20
+	.byte	'd1',0,4
+	.word	320
+	.byte	2,35,20,20
+	.byte	'd2',0,4
+	.word	320
+	.byte	2,35,24,20
+	.byte	'd3',0,4
+	.word	320
+	.byte	2,35,28,20
+	.byte	'a4',0,4
+	.word	249
+	.byte	2,35,32,20
+	.byte	'a5',0,4
+	.word	320
+	.byte	2,35,36,20
+	.byte	'a6',0,4
+	.word	320
+	.byte	2,35,40,20
+	.byte	'a7',0,4
+	.word	320
+	.byte	2,35,44,20
+	.byte	'd4',0,4
+	.word	320
+	.byte	2,35,48,20
+	.byte	'd5',0,4
+	.word	320
+	.byte	2,35,52,20
+	.byte	'd6',0,4
+	.word	320
+	.byte	2,35,56,20
+	.byte	'd7',0,4
+	.word	320
+	.byte	2,35,60,0,20
+	.byte	'l',0,64
+	.word	1215
+	.byte	2,35,0,0,14
+	.byte	'context_t',0,1,112,3
+	.word	986
+	.byte	23
+	.byte	'_Errno',0,10,19,21
+	.word	177
+	.byte	1,1,3
+	.byte	'unsigned long long int',0,8,7,14
+	.byte	'clock_t',0,11,32,33
+	.word	1476
+	.byte	24
+	.byte	'swc_s',0,3,23,16,44,20
+	.byte	'task_state',0,4
+	.word	320
+	.byte	2,35,0,20
+	.byte	'absolute_deadline',0,4
+	.word	320
+	.byte	2,35,4,20
+	.byte	'relative_deadline',0,4
+	.word	320
+	.byte	2,35,8,20
+	.byte	'next_release_time',0,4
+	.word	320
+	.byte	2,35,12,20
+	.byte	'lcx',0,4
+	.word	320
+	.byte	2,35,16,20
+	.byte	'priority',0,4
+	.word	320
+	.byte	2,35,20,20
+	.byte	'period',0,4
+	.word	320
+	.byte	2,35,24,20
+	.byte	'release_timestamp',0,8
+	.word	1476
+	.byte	2,35,28,7
+	.word	320
+	.byte	20
+	.byte	'arg',0,4
+	.word	1704
+	.byte	2,35,36,25,4
+	.word	320
+	.byte	26,0,0,20
+	.byte	'stack',0,4
+	.word	1722
+	.byte	2,35,40,0,7
+	.word	1518
+	.byte	14
+	.byte	'swc_t',0,3,34,4
+	.word	1747
+.L46:
+	.byte	21
+	.word	320
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L21:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,36
+	.byte	0,3,8,11,15,62,15,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,11,0,0,0,6,59,0,3,8,0,0,7,15,0,73,19,0,0
+	.byte	8,46,1,3,8,54,15,39,12,63,12,60,12,0,0,9,5,0,73,19,0,0,10,46,0,3,8,54,15,39,12,63,12,60,12,0,0,11,46,0
+	.byte	3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,12,46,1,49,19,0,0,13,5,0,49,19,0,0,14,22,0,3,8,58,15
+	.byte	59,15,57,15,73,19,0,0,15,21,0,54,15,0,0,16,23,1,58,15,59,15,57,15,11,15,0,0,17,19,1,58,15,59,15,57,15
+	.byte	11,15,0,0,18,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,19,13,0,11,15,73,19,13,15,12,15,56,9,0,0,20,13
+	.byte	0,3,8,11,15,73,19,56,9,0,0,21,53,0,73,19,0,0,22,21,1,54,15,39,12,0,0,23,52,0,3,8,58,15,59,15,57,15,73
+	.byte	19,63,12,60,12,0,0,24,19,1,3,8,58,15,59,15,57,15,11,15,0,0,25,1,1,11,15,73,19,0,0,26,33,0,47,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L22:
+	.word	.L51-.L50
+.L50:
+	.half	3
+	.word	.L53-.L52
+.L52:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\intrinsic.h',0,0,0,0
+	.byte	'..\\CAN.h',0,0,0,0
+	.byte	'..\\kernel.h',0,0,0,0
+	.byte	'..\\user_main.h',0,0,0,0
+	.byte	'..\\MAIN.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'..\\MAIN.h',0,0,0,0
+	.byte	'stdio.h',0,1,0,0
+	.byte	'stdint.h',0,1,0,0
+	.byte	'errno.h',0,1,0,0
+	.byte	'time.h',0,1,0,0,0
+.L53:
+.L51:
+	.sdecl	'.debug_info',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_info'
+.L23:
+	.word	253
+	.half	3
+	.word	.L24
+	.byte	4,1
+	.byte	'..\\MAIN.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L26,.L25
+	.byte	2
+	.word	.L19
+	.byte	3
+	.byte	'MAIN_vWriteWDTCON0',0,1,206,2,6,1,1,1
+	.word	.L16,.L40,.L15
+	.byte	4
+	.byte	'uwValue',0,1,206,2,31
+	.word	.L41,.L42
+	.byte	5
+	.word	.L16,.L40
+	.byte	6
+	.byte	'uwDummy',0,1,208,2,9
+	.word	.L41,.L43
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_abbrev'
+.L24:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_line'
+.L25:
+	.word	.L55-.L54
+.L54:
+	.half	3
+	.word	.L57-.L56
+.L56:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\MAIN.c',0,0,0,0,0
+.L57:
+	.byte	5,28,7,0,5,2
+	.word	.L16
+	.byte	3,209,2,1,5,11,9
+	.half	.L48-.L16
+	.byte	3,1,1,5,16,3,2,1,5,3,9
+	.half	.L58-.L48
+	.byte	1,5,13,7,9
+	.half	.L59-.L58
+	.byte	3,2,1,5,27,9
+	.half	.L60-.L59
+	.byte	1,5,13,9
+	.half	.L9-.L60
+	.byte	3,4,1,5,16,9
+	.half	.L10-.L9
+	.byte	3,2,1,5,3,9
+	.half	.L61-.L10
+	.byte	1,5,13,7,9
+	.half	.L62-.L61
+	.byte	3,2,1,5,27,9
+	.half	.L63-.L62
+	.byte	1,5,13,9
+	.half	.L11-.L63
+	.byte	3,4,1,5,11,9
+	.half	.L12-.L11
+	.byte	3,3,1,5,14,3,1,1,5,12,9
+	.half	.L64-.L12
+	.byte	3,2,1,9
+	.half	.L49-.L64
+	.byte	3,1,1,5,15,3,1,1,5,1,9
+	.half	.L47-.L49
+	.byte	3,2,1,7,9
+	.half	.L27-.L47
+	.byte	0,1,1
+.L55:
+	.sdecl	'.debug_ranges',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_ranges'
+.L26:
+	.word	-1,.L16,0,.L27-.L16,0,0
+	.sdecl	'.debug_info',debug,cluster('MAIN_vInit')
+	.sect	'.debug_info'
+.L28:
+	.word	202
+	.half	3
+	.word	.L29
+	.byte	4,1
+	.byte	'..\\MAIN.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L31,.L30
+	.byte	2
+	.word	.L19
+	.byte	3
+	.byte	'MAIN_vInit',0,1,132,1,6,1,1,1
+	.word	.L14,.L44,.L13
+	.byte	4
+	.word	.L14,.L44
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('MAIN_vInit')
+	.sect	'.debug_abbrev'
+.L29:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('MAIN_vInit')
+	.sect	'.debug_line'
+.L30:
+	.word	.L66-.L65
+.L65:
+	.half	3
+	.word	.L68-.L67
+.L67:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\MAIN.c',0,0,0,0,0
+.L68:
+	.byte	5,23,7,0,5,2
+	.word	.L14
+	.byte	3,211,1,1,5,10,9
+	.half	.L69-.L14
+	.byte	1,5,7,7,9
+	.half	.L70-.L69
+	.byte	3,2,1,5,24,9
+	.half	.L71-.L70
+	.byte	3,1,1,5,22,1,5,20,9
+	.half	.L72-.L71
+	.byte	3,1,1,5,29,9
+	.half	.L73-.L72
+	.byte	1,5,28,9
+	.half	.L4-.L73
+	.byte	3,1,1,5,15,9
+	.half	.L74-.L4
+	.byte	1,5,24,7,9
+	.half	.L75-.L74
+	.byte	3,1,1,5,22,9
+	.half	.L76-.L75
+	.byte	1,5,24,9
+	.half	.L77-.L76
+	.byte	3,1,1,5,22,9
+	.half	.L78-.L77
+	.byte	1,5,7,9
+	.half	.L79-.L78
+	.byte	3,1,1,5,27,9
+	.half	.L5-.L79
+	.byte	3,1,1,5,40,9
+	.half	.L80-.L5
+	.byte	1,5,7,7,9
+	.half	.L81-.L80
+	.byte	3,1,1,5,20,9
+	.half	.L82-.L81
+	.byte	3,1,1,5,29,9
+	.half	.L83-.L82
+	.byte	1,5,7,9
+	.half	.L84-.L83
+	.byte	3,1,1,5,16,9
+	.half	.L2-.L84
+	.byte	3,9,1,5,7,3,109,1,9
+	.half	.L85-.L2
+	.byte	3,19,1,5,8,9
+	.half	.L86-.L85
+	.byte	3,1,1,5,3,9
+	.half	.L87-.L86
+	.byte	3,12,1,5,20,9
+	.half	.L88-.L87
+	.byte	3,1,1,5,18,1,5,20,9
+	.half	.L89-.L88
+	.byte	3,1,1,5,18,1,5,3,9
+	.half	.L90-.L89
+	.byte	3,1,1,5,20,9
+	.half	.L91-.L90
+	.byte	3,4,1,5,18,1,9
+	.half	.L92-.L91
+	.byte	3,3,1,5,20,9
+	.half	.L93-.L92
+	.byte	3,3,1,5,18,1,9
+	.half	.L94-.L93
+	.byte	3,3,1,9
+	.half	.L95-.L94
+	.byte	3,3,1,9
+	.half	.L96-.L95
+	.byte	3,3,1,9
+	.half	.L97-.L96
+	.byte	3,3,1,5,3,9
+	.half	.L98-.L97
+	.byte	3,7,1,5,20,9
+	.half	.L99-.L98
+	.byte	3,1,1,5,18,1,5,30,9
+	.half	.L100-.L99
+	.byte	3,1,1,5,21,9
+	.half	.L101-.L100
+	.byte	1,5,3,9
+	.half	.L102-.L101
+	.byte	3,1,1,5,12,9
+	.half	.L103-.L102
+	.byte	3,6,1,5,10,9
+	.half	.L104-.L103
+	.byte	3,12,1,5,1,9
+	.half	.L105-.L104
+	.byte	3,9,1,7,9
+	.half	.L32-.L105
+	.byte	0,1,1
+.L66:
+	.sdecl	'.debug_ranges',debug,cluster('MAIN_vInit')
+	.sect	'.debug_ranges'
+.L31:
+	.word	-1,.L14,0,.L32-.L14,0,0
+	.sdecl	'.debug_info',debug,cluster('main')
+	.sect	'.debug_info'
+.L33:
+	.word	196
+	.half	3
+	.word	.L34
+	.byte	4,1
+	.byte	'..\\MAIN.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L36,.L35
+	.byte	2
+	.word	.L19
+	.byte	3
+	.byte	'main',0,1,133,3,6,1,1,1
+	.word	.L18,.L45,.L17
+	.byte	4
+	.word	.L18,.L45
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('main')
+	.sect	'.debug_abbrev'
+.L34:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('main')
+	.sect	'.debug_line'
+.L35:
+	.word	.L107-.L106
+.L106:
+	.half	3
+	.word	.L109-.L108
+.L108:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\MAIN.c',0,0,0,0,0
+.L109:
+	.byte	5,16,7,0,5,2
+	.word	.L18
+	.byte	3,135,3,1,5,12,9
+	.half	.L110-.L18
+	.byte	3,1,1,5,1,7,9
+	.half	.L37-.L110
+	.byte	3,4,0,1,1
+.L107:
+	.sdecl	'.debug_ranges',debug,cluster('main')
+	.sect	'.debug_ranges'
+.L36:
+	.word	-1,.L18,0,.L37-.L18,0,0
+	.sdecl	'.debug_info',debug,cluster('DummyToForceRead')
+	.sect	'.debug_info'
+.L38:
+	.word	185
+	.half	3
+	.word	.L39
+	.byte	4,1
+	.byte	'..\\MAIN.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L19
+	.byte	3
+	.byte	'DummyToForceRead',0,5,86,23
+	.word	.L46
+	.byte	1,5,3
+	.word	DummyToForceRead
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('DummyToForceRead')
+	.sect	'.debug_abbrev'
+.L39:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_loc',debug,cluster('MAIN_vInit')
+	.sect	'.debug_loc'
+.L13:
+	.word	-1,.L14,0,.L44-.L14
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_loc'
+.L15:
+	.word	-1,.L16,0,.L40-.L16
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L43:
+	.word	-1,.L16,.L48-.L16,.L49-.L16
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L42:
+	.word	-1,.L16,0,.L47-.L16
+	.half	5
+	.byte	144,34,157,32,0
+	.word	.L47-.L16,.L40-.L16
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('main')
+	.sect	'.debug_loc'
+.L17:
+	.word	-1,.L18,0,.L45-.L18
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L111:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('MAIN_vInit')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L14,.L44-.L14
+	.sdecl	'.debug_frame',debug,cluster('MAIN_vWriteWDTCON0')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L111,.L16,.L40-.L16
+	.byte	8,19,8,20,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('main')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L18,.L45-.L18
+
+; ..\MAIN.c	   394    return;
+; ..\MAIN.c	   395  
+; ..\MAIN.c	   396    // USER CODE END
+; ..\MAIN.c	   397  } //  End of function main
+; ..\MAIN.c	   398  
+; ..\MAIN.c	   399  
+; ..\MAIN.c	   400  
+; ..\MAIN.c	   401  // USER CODE BEGIN (MAIN_General,10)
+; ..\MAIN.c	   402  
+; ..\MAIN.c	   403  // USER CODE END
+; ..\MAIN.c	   404  
+
+	; Module end

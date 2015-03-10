@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="com.tasking.config.ctc.abs.debug.1686874240">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.tasking.config.ctc.abs.debug.1686874240" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.tasking.managedbuilder.TASKING_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.tasking.managedbuilder.TskRegexErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="elf" artifactName="Garda" buildArtefactType="com.tasking.ctc.buildArtefactType.elf" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=com.tasking.ctc.buildArtefactType.elf" cleanCommand="&quot;${PRODDIR}/bin/rm&quot; -rf" description="" id="com.tasking.config.ctc.abs.debug.1686874240" name="Debug" parent="com.tasking.config.ctc.abs.debug">
+					<folderInfo id="com.tasking.config.ctc.abs.debug.1686874240." name="/" resourcePath="">
+						<toolChain id="com.tasking.ctc.abs.debug.164019103" name="TASKING VX-toolset for TriCore" superClass="com.tasking.ctc.abs.debug">
+							<option id="com.tasking.ctc.prodDir.1215184600" name="Product directory:" superClass="com.tasking.ctc.prodDir" value="${eclipse_home}/.." valueType="string"/>
+							<option id="com.tasking.ctc.cpu.380144831" name="Processor:" superClass="com.tasking.ctc.cpu" value="tc1797" valueType="string"/>
+							<option id="com.tasking.ctc.pluginVersion.2055344540" name="Plugin version" superClass="com.tasking.ctc.pluginVersion" value="1.95.0.0" valueType="string"/>
+							<targetPlatform archList="all" binaryParser="com.tasking.managedbuilder.TASKING_ELF" id="com.tasking.ctc.platform.abs.debug.448146259" name="Debug" osList="" superClass="com.tasking.ctc.platform.abs.debug"/>
+							<builder buildPath="${workspace_loc:/DAVE_TEST/Debug}" id="com.tasking.ctc.builder.abs.debug.810605915" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="TASKING TriCore Makefile generator" parallelBuildOn="true" parallelizationNumber="-1" superClass="com.tasking.ctc.builder.abs.debug"/>
+							<tool id="com.tasking.ctc.cc.abs.debug.1443658258" name="C/C++ Compiler" superClass="com.tasking.ctc.cc.abs.debug">
+								<option id="com.tasking.ctc.cc.pr36858.1732281581" name="workaround for PR36858" superClass="com.tasking.ctc.cc.pr36858" value="true" valueType="string"/>
+								<option id="com.tasking.ctc.cc.noTaskingSfr.337605328" name="Automatic inclusion of '.sfr' file" superClass="com.tasking.ctc.cc.noTaskingSfr" value="true" valueType="boolean"/>
+								<option id="com.tasking.ctc.cc.definedSymbols.140873981" name="Defined symbols" superClass="com.tasking.ctc.cc.definedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__TC1797__=1"/>
+									<listOptionValue builtIn="false" value="FREQ_CPU_MHZ=180"/>
+								</option>
+								<inputType id="com.tasking.ctc.cppInputType.1660299800" name="C++" superClass="com.tasking.ctc.cppInputType"/>
+								<inputType id="com.tasking.ctc.cpp.cInputType.1016678265" name="C" superClass="com.tasking.ctc.cpp.cInputType"/>
+								<inputType id="com.tasking.ctc.cc.msInputType.483812364" name="MS" superClass="com.tasking.ctc.cc.msInputType"/>
+							</tool>
+							<tool id="com.tasking.ctc.as.abs.debug.1932446303" name="Assembler" superClass="com.tasking.ctc.as.abs.debug">
+								<inputType id="com.tasking.ctc.asmInputType.2004757450" name="ASM" superClass="com.tasking.ctc.asmInputType"/>
+							</tool>
+							<tool id="com.tasking.ctc.lk.abs.debug.1509909113" name="Linker" superClass="com.tasking.ctc.lk.abs.debug">
+								<inputType id="com.tasking.ctc.lkObjInputType.299857510" name="OBJ" superClass="com.tasking.ctc.lkObjInputType"/>
+								<inputType id="com.tasking.ctc.lkLibInputType.1316429131" name="LIB" superClass="com.tasking.ctc.lkLibInputType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+				<project-mappings>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cHeader" language="com.tasking.ctc.clanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cSource" language="com.tasking.ctc.clanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxHeader" language="com.tasking.ctc.cpplanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxSource" language="com.tasking.ctc.cpplanguage"/>
+				</project-mappings>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+			<storageModule moduleId="com.tasking.flash.settings">
+				<flashDevice flash_base_address="0xA1000000" flash_chip="AM29BL162C" flash_chips="0x2" flash_unused_address_lines="0x0" flash_vendor="AMD" flash_width="0x10"/>
+			</storageModule>
+			<storageModule moduleId="com.tasking.toolInfo">
+				<toolInfo>TASKING VX-toolset for TriCore: control program v4.1r1 Build 177</toolInfo>
+				<toolInfo>TASKING program builder v4.1r1 Build 071</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: object linker v4.1r1 Build 220 SN 00581034</toolInfo>
+				<toolInfo>TASKING VX-toolset for TriCore: assembler v4.1r1 Build 333</toolInfo>
+			</storageModule>
+		</cconfiguration>
+		<cconfiguration id="com.tasking.config.ctc.abs.release.1328366909">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.tasking.config.ctc.abs.release.1328366909" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.tasking.managedbuilder.TASKING_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.tasking.managedbuilder.TskRegexErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="elf" artifactName="CC_LKAS" buildArtefactType="com.tasking.ctc.buildArtefactType.elf" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=com.tasking.ctc.buildArtefactType.elf" cleanCommand="&quot;${PRODDIR}/bin/rm&quot; -rf" description="" id="com.tasking.config.ctc.abs.release.1328366909" name="Release" parent="com.tasking.config.ctc.abs.release">
+					<folderInfo id="com.tasking.config.ctc.abs.release.1328366909." name="/" resourcePath="">
+						<toolChain id="com.tasking.ctc.abs.release.1622092936" name="TASKING VX-toolset for TriCore" superClass="com.tasking.ctc.abs.release">
+							<option id="com.tasking.ctc.prodDir.1106262714" name="Product directory:" superClass="com.tasking.ctc.prodDir" value="${eclipse_home}/.." valueType="string"/>
+							<option id="com.tasking.ctc.cpu.988854556" name="Processor:" superClass="com.tasking.ctc.cpu" value="tc1797" valueType="string"/>
+							<option id="com.tasking.ctc.pluginVersion.585815957" name="Plugin version" superClass="com.tasking.ctc.pluginVersion" value="1.95.0.0" valueType="string"/>
+							<targetPlatform archList="all" binaryParser="com.tasking.managedbuilder.TASKING_ELF" id="com.tasking.ctc.platform.abs.release.273114723" name="Release" osList="" superClass="com.tasking.ctc.platform.abs.release"/>
+							<builder buildPath="${workspace_loc:/DAVE_TEST/Release}" id="com.tasking.ctc.builder.abs.debug.897113651" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="TASKING TriCore Makefile generator" parallelBuildOn="true" parallelizationNumber="-1" superClass="com.tasking.ctc.builder.abs.debug"/>
+							<tool id="com.tasking.ctc.cc.abs.release.1483899991" name="C/C++ Compiler" superClass="com.tasking.ctc.cc.abs.release">
+								<option id="com.tasking.ctc.cc.pr36858.1237119383" name="workaround for PR36858" superClass="com.tasking.ctc.cc.pr36858" value="true" valueType="string"/>
+								<inputType id="com.tasking.ctc.cppInputType.1091900120" name="C++" superClass="com.tasking.ctc.cppInputType"/>
+								<inputType id="com.tasking.ctc.cpp.cInputType.1380509801" name="C" superClass="com.tasking.ctc.cpp.cInputType"/>
+								<inputType id="com.tasking.ctc.cc.msInputType.1483641418" name="MS" superClass="com.tasking.ctc.cc.msInputType"/>
+							</tool>
+							<tool id="com.tasking.ctc.as.abs.release.979102742" name="Assembler" superClass="com.tasking.ctc.as.abs.release">
+								<inputType id="com.tasking.ctc.asmInputType.1871569976" name="ASM" superClass="com.tasking.ctc.asmInputType"/>
+							</tool>
+							<tool id="com.tasking.ctc.lk.abs.release.208435015" name="Linker" superClass="com.tasking.ctc.lk.abs.release">
+								<inputType id="com.tasking.ctc.lkObjInputType.113727101" name="OBJ" superClass="com.tasking.ctc.lkObjInputType"/>
+								<inputType id="com.tasking.ctc.lkLibInputType.2114701519" name="LIB" superClass="com.tasking.ctc.lkLibInputType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="sync_on_halt.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+				<project-mappings>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cHeader" language="com.tasking.ctc.clanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cSource" language="com.tasking.ctc.clanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxHeader" language="com.tasking.ctc.cpplanguage"/>
+					<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxSource" language="com.tasking.ctc.cpplanguage"/>
+				</project-mappings>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="DAVE_TEST.com.tasking.ctc.target.abs.1395663533" name="TASKING TriCore Application" projectType="com.tasking.ctc.target.abs"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+		<project-mappings>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cHeader" language="com.tasking.ctc.clanguage"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cSource" language="com.tasking.ctc.clanguage"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxHeader" language="com.tasking.ctc.cpplanguage"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxSource" language="com.tasking.ctc.cpplanguage"/>
+		</project-mappings>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+		<profile id="com.tasking.cpcp.TskPCPScannerInfo">
+			<buildOutputProvider>
+				<openAction enabled="false" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="" command="ccpcp" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="com.tasking.ctc.TskTriCoreScannerInfo">
+			<buildOutputProvider>
+				<openAction enabled="false" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="" command="cctc" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="makefileGenerator">
+				<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/${specs_file}&quot;'" command="sh" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-c 'g++ -E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;'" command="sh" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;'" command="sh" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<scannerConfigBuildInfo instanceId="com.tasking.config.ctc.abs.debug.1686874240;com.tasking.config.ctc.abs.debug.1686874240.">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.tasking.ctc.TskTriCoreScannerInfo"/>
+			<profile id="com.tasking.cpcp.TskPCPScannerInfo">
+				<buildOutputProvider>
+					<openAction enabled="false" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="" command="ccpcp" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="com.tasking.ctc.TskTriCoreScannerInfo">
+				<buildOutputProvider>
+					<openAction enabled="false" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="" command="cctc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="makefileGenerator">
+					<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/${specs_file}&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'g++ -E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.tasking.config.ctc.abs.release.1328366909;com.tasking.config.ctc.abs.release.1328366909.">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.tasking.ctc.TskTriCoreScannerInfo"/>
+			<profile id="com.tasking.cpcp.TskPCPScannerInfo">
+				<buildOutputProvider>
+					<openAction enabled="false" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="" command="ccpcp" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="com.tasking.ctc.TskTriCoreScannerInfo">
+				<buildOutputProvider>
+					<openAction enabled="false" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="" command="cctc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="makefileGenerator">
+					<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/${specs_file}&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'g++ -E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-c 'gcc -E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;'" command="sh" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope"/>
+</cproject>

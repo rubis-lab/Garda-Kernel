@@ -1,0 +1,568 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc3056a -H sfr/regtc1797.sfr -c99 --dep-file=.user_main_rtos.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=user_main_rtos.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o user_main_rtos.src ..\\user_main_rtos.c"
+	.compiler_name		"ctc"
+	.name	"user_main_rtos"
+
+	
+$TC131
+	
+	.extern	_Errno
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L3:
+	.word	1663
+	.half	3
+	.word	.L4
+	.byte	4
+.L2:
+	.byte	1
+	.byte	'..\\user_main_rtos.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L5
+	.byte	2
+	.byte	'endinit_clear',0,3,1,159,1,13,1,1,3
+	.byte	'int',0,4,5,4
+	.byte	'x',0,1,159,1,31
+	.word	187
+	.byte	5,0,2
+	.byte	'endinit_set',0,3,1,169,1,13,1,1,4
+	.byte	'x',0,1,169,1,29
+	.word	187
+	.byte	5,0,2
+	.byte	'nops',0,3,1,143,2,13,1,1,6
+	.byte	'void',0,7
+	.word	253
+	.byte	4
+	.byte	'cnt',0,1,143,2,24
+	.word	259
+	.byte	5,0,8
+	.word	165
+	.byte	9
+	.word	194
+	.byte	5,0,8
+	.word	207
+	.byte	9
+	.word	227
+	.byte	5,0,8
+	.word	240
+	.byte	9
+	.word	264
+	.byte	5,0,10
+	.byte	'__prof_adm',0,2,1,1
+	.word	259
+	.byte	11,1,7
+	.word	334
+	.byte	10
+	.byte	'__codeptr',0,2,1,1
+	.word	336
+	.byte	12,3,145,19,18,4,13,3,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,14
+	.byte	'CNT1',0,4
+	.word	371
+	.byte	12,20,2,35,0,15,4
+	.word	371
+	.byte	2,18,2,35,0,14
+	.byte	'TOS',0,4
+	.word	371
+	.byte	2,16,2,35,0,14
+	.byte	'SRPN',0,4
+	.word	371
+	.byte	8,8,2,35,0,14
+	.byte	'CPPN',0,4
+	.word	371
+	.byte	8,0,2,35,0,0,16
+	.byte	'B',0,4
+	.word	365
+	.byte	2,35,0,16
+	.byte	'I',0,4
+	.word	187
+	.byte	2,35,0,3
+	.byte	'unsigned int',0,4,7,16
+	.byte	'U',0,4
+	.word	484
+	.byte	2,35,0,0,17
+	.word	359
+	.byte	10
+	.byte	'PCP_GPR6_type',0,3,158,19,3
+	.word	512
+	.byte	12,3,160,19,18,4,13,3,162,19,2,4,14
+	.byte	'Z',0,4
+	.word	371
+	.byte	1,31,2,35,0,14
+	.byte	'N',0,4
+	.word	371
+	.byte	1,30,2,35,0,14
+	.byte	'C',0,4
+	.word	371
+	.byte	1,29,2,35,0,14
+	.byte	'V',0,4
+	.word	371
+	.byte	1,28,2,35,0,14
+	.byte	'CNZ',0,4
+	.word	371
+	.byte	1,27,2,35,0,14
+	.byte	'IEN',0,4
+	.word	371
+	.byte	1,26,2,35,0,14
+	.byte	'CEN',0,4
+	.word	371
+	.byte	1,25,2,35,0,15,4
+	.word	371
+	.byte	1,24,2,35,0,14
+	.byte	'DPTR',0,4
+	.word	371
+	.byte	8,16,2,35,0,15,4
+	.word	371
+	.byte	16,0,2,35,0,0,16
+	.byte	'B',0,4
+	.word	546
+	.byte	2,35,0,16
+	.byte	'I',0,4
+	.word	187
+	.byte	2,35,0,16
+	.byte	'U',0,4
+	.word	484
+	.byte	2,35,0,0,17
+	.word	540
+	.byte	10
+	.byte	'PCP_GPR7_type',0,3,178,19,3
+	.word	722
+	.byte	3
+	.byte	'unsigned short int',0,2,7,10
+	.byte	'_iob_flag_t',0,4,75,25
+	.word	750
+	.byte	10
+	.byte	'uint16_t',0,5,24,33
+	.word	750
+	.byte	10
+	.byte	'uint32_t',0,5,26,33
+	.word	484
+	.byte	12,1,75,9,64,13,1,76,5,64,16
+	.byte	'pcxi',0,4
+	.word	484
+	.byte	2,35,0,16
+	.byte	'psw',0,4
+	.word	484
+	.byte	2,35,4,16
+	.byte	'a10',0,4
+	.word	259
+	.byte	2,35,8,16
+	.byte	'a11',0,4
+	.word	259
+	.byte	2,35,12,16
+	.byte	'd8',0,4
+	.word	484
+	.byte	2,35,16,16
+	.byte	'd9',0,4
+	.word	484
+	.byte	2,35,20,16
+	.byte	'd10',0,4
+	.word	484
+	.byte	2,35,24,16
+	.byte	'd11',0,4
+	.word	484
+	.byte	2,35,28,16
+	.byte	'a12',0,4
+	.word	484
+	.byte	2,35,32,16
+	.byte	'a13',0,4
+	.word	484
+	.byte	2,35,36,16
+	.byte	'a14',0,4
+	.word	484
+	.byte	2,35,40,16
+	.byte	'a15',0,4
+	.word	484
+	.byte	2,35,44,16
+	.byte	'd12',0,4
+	.word	484
+	.byte	2,35,48,16
+	.byte	'd13',0,4
+	.word	484
+	.byte	2,35,52,16
+	.byte	'd14',0,4
+	.word	484
+	.byte	2,35,56,16
+	.byte	'd15',0,4
+	.word	484
+	.byte	2,35,60,0,16
+	.byte	'u',0,64
+	.word	831
+	.byte	2,35,0,13,1,94,5,64,16
+	.byte	'pcxi',0,4
+	.word	484
+	.byte	2,35,0,18,1,1,19
+	.word	259
+	.byte	0,7
+	.word	1074
+	.byte	16
+	.byte	'pc',0,4
+	.word	1083
+	.byte	2,35,4,16
+	.byte	'a2',0,4
+	.word	484
+	.byte	2,35,8,16
+	.byte	'a3',0,4
+	.word	484
+	.byte	2,35,12,16
+	.byte	'd0',0,4
+	.word	484
+	.byte	2,35,16,16
+	.byte	'd1',0,4
+	.word	484
+	.byte	2,35,20,16
+	.byte	'd2',0,4
+	.word	484
+	.byte	2,35,24,16
+	.byte	'd3',0,4
+	.word	484
+	.byte	2,35,28,16
+	.byte	'a4',0,4
+	.word	259
+	.byte	2,35,32,16
+	.byte	'a5',0,4
+	.word	484
+	.byte	2,35,36,16
+	.byte	'a6',0,4
+	.word	484
+	.byte	2,35,40,16
+	.byte	'a7',0,4
+	.word	484
+	.byte	2,35,44,16
+	.byte	'd4',0,4
+	.word	484
+	.byte	2,35,48,16
+	.byte	'd5',0,4
+	.word	484
+	.byte	2,35,52,16
+	.byte	'd6',0,4
+	.word	484
+	.byte	2,35,56,16
+	.byte	'd7',0,4
+	.word	484
+	.byte	2,35,60,0,16
+	.byte	'l',0,64
+	.word	1055
+	.byte	2,35,0,0,10
+	.byte	'context_t',0,1,112,3
+	.word	826
+	.byte	20
+	.byte	'_Errno',0,6,19,21
+	.word	187
+	.byte	1,1,3
+	.byte	'unsigned long long int',0,8,7,10
+	.byte	'clock_t',0,7,32,33
+	.word	1316
+	.byte	3
+	.byte	'unsigned char',0,1,8,10
+	.byte	'ubyte',0,8,69,24
+	.word	1358
+	.byte	10
+	.byte	'ushort',0,8,71,24
+	.word	750
+	.byte	10
+	.byte	'uword',0,8,73,24
+	.word	484
+	.byte	21
+	.byte	'swc_s',0,9,23,16,44,16
+	.byte	'task_state',0,4
+	.word	484
+	.byte	2,35,0,16
+	.byte	'absolute_deadline',0,4
+	.word	484
+	.byte	2,35,4,16
+	.byte	'relative_deadline',0,4
+	.word	484
+	.byte	2,35,8,16
+	.byte	'next_release_time',0,4
+	.word	484
+	.byte	2,35,12,16
+	.byte	'lcx',0,4
+	.word	484
+	.byte	2,35,16,16
+	.byte	'priority',0,4
+	.word	484
+	.byte	2,35,20,16
+	.byte	'period',0,4
+	.word	484
+	.byte	2,35,24,16
+	.byte	'release_timestamp',0,8
+	.word	1316
+	.byte	2,35,28,7
+	.word	484
+	.byte	16
+	.byte	'arg',0,4
+	.word	1604
+	.byte	2,35,36,22,4
+	.word	484
+	.byte	23,0,0,16
+	.byte	'stack',0,4
+	.word	1622
+	.byte	2,35,40,0,7
+	.word	1418
+	.byte	10
+	.byte	'swc_t',0,9,34,4
+	.word	1647
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L4:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,36
+	.byte	0,3,8,11,15,62,15,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,11,0,0,0,6,59,0,3,8,0,0,7,15,0,73,19,0,0
+	.byte	8,46,1,49,19,0,0,9,5,0,49,19,0,0,10,22,0,3,8,58,15,59,15,57,15,73,19,0,0,11,21,0,54,15,0,0,12,23,1,58
+	.byte	15,59,15,57,15,11,15,0,0,13,19,1,58,15,59,15,57,15,11,15,0,0,14,13,0,3,8,11,15,73,19,13,15,12,15,56,9
+	.byte	0,0,15,13,0,11,15,73,19,13,15,12,15,56,9,0,0,16,13,0,3,8,11,15,73,19,56,9,0,0,17,53,0,73,19,0,0,18,21
+	.byte	1,54,15,39,12,0,0,19,5,0,73,19,0,0,20,52,0,3,8,58,15,59,15,57,15,73,19,63,12,60,12,0,0,21,19,1,3,8,58
+	.byte	15,59,15,57,15,11,15,0,0,22,1,1,11,15,73,19,0,0,23,33,0,47,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L5:
+	.word	.L7-.L6
+.L6:
+	.half	3
+	.word	.L9-.L8
+.L8:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\intrinsic.h',0,0,0,0
+	.byte	'..\\user_main_rtos.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdio.h',0,1,0,0
+	.byte	'stdint.h',0,1,0,0
+	.byte	'errno.h',0,1,0,0
+	.byte	'time.h',0,1,0,0
+	.byte	'..\\MAIN.h',0,0,0,0
+	.byte	'..\\kernel.h',0,0,0,0,0
+.L9:
+.L7:
+
+; ..\user_main_rtos.c	     1  #include "user_main.h"
+; ..\user_main_rtos.c	     2  #if 0
+; ..\user_main_rtos.c	     3  enum user_input_name{ACCEL, BRAKE, LEFT_STEER, RIGHT_STEER, STEER_MODE};
+; ..\user_main_rtos.c	     4  enum torcs_output_name{CC_TRIGGER, LKAS_TRIGGER, SPEED, STEER_VALUE, RPM, YAW_RATE, DISTANCE, PASSED_TIME, TARGET_SPEED, ACCEL_VALUE, TARGET_RPM, IS_RUNNING, WHEEL_SPEED, TARGET_WHEEL_SPEED}; 
+; ..\user_main_rtos.c	     5  
+; ..\user_main_rtos.c	     6  static void func_1(void *arg);
+; ..\user_main_rtos.c	     7  static void func_2(void *arg);
+; ..\user_main_rtos.c	     8  static void func_3(void *arg);
+; ..\user_main_rtos.c	     9  static void func_cc(void *arg);
+; ..\user_main_rtos.c	    10  static void func_lkas(void *arg);
+; ..\user_main_rtos.c	    11  
+; ..\user_main_rtos.c	    12  static void func_idle(void* arg);
+; ..\user_main_rtos.c	    13  
+; ..\user_main_rtos.c	    14  #pragma align 8
+; ..\user_main_rtos.c	    15  
+; ..\user_main_rtos.c	    16  DECLARE_HWC(hwc_1,       10, 10);
+; ..\user_main_rtos.c	    17  DECLARE_HWC(gnd,         0,  0);    // ground component, or idle component
+; ..\user_main_rtos.c	    18  
+; ..\user_main_rtos.c	    19  DECLARE_SWC(idle,               0,    0,        DEFAULT_STACK_SIZE, ACTIVE)
+; ..\user_main_rtos.c	    20  DECLARE_SWC(swc_1,              5,    20,       DEFAULT_STACK_SIZE, INACTIVE)
+; ..\user_main_rtos.c	    21  DECLARE_SWC(swc_2,              4,    35,       DEFAULT_STACK_SIZE, INACTIVE)
+; ..\user_main_rtos.c	    22  DECLARE_SWC(swc_3,              3,    40,       DEFAULT_STACK_SIZE, INACTIVE)
+; ..\user_main_rtos.c	    23  DECLARE_SWC(swc_4,              2,    50,       DEFAULT_STACK_SIZE, ACTIVE)
+; ..\user_main_rtos.c	    24  DECLARE_SWC(swc_5,              1,    60,       DEFAULT_STACK_SIZE, ACTIVE)
+; ..\user_main_rtos.c	    25  DECLARE_SWC(gnd_idle,           0,    0,        DEFAULT_STACK_SIZE, ACTIVE)
+; ..\user_main_rtos.c	    26  
+; ..\user_main_rtos.c	    27  #pragma align restore
+; ..\user_main_rtos.c	    28  
+; ..\user_main_rtos.c	    29  void callback(uint32_t swc_id, uint32_t flag)
+; ..\user_main_rtos.c	    30  {
+; ..\user_main_rtos.c	    31      switch (swc_id) {
+; ..\user_main_rtos.c	    32          case 1:
+; ..\user_main_rtos.c	    33              swc_1->active = flag;
+; ..\user_main_rtos.c	    34              break;
+; ..\user_main_rtos.c	    35          case 2:
+; ..\user_main_rtos.c	    36              swc_2->active = flag;
+; ..\user_main_rtos.c	    37              break;
+; ..\user_main_rtos.c	    38          case 3:
+; ..\user_main_rtos.c	    39              swc_3->active = flag;
+; ..\user_main_rtos.c	    40              break;
+; ..\user_main_rtos.c	    41          case 4:
+; ..\user_main_rtos.c	    42              swc_4->active = flag;
+; ..\user_main_rtos.c	    43              break;
+; ..\user_main_rtos.c	    44          case 5:
+; ..\user_main_rtos.c	    45              swc_5->active = flag;
+; ..\user_main_rtos.c	    46              break;
+; ..\user_main_rtos.c	    47      }
+; ..\user_main_rtos.c	    48  }
+; ..\user_main_rtos.c	    49  
+; ..\user_main_rtos.c	    50  void user_main(void)
+; ..\user_main_rtos.c	    51  {
+; ..\user_main_rtos.c	    52      printf("Starting HW/SW Components...\n");
+; ..\user_main_rtos.c	    53  
+; ..\user_main_rtos.c	    54  
+; ..\user_main_rtos.c	    55      create_hwc(hwc_1);
+; ..\user_main_rtos.c	    56      create_swc(hwc_1, swc_1,    NULL, func_1,    WORK);
+; ..\user_main_rtos.c	    57      create_swc(hwc_1, swc_2,    NULL, func_2,    WORK);
+; ..\user_main_rtos.c	    58      create_swc(hwc_1, swc_3,    NULL, func_3,    WORK);
+; ..\user_main_rtos.c	    59      create_swc(hwc_1, swc_4,    NULL, func_cc,   WORK);
+; ..\user_main_rtos.c	    60      create_swc(hwc_1, swc_5,    NULL, func_lkas, WORK);
+; ..\user_main_rtos.c	    61      create_swc(hwc_1, idle,     NULL, func_idle, IDLE);
+; ..\user_main_rtos.c	    62  
+; ..\user_main_rtos.c	    63      create_hwc(gnd);
+; ..\user_main_rtos.c	    64      create_swc(gnd,   gnd_idle, NULL, func_idle, IDLE);
+; ..\user_main_rtos.c	    65  
+; ..\user_main_rtos.c	    66      /* Enable timer interrupt */
+; ..\user_main_rtos.c	    67      printf("Starting The Timer Interrupt...\n");
+; ..\user_main_rtos.c	    68      init_timer_interrupt();
+; ..\user_main_rtos.c	    69      set_current_hwc(hwc_1);
+; ..\user_main_rtos.c	    70  
+; ..\user_main_rtos.c	    71      /* only the idle task is running after calling schedule() and before the 1st timer interrupt */
+; ..\user_main_rtos.c	    72  
+; ..\user_main_rtos.c	    73      printf("Starting The Scheduler...\n");
+; ..\user_main_rtos.c	    74  
+; ..\user_main_rtos.c	    75  
+; ..\user_main_rtos.c	    76      schedule();
+; ..\user_main_rtos.c	    77  }
+; ..\user_main_rtos.c	    78  
+; ..\user_main_rtos.c	    79  static void func_1(void *arg)
+; ..\user_main_rtos.c	    80  {
+; ..\user_main_rtos.c	    81      for (;;) {
+; ..\user_main_rtos.c	    82      	if (self()->active) {
+; ..\user_main_rtos.c	    83          	led_on(0);
+; ..\user_main_rtos.c	    84          	delay_ms_f(1000);
+; ..\user_main_rtos.c	    85          	led_off(0);
+; ..\user_main_rtos.c	    86          	delay_ms_f(1000);
+; ..\user_main_rtos.c	    87      	}
+; ..\user_main_rtos.c	    88          syscall_suspend();
+; ..\user_main_rtos.c	    89      }
+; ..\user_main_rtos.c	    90  }
+; ..\user_main_rtos.c	    91  
+; ..\user_main_rtos.c	    92  static void func_2(void *arg)
+; ..\user_main_rtos.c	    93  {
+; ..\user_main_rtos.c	    94      for (;;) {
+; ..\user_main_rtos.c	    95      	if (self()->active) {
+; ..\user_main_rtos.c	    96          	led_on(1);
+; ..\user_main_rtos.c	    97          	delay_ms_f(10);
+; ..\user_main_rtos.c	    98          	led_off(1);
+; ..\user_main_rtos.c	    99          	delay_ms_f(10);
+; ..\user_main_rtos.c	   100      	}
+; ..\user_main_rtos.c	   101      	syscall_suspend();
+; ..\user_main_rtos.c	   102      }
+; ..\user_main_rtos.c	   103  }
+; ..\user_main_rtos.c	   104  
+; ..\user_main_rtos.c	   105  static void func_3(void *arg)
+; ..\user_main_rtos.c	   106  {
+; ..\user_main_rtos.c	   107      for (;;) {
+; ..\user_main_rtos.c	   108      	if (self()->active) {
+; ..\user_main_rtos.c	   109          	led_on(2);
+; ..\user_main_rtos.c	   110          	delay_ms_f(100);
+; ..\user_main_rtos.c	   111          	led_off(2);
+; ..\user_main_rtos.c	   112          	delay_ms_f(100);
+; ..\user_main_rtos.c	   113      	}
+; ..\user_main_rtos.c	   114      	syscall_suspend();
+; ..\user_main_rtos.c	   115      }
+; ..\user_main_rtos.c	   116  }
+; ..\user_main_rtos.c	   117  
+; ..\user_main_rtos.c	   118  static void func_cc(void *arg)
+; ..\user_main_rtos.c	   119  {
+; ..\user_main_rtos.c	   120      float torcs_output[14 + 10];
+; ..\user_main_rtos.c	   121      float user_input[5 + 10];
+; ..\user_main_rtos.c	   122      CAN_SWObj CC_sensing_1, CC_sensing_2;
+; ..\user_main_rtos.c	   123      ubyte send_buf[16];
+; ..\user_main_rtos.c	   124  
+; ..\user_main_rtos.c	   125      while (1) {
+; ..\user_main_rtos.c	   126      	led_toggle(3);
+; ..\user_main_rtos.c	   127      	delay_ms_f(3);
+; ..\user_main_rtos.c	   128  		//while (!(CAN_ubNewData(1) && CAN_ubNewData(4)));
+; ..\user_main_rtos.c	   129  
+; ..\user_main_rtos.c	   130      	CAN_vGetMsgObj(0, &CC_sensing_1);
+; ..\user_main_rtos.c	   131  		CAN_vReleaseObj(0);
+; ..\user_main_rtos.c	   132  		CAN_vGetMsgObj(2, &CC_sensing_2);
+; ..\user_main_rtos.c	   133  		CAN_vReleaseObj(2);
+; ..\user_main_rtos.c	   134  
+; ..\user_main_rtos.c	   135  		torcs_output[CC_TRIGGER] = *((float *)&CC_sensing_1.ubData[0]);
+; ..\user_main_rtos.c	   136  		torcs_output[SPEED] = *((float *)&CC_sensing_1.ubData[4]);
+; ..\user_main_rtos.c	   137  		torcs_output[TARGET_SPEED] = *((float *)&CC_sensing_2.ubData[0]);
+; ..\user_main_rtos.c	   138  		torcs_output[ACCEL_VALUE] = *((float *)&CC_sensing_2.ubData[4]);
+; ..\user_main_rtos.c	   139  
+; ..\user_main_rtos.c	   140  		if (torcs_output[CC_TRIGGER] > 0.5) {
+; ..\user_main_rtos.c	   141  			if (user_input[ACCEL] < 0.001)	// first time
+; ..\user_main_rtos.c	   142  				user_input[ACCEL] = torcs_output[ACCEL_VALUE];
+; ..\user_main_rtos.c	   143  
+; ..\user_main_rtos.c	   144  			if (torcs_output[SPEED] - torcs_output[TARGET_SPEED] < -torcs_output[TARGET_SPEED]*0.01)
+; ..\user_main_rtos.c	   145  				user_input[ACCEL] += 0.0005;
+; ..\user_main_rtos.c	   146  			else if (torcs_output[SPEED] > torcs_output[TARGET_SPEED])
+; ..\user_main_rtos.c	   147  				user_input[ACCEL] -= 0.001;
+; ..\user_main_rtos.c	   148  		} 
+; ..\user_main_rtos.c	   149          else {
+; ..\user_main_rtos.c	   150  			user_input[ACCEL] = user_input[BRAKE] = 0.0;
+; ..\user_main_rtos.c	   151  		}
+; ..\user_main_rtos.c	   152  
+; ..\user_main_rtos.c	   153  		memcpy(&send_buf[0], &user_input[ACCEL], 4);
+; ..\user_main_rtos.c	   154  		memcpy(&send_buf[4], &user_input[BRAKE], 4);
+; ..\user_main_rtos.c	   155  		CAN_vLoadData(10, (ubyte *)send_buf);
+; ..\user_main_rtos.c	   156  
+; ..\user_main_rtos.c	   157  
+; ..\user_main_rtos.c	   158  		//delayed_output(10, self()->timer);
+; ..\user_main_rtos.c	   159          CAN_vTransmit(10);
+; ..\user_main_rtos.c	   160  
+; ..\user_main_rtos.c	   161          syscall_suspend();
+; ..\user_main_rtos.c	   162      }
+; ..\user_main_rtos.c	   163  }
+; ..\user_main_rtos.c	   164  
+; ..\user_main_rtos.c	   165  static void func_lkas(void *arg)
+; ..\user_main_rtos.c	   166  {
+; ..\user_main_rtos.c	   167      float torcs_output[14 + 10];
+; ..\user_main_rtos.c	   168      float user_input[5 + 10];
+; ..\user_main_rtos.c	   169      CAN_SWObj LKAS_sensing;
+; ..\user_main_rtos.c	   170      ubyte send_buf[8];
+; ..\user_main_rtos.c	   171      float saved_steering = 0.0;
+; ..\user_main_rtos.c	   172  
+; ..\user_main_rtos.c	   173      while (1) {
+; ..\user_main_rtos.c	   174      	led_toggle(4);
+; ..\user_main_rtos.c	   175      	delay_ms_f(3);
+; ..\user_main_rtos.c	   176  
+; ..\user_main_rtos.c	   177          //while (!CAN_ubNewData(1));
+; ..\user_main_rtos.c	   178  
+; ..\user_main_rtos.c	   179  
+; ..\user_main_rtos.c	   180  		CAN_vGetMsgObj(1, &LKAS_sensing);
+; ..\user_main_rtos.c	   181  		CAN_vReleaseObj(1);
+; ..\user_main_rtos.c	   182  
+; ..\user_main_rtos.c	   183  		torcs_output[LKAS_TRIGGER] = *((float *)&LKAS_sensing.ubData[0]);
+; ..\user_main_rtos.c	   184  		torcs_output[STEER_VALUE] = *((float *)&LKAS_sensing.ubData[4]);
+; ..\user_main_rtos.c	   185  
+; ..\user_main_rtos.c	   186  
+; ..\user_main_rtos.c	   187  		saved_steering = torcs_output[STEER_VALUE];
+; ..\user_main_rtos.c	   188  		if (torcs_output[LKAS_TRIGGER] > 0.5) {
+; ..\user_main_rtos.c	   189  			if (saved_steering > 0.0) {
+; ..\user_main_rtos.c	   190  				if (saved_steering > 1.0)
+; ..\user_main_rtos.c	   191  					user_input[LEFT_STEER] = 1.0;
+; ..\user_main_rtos.c	   192  				else
+; ..\user_main_rtos.c	   193  					user_input[LEFT_STEER] = saved_steering;
+; ..\user_main_rtos.c	   194  				user_input[RIGHT_STEER] = 0.0;
+; ..\user_main_rtos.c	   195  			}
+; ..\user_main_rtos.c	   196  			else if (saved_steering < 0.0) {
+; ..\user_main_rtos.c	   197  				if (saved_steering < -1.0)
+; ..\user_main_rtos.c	   198  					user_input[RIGHT_STEER] = 1.0;
+; ..\user_main_rtos.c	   199  				else
+; ..\user_main_rtos.c	   200  					user_input[RIGHT_STEER] = -saved_steering;
+; ..\user_main_rtos.c	   201  				user_input[LEFT_STEER] = 0.0;
+; ..\user_main_rtos.c	   202  			}
+; ..\user_main_rtos.c	   203  		}
+; ..\user_main_rtos.c	   204  		else {
+; ..\user_main_rtos.c	   205  			user_input[LEFT_STEER] = user_input[RIGHT_STEER] = 0.0;
+; ..\user_main_rtos.c	   206  			user_input[STEER_MODE] = 1.0;
+; ..\user_main_rtos.c	   207  		}
+; ..\user_main_rtos.c	   208  
+; ..\user_main_rtos.c	   209  		memcpy(&send_buf[0], &user_input[LEFT_STEER], 4);
+; ..\user_main_rtos.c	   210  		memcpy(&send_buf[4], &user_input[RIGHT_STEER], 4);
+; ..\user_main_rtos.c	   211  		CAN_vLoadData(11, (ubyte *)send_buf);
+; ..\user_main_rtos.c	   212  
+; ..\user_main_rtos.c	   213          CAN_vTransmit(11);
+; ..\user_main_rtos.c	   214  		//delayed_output(11, self()->timer);
+; ..\user_main_rtos.c	   215  
+; ..\user_main_rtos.c	   216          syscall_suspend();
+; ..\user_main_rtos.c	   217      }
+; ..\user_main_rtos.c	   218  }
+; ..\user_main_rtos.c	   219  
+; ..\user_main_rtos.c	   220  static void func_idle(void* arg)
+; ..\user_main_rtos.c	   221  {
+; ..\user_main_rtos.c	   222      for (;;) {
+; ..\user_main_rtos.c	   223      	__nop();
+; ..\user_main_rtos.c	   224      }
+; ..\user_main_rtos.c	   225  }
+; ..\user_main_rtos.c	   226  #endif
+
+	; Module end

@@ -1,0 +1,7239 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc1936a -H sfr/regtc1797.sfr -c99 --dep-file=.kernel.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=kernel.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o kernel.src ..\\kernel.c"
+	.compiler_name		"ctc"
+	.name	"kernel"
+
+	
+$TC131
+	.sdecl	'.zrodata.led.__const_80808080',data,rom
+	.sect	'.zrodata.led.__const_80808080'
+	.align	2
+__const_80808080:	.type	object
+	.size	__const_80808080,4
+	.word	-2139062144
+	.sdecl	'.zrodata.kernel.__const_000186a0',data,rom
+	.sect	'.zrodata.kernel.__const_000186a0'
+	.align	2
+__const_000186a0:	.type	object
+	.size	__const_000186a0,4
+	.word	100000
+	.sdecl	'.zrodata.kernel.__const_7fffffff',data,rom
+	.sect	'.zrodata.kernel.__const_7fffffff'
+	.align	2
+__const_7fffffff:	.type	object
+	.size	__const_7fffffff,4
+	.word	2147483647
+	
+	.sdecl	'.text.kernel.initSInfoPool',code,cluster('initSInfoPool')
+	.sect	'.text.kernel.initSInfoPool'
+	.align	2
+	
+	.global	initSInfoPool
+
+; ..\kernel.c	     1  /*
+; ..\kernel.c	     2   * kernel.c
+; ..\kernel.c	     3   *
+; ..\kernel.c	     4   * Jong-Chan Kim
+; ..\kernel.c	     5   */
+; ..\kernel.c	     6  #include <stdlib.h>
+; ..\kernel.c	     7  #include <string.h>
+; ..\kernel.c	     8  #include <limits.h>
+; ..\kernel.c	     9  #include <time.h>
+; ..\kernel.c	    10  #include "kernel.h"
+; ..\kernel.c	    11  #include "led.h"
+; ..\kernel.c	    12  
+; ..\kernel.c	    13  /* global variables */
+; ..\kernel.c	    14  extern hwc_t ground_component;
+; ..\kernel.c	    15  
+; ..\kernel.c	    16  uint32_t delayed_output_pending[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; ..\kernel.c	    17  
+; ..\kernel.c	    18  hwc_t components[MAX_COMPONENTS];
+; ..\kernel.c	    19  int n_components = 0;
+; ..\kernel.c	    20  
+; ..\kernel.c	    21  uint32_t volatile jiffies = 0;
+; ..\kernel.c	    22  
+; ..\kernel.c	    23  hwc_t running_component = NULL;
+; ..\kernel.c	    24  swc_t running_task;
+; ..\kernel.c	    25  
+; ..\kernel.c	    26  /* for CAN componentizing */
+; ..\kernel.c	    27  ubyte canMsgValidbit[N_MSG];
+; ..\kernel.c	    28  ubyte canTdmMap[N_CAN_SLOT];
+; ..\kernel.c	    29  uword canSlotWalker;
+; ..\kernel.c	    30  
+; ..\kernel.c	    31  /* for variable timer interrupt (unit:us)*/
+; ..\kernel.c	    32  ubyte sIsFirstCycle;
+; ..\kernel.c	    33  uword sHyperPeriod;
+; ..\kernel.c	    34  
+; ..\kernel.c	    35  typedef struct ScheduleInfo sInfo;
+; ..\kernel.c	    36  sInfo *sHead, *sTail;
+; ..\kernel.c	    37  struct ScheduleInfo {
+; ..\kernel.c	    38  	uword releaseTime;
+; ..\kernel.c	    39  	uword deadline;
+; ..\kernel.c	    40  	ubyte isFinished;	/* 0 if false, 1 if true*/
+; ..\kernel.c	    41  	swc_t runnableTask, idleTask;
+; ..\kernel.c	    42  	sInfo* next;
+; ..\kernel.c	    43  };
+; ..\kernel.c	    44  
+; ..\kernel.c	    45  sInfo *sWalker;
+; ..\kernel.c	    46  sInfo sInfoPool[N_SINFO_POOL];
+; ..\kernel.c	    47  ubyte sInfoDirtybit[N_SINFO_POOL];
+; ..\kernel.c	    48  
+; ..\kernel.c	    49  /* global variables end */
+; ..\kernel.c	    50  
+; ..\kernel.c	    51  void initSInfoPool(uword hyperPeriodUs)
+; Function initSInfoPool
+.L76:
+initSInfoPool:	.type	func
+
+; ..\kernel.c	    52  {
+; ..\kernel.c	    53  	int i;
+; ..\kernel.c	    54  	sIsFirstCycle = TRUE;
+	mov	d15,#1
+	st.b	sIsFirstCycle,d15
+.L715:
+
+; ..\kernel.c	    55  	sHyperPeriod = hyperPeriodUs; // 10ms
+; ..\kernel.c	    56  	for(i=0; i < N_SINFO_POOL; i++) {
+; ..\kernel.c	    57  		memset(&sInfoPool[i], 0, sizeof(sInfo));
+; ..\kernel.c	    58  		sInfoDirtybit[i] = FALSE;
+	mov	d15,#0
+	movh.a	a15,#@his(sInfoPool)
+.L716:
+	movh.a	a12,#@his(sInfoDirtybit)
+.L717:
+	st.w	sHyperPeriod,d4
+.L718:
+	lea	a15,[a15]@los(sInfoPool)
+.L719:
+	lea	a12,[a12]@los(sInfoDirtybit)
+.L720:
+	lea	a13,19
+.L2:
+	mov	d4,#0
+.L721:
+	mov	d5,#24
+	mov.aa	a4,a15
+	call	memset
+.L722:
+	lea	a15,[a15]24
+.L723:
+	st.b	[a12+],d15
+.L724:
+	loop	a13,.L2				; predicted taken
+.L725:
+
+; ..\kernel.c	    59  	}
+; ..\kernel.c	    60  	sHead = NULL;
+	mov.a	a15,#0
+.L726:
+	st.a	sHead,a15
+.L727:
+
+; ..\kernel.c	    61  	sTail = NULL;
+	st.a	sTail,a15
+.L728:
+
+; ..\kernel.c	    62  }
+	ret
+.L392:
+	
+__initSInfoPool_function_end:
+	.size	initSInfoPool,__initSInfoPool_function_end-initSInfoPool
+.L233:
+	; End of function
+	
+	.sdecl	'.text.kernel.getSInfoFromPool',code,cluster('getSInfoFromPool')
+	.sect	'.text.kernel.getSInfoFromPool'
+	.align	2
+	
+	.global	getSInfoFromPool
+
+; ..\kernel.c	    63  
+; ..\kernel.c	    64  sInfo* getSInfoFromPool()
+; Function getSInfoFromPool
+.L78:
+getSInfoFromPool:	.type	func
+
+; ..\kernel.c	    65  {
+; ..\kernel.c	    66  	int i;
+; ..\kernel.c	    67  	for(i=0; i < N_SINFO_POOL; i++) {
+; ..\kernel.c	    68  		if(sInfoDirtybit[i] == FALSE) {
+	movh.a	a15,#@his(sInfoDirtybit)
+	lea	a15,[a15]@los(sInfoDirtybit)
+.L733:
+
+; ..\kernel.c	    69  			sInfoDirtybit[i] = TRUE;
+; ..\kernel.c	    70  			return &sInfoPool[i];
+	movh.a	a2,#@his(sInfoPool)
+	lea	a2,[a2]@los(sInfoPool)
+.L734:
+	lea	a4,19
+.L3:
+	ld.bu	d15,[a15]
+.L735:
+	jne	d15,#0,.L4				; predicted taken
+.L736:
+	mov	d15,#1
+	st.b	[a15],d15
+.L737:
+
+; ..\kernel.c	    71  		}
+; ..\kernel.c	    72  	}
+; ..\kernel.c	    73  
+; ..\kernel.c	    74  	return NULL;
+; ..\kernel.c	    75  }
+	ret
+.L4:
+	add.a	a15,#1
+	lea	a2,[a2]24
+.L738:
+	loop	a4,.L3				; predicted taken
+.L739:
+	mov.a	a2,#0
+.L740:
+	ret
+.L395:
+	
+__getSInfoFromPool_function_end:
+	.size	getSInfoFromPool,__getSInfoFromPool_function_end-getSInfoFromPool
+.L238:
+	; End of function
+	
+	.sdecl	'.text.kernel.freeSInfo',code,cluster('freeSInfo')
+	.sect	'.text.kernel.freeSInfo'
+	.align	2
+	
+	.global	freeSInfo
+
+; ..\kernel.c	    76  
+; ..\kernel.c	    77  void freeSInfo(sInfo* target)
+; Function freeSInfo
+.L80:
+freeSInfo:	.type	func
+
+; ..\kernel.c	    78  {
+; ..\kernel.c	    79  	int i;
+; ..\kernel.c	    80  	target->releaseTime		= 0;
+	mov	d15,#0
+	st.w	[a4],d15
+.L745:
+
+; ..\kernel.c	    81  	target->deadline		= 0;
+	st.w	[a4]4,d15
+.L746:
+
+; ..\kernel.c	    82  	target->isFinished		= FALSE;
+	st.b	[a4]8,d15
+.L747:
+
+; ..\kernel.c	    83  	target->runnableTask	= NULL;
+	mov.a	a15,#0
+.L748:
+	st.a	[a4]12,a15
+.L749:
+
+; ..\kernel.c	    84  	target->idleTask		= NULL;
+	st.a	[a4]16,a15
+.L750:
+
+; ..\kernel.c	    85  	target->next			= NULL;
+	st.a	[a4]20,a15
+.L751:
+
+; ..\kernel.c	    86  
+; ..\kernel.c	    87  	for(i=0; i < N_SINFO_POOL; i++) {
+; ..\kernel.c	    88  		if(&sInfoPool[i] == target) {
+	movh.a	a15,#@his(sInfoPool)
+	lea	a15,[a15]@los(sInfoPool)
+.L752:
+
+; ..\kernel.c	    89  			sInfoDirtybit[i] = FALSE;
+	movh.a	a2,#@his(sInfoDirtybit)
+	lea	a2,[a2]@los(sInfoDirtybit)
+.L753:
+	lea	a5,19
+.L7:
+	jne.a	a15,a4,.L8				; unsupported prediction taken forward branch
+.L754:
+	st.b	[a2],d15
+.L755:
+
+; ..\kernel.c	    90  			return;
+; ..\kernel.c	    91  		}
+; ..\kernel.c	    92  	}
+; ..\kernel.c	    93  }
+	ret
+.L8:
+	lea	a15,[a15]24
+	add.a	a2,#1
+.L756:
+	loop	a5,.L7				; predicted taken
+.L757:
+	ret
+.L397:
+	
+__freeSInfo_function_end:
+	.size	freeSInfo,__freeSInfo_function_end-freeSInfo
+.L243:
+	; End of function
+	
+	.sdecl	'.text.kernel.addScheduleInfo',code,cluster('addScheduleInfo')
+	.sect	'.text.kernel.addScheduleInfo'
+	.align	2
+	
+	.global	addScheduleInfo
+
+; ..\kernel.c	    94  
+; ..\kernel.c	    95  void addScheduleInfo(uword releaseTime, uword deadline, swc_t runnableTask, swc_t idleTask)
+; Function addScheduleInfo
+.L82:
+addScheduleInfo:	.type	func
+	mov	d8,d4
+	mov.aa	a12,a4
+.L445:
+	mov	d15,d5
+	mov.aa	a13,a5
+.L446:
+
+; ..\kernel.c	    96  {
+; ..\kernel.c	    97  	ubyte didAdd = FALSE;
+	mov	d9,#0
+.L448:
+
+; ..\kernel.c	    98  	sInfo *prevSInfo, *walker;
+; ..\kernel.c	    99  	sInfo *newSInfo = getSInfoFromPool();
+	call	getSInfoFromPool
+.L444:
+
+; ..\kernel.c	   100  	if(newSInfo == NULL) return;
+	jz.a	a2,.L10				; predicted not taken
+.L691:
+
+; ..\kernel.c	   101  
+; ..\kernel.c	   102  	newSInfo->releaseTime = releaseTime;
+; ..\kernel.c	   103  	newSInfo->deadline = deadline;
+; ..\kernel.c	   104  	newSInfo->isFinished = FALSE;
+; ..\kernel.c	   105  	newSInfo->runnableTask = runnableTask;
+; ..\kernel.c	   106  	newSInfo->idleTask = idleTask;
+; ..\kernel.c	   107  	if(sHead == NULL) {
+	ld.a	a4,sHead
+.L692:
+
+; ..\kernel.c	   108  		sHead = newSInfo;
+; ..\kernel.c	   109  		sTail = sHead;
+	ld.a	a5,sTail
+.L693:
+	st.w	[a2],d8
+.L694:
+	st.w	[a2]4,d15
+.L695:
+	mov	d15,#0
+	st.b	[a2]8,d15
+.L447:
+	st.a	[a2]12,a12
+.L696:
+	st.a	[a2]16,a13
+.L697:
+	jnz.a	a4,.L11				; predicted taken
+.L698:
+	mov.aa	a4,a2
+.L699:
+	mov.aa	a5,a2
+.L700:
+
+; ..\kernel.c	   110  		sHead->next = sTail;
+	st.a	[a2]20,a2
+.L701:
+	j	.L12
+.L11:
+
+; ..\kernel.c	   111  	} else {
+; ..\kernel.c	   112  		walker = sHead;
+	mov.aa	a6,a4
+.L449:
+
+; ..\kernel.c	   113  		prevSInfo = sTail;
+	mov.aa	a15,a5
+.L451:
+
+; ..\kernel.c	   114  		while(walker != sTail) {
+	j	.L13
+.L14:
+
+; ..\kernel.c	   115  			if(releaseTime < walker->releaseTime) {
+	ld.w	d15,[a6]
+.L702:
+	jge.u	d8,d15,.L15				; unsupported prediction taken forward branch
+.L703:
+
+; ..\kernel.c	   116  				didAdd = TRUE;
+; ..\kernel.c	   117  				if(prevSInfo->next == sHead)
+	mov	d9,#1
+	ld.a	a6,[a15]20
+.L450:
+	jne.a	a6,a4,.L16				; unsupported prediction taken forward branch
+.L704:
+
+; ..\kernel.c	   118  					sHead = newSInfo;
+	mov.aa	a4,a2
+.L16:
+
+; ..\kernel.c	   119  				newSInfo->next = prevSInfo->next;
+	st.a	[a2]20,a6
+.L705:
+
+; ..\kernel.c	   120  				prevSInfo->next = newSInfo;
+	st.a	[a15]20,a2
+.L706:
+
+; ..\kernel.c	   121  				break;
+	j	.L17
+.L15:
+
+; ..\kernel.c	   122  			}
+; ..\kernel.c	   123  			prevSInfo = walker;
+	mov.aa	a15,a6
+.L707:
+
+; ..\kernel.c	   124  			walker = walker->next;
+	ld.a	a6,[a6]20
+.L13:
+	jne.a	a6,a5,.L14				; predicted taken
+
+; ..\kernel.c	   125  		}
+; ..\kernel.c	   126  	}
+.L17:
+.L12:
+
+; ..\kernel.c	   127  
+; ..\kernel.c	   128  	if(didAdd == FALSE) {
+	jne	d9,#0,.L18				; predicted taken
+.L708:
+
+; ..\kernel.c	   129  		newSInfo->next = sHead;
+	st.a	[a2]20,a4
+.L709:
+
+; ..\kernel.c	   130  		sTail->next = newSInfo;
+	st.a	[a5]20,a2
+.L710:
+
+; ..\kernel.c	   131  		sTail = newSInfo;
+	mov.aa	a5,a2
+.L18:
+
+; ..\kernel.c	   132  	}
+; ..\kernel.c	   133  }
+	st.a	sHead,a4
+	st.a	sTail,a5
+.L10:
+	ret
+.L381:
+	
+__addScheduleInfo_function_end:
+	.size	addScheduleInfo,__addScheduleInfo_function_end-addScheduleInfo
+.L228:
+	; End of function
+	
+	.sdecl	'.text.kernel.config_timer',code,cluster('config_timer')
+	.sect	'.text.kernel.config_timer'
+	.align	2
+	
+	.global	config_timer
+
+; ..\kernel.c	   134  
+; ..\kernel.c	   135  void config_timer(uword us, char sel)
+; Function config_timer
+.L84:
+config_timer:	.type	func
+	mov	d15,d5
+.L454:
+
+; ..\kernel.c	   136  {
+; ..\kernel.c	   137  	unsigned int additionalU=0; //, mSize;
+; ..\kernel.c	   138  	//additionalU = us / pow(2,13) / 90;
+; ..\kernel.c	   139  	additionalU = us / 91;
+	mov	d5,#91
+.L452:
+	call	__rt_udivmod
+.L453:
+
+; ..\kernel.c	   140  	//mSize = log(additionalU) / 0.69314718;
+; ..\kernel.c	   141  
+; ..\kernel.c	   142  	/*
+; ..\kernel.c	   143  	if(mSize > 31) mSize = 31;
+; ..\kernel.c	   144  	else */if(additionalU == 0) {
+; ..\kernel.c	   145  		additionalU = 1;
+	sel	d2,d2,d2,#1
+.L762:
+
+; ..\kernel.c	   146  	}
+; ..\kernel.c	   147  
+; ..\kernel.c	   148  	switch(sel) {
+; ..\kernel.c	   149  	case 0:
+	jeq	d15,#0,.L20				; prediction unknown
+.L763:
+
+; ..\kernel.c	   150  		STM_CMP0.U = (uint32_t)(STM_CMP0.U + (uint32_t)additionalU);
+; ..\kernel.c	   151  		//STM_CMP0.U = additionalU;
+; ..\kernel.c	   152  		/*
+; ..\kernel.c	   153  		STM_CMCON.B.MSIZE0 = 31;
+; ..\kernel.c	   154  		STM_CMCON.B.MSTART0 = 13;
+; ..\kernel.c	   155  		*/
+; ..\kernel.c	   156  		break;
+; ..\kernel.c	   157  	case 1:
+	jeq	d15,#1,.L21				; prediction unknown
+.L764:
+
+; ..\kernel.c	   158  		STM_CMP1.U = (uint32_t)(STM_CMP1.U + (uint32_t)additionalU);
+; ..\kernel.c	   159  		STM_CMCON.B.MSIZE1 = 31;
+; ..\kernel.c	   160  		STM_CMCON.B.MSTART1 = 13;
+; ..\kernel.c	   161  		break;
+; ..\kernel.c	   162  	}
+; ..\kernel.c	   163  }
+	ret
+.L20:
+	ld.w	d15,0xf0000230
+.L455:
+	add	d15,d2
+	st.w	0xf0000230,d15
+.L765:
+	ret
+.L21:
+	ld.w	d15,0xf0000234
+.L456:
+	add	d15,d2
+	st.w	0xf0000234,d15
+.L766:
+	ld.bu	d15,0xf000023a
+.L767:
+	or	d15,#31
+	st.b	0xf000023a,d15
+.L768:
+	ld.bu	d0,0xf000023b
+.L769:
+	insert	d15,d0,#13,#0,#5
+	st.b	0xf000023b,d15
+.L770:
+	ret
+.L400:
+	
+__config_timer_function_end:
+	.size	config_timer,__config_timer_function_end-config_timer
+.L248:
+	; End of function
+	
+	.sdecl	'.text.kernel.init_hardware',code,cluster('init_hardware')
+	.sect	'.text.kernel.init_hardware'
+	.align	2
+	
+	.global	init_hardware
+
+; ..\kernel.c	   164  
+; ..\kernel.c	   165  void init_hardware(void)
+; Function init_hardware
+.L86:
+init_hardware:	.type	func
+
+; ..\kernel.c	   166  {
+; ..\kernel.c	   167      printf("Starting Garda Kernel...\n");
+	movh.a	a4,#@his(.1.str)
+	lea	a4,[a4]@los(.1.str)
+	call	printf
+.L510:
+
+; ..\kernel.c	   168      pll_init();
+	call	pll_init
+.L511:
+
+; ..\kernel.c	   169      printf("    PLL initialized\n");
+	movh.a	a4,#@his(.2.str)
+	lea	a4,[a4]@los(.2.str)
+	call	printf
+.L325:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+	ld.w	d15,__const_80808080
+.L512:
+	st.w	0xf0000f10,d15
+.L513:
+
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+	st.w	0xf0000f14,d15
+.L326:
+
+; ..\kernel.c	   170      led_init();
+; ..\kernel.c	   171      printf("    LED initialized\n");
+	movh.a	a4,#@his(.3.str)
+	lea	a4,[a4]@los(.3.str)
+	call	printf
+.L329:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+	ld.w	d15,0xf0000f00
+.L514:
+	or	d15,#255
+	st.w	0xf0000f00,d15
+.L330:
+
+; ..\kernel.c	   172      led_off_all();
+; ..\kernel.c	   173  	can_init();
+	call	can_init
+.L515:
+
+; ..\kernel.c	   174      printf("    CAN initialized\n");
+	movh.a	a4,#@his(.4.str)
+	lea	a4,[a4]@los(.4.str)
+	call	printf
+.L516:
+
+; ..\kernel.c	   175      initSInfoPool(100000); // 10ms
+	ld.w	d4,__const_000186a0
+	j	initSInfoPool
+.L323:
+	
+__init_hardware_function_end:
+	.size	init_hardware,__init_hardware_function_end-init_hardware
+.L148:
+	; End of function
+	
+	.sdecl	'.text.kernel.can_init',code,cluster('can_init')
+	.sect	'.text.kernel.can_init'
+	.align	2
+	
+	.global	can_init
+
+; ..\kernel.c	   176  }
+; ..\kernel.c	   177  
+; ..\kernel.c	   178  int can_init(void)
+; Function can_init
+.L88:
+can_init:	.type	func
+
+; ..\kernel.c	   179  {
+; ..\kernel.c	   180  	CAN_vInit();
+	call	CAN_vInit
+.L493:
+
+; ..\kernel.c	   181  
+; ..\kernel.c	   182  	canSlotWalker = 0;
+; ..\kernel.c	   183  	memset(canMsgValidbit, (int)FALSE, sizeof(ubyte)*N_MSG);
+	mov	d4,#0
+	movh.a	a4,#@his(canMsgValidbit)
+.L494:
+	mov	d5,#30
+	st.w	canSlotWalker,d4
+.L495:
+	lea	a4,[a4]@los(canMsgValidbit)
+.L496:
+	call	memset
+.L497:
+
+; ..\kernel.c	   184  	memset(canTdmMap, (int)NULL, sizeof(ubyte)*N_CAN_SLOT);
+	movh.a	a15,#@his(canTdmMap)
+	lea	a15,[a15]@los(canTdmMap)
+.L498:
+	mov	d4,#0
+.L499:
+	mov	d5,#50
+	mov.aa	a4,a15
+	call	memset
+.L500:
+
+; ..\kernel.c	   185  
+; ..\kernel.c	   186  	/* Componentized CAN setting */
+; ..\kernel.c	   187  	can_map(0, 0x00);
+	mov	d2,#0
+	st.b	[a15],d2
+.L501:
+
+; ..\kernel.c	   188  	can_map(1, 0x01);
+	mov	d15,#1
+	st.b	[a15]1,d15
+.L502:
+
+; ..\kernel.c	   189  	/*
+; ..\kernel.c	   190  	can_map(2, 0);
+; ..\kernel.c	   191  	can_map(3, 1);
+; ..\kernel.c	   192  	*/
+; ..\kernel.c	   193  	can_map(10, 0x0b);
+	mov	d15,#11
+	st.b	[a15]10,d15
+.L503:
+
+; ..\kernel.c	   194  	can_map(15, 0x0c);
+	mov	d15,#12
+	st.b	[a15]15,d15
+.L504:
+
+; ..\kernel.c	   195  	can_map(20, 0x0d);
+	mov	d15,#13
+	st.b	[a15]20,d15
+.L505:
+
+; ..\kernel.c	   196  
+; ..\kernel.c	   197  	return 0;
+; ..\kernel.c	   198  }
+	ret
+.L322:
+	
+__can_init_function_end:
+	.size	can_init,__can_init_function_end-can_init
+.L143:
+	; End of function
+	
+	.sdecl	'.text.kernel.request',code,cluster('request')
+	.sect	'.text.kernel.request'
+	.align	2
+	
+	.global	request
+
+; ..\kernel.c	   199  
+; ..\kernel.c	   200  void request(int mo_id, ubyte *data)
+; Function request
+.L90:
+request:	.type	func
+
+; ..\kernel.c	   201  {
+; ..\kernel.c	   202  	if ( canMsgValidbit[mo_id] == FALSE ) {
+	movh.a	a15,#@his(canMsgValidbit)
+	lea	a15,[a15]@los(canMsgValidbit)
+.L656:
+	addsc.a	a15,a15,d4,#0
+	ld.bu	d15,[a15]
+.L657:
+	jne	d15,#0,.L25				; predicted taken
+.L658:
+
+; ..\kernel.c	   203  		canMsgValidbit[mo_id] = TRUE;
+	mov	d15,#1
+	st.b	[a15],d15
+.L659:
+
+; ..\kernel.c	   204  		CAN_vLoadData((ubyte)mo_id, data);
+	extr.u	d4,d4,#0,#8
+.L457:
+	j	CAN_vLoadData
+.L25:
+
+; ..\kernel.c	   205  	}
+; ..\kernel.c	   206  }
+	ret
+.L371:
+	
+__request_function_end:
+	.size	request,__request_function_end-request
+.L203:
+	; End of function
+	
+	.sdecl	'.text.kernel.get_running_component',code,cluster('get_running_component')
+	.sect	'.text.kernel.get_running_component'
+	.align	2
+	
+	.global	get_running_component
+
+; ..\kernel.c	   207  
+; ..\kernel.c	   208  hwc_t get_running_component(void)
+; Function get_running_component
+.L92:
+get_running_component:	.type	func
+
+; ..\kernel.c	   209  {
+; ..\kernel.c	   210      return running_component;
+	ld.a	a2,running_component
+.L521:
+
+; ..\kernel.c	   211  }
+	ret
+.L333:
+	
+__get_running_component_function_end:
+	.size	get_running_component,__get_running_component_function_end-get_running_component
+.L153:
+	; End of function
+	
+	.sdecl	'.text.kernel.set_running_component',code,cluster('set_running_component')
+	.sect	'.text.kernel.set_running_component'
+	.align	2
+	
+	.global	set_running_component
+
+; ..\kernel.c	   212  
+; ..\kernel.c	   213  void set_running_component(hwc_t component)
+; Function set_running_component
+.L94:
+set_running_component:	.type	func
+
+; ..\kernel.c	   214  {
+; ..\kernel.c	   215  	running_component = component;
+	st.a	running_component,a4
+.L531:
+
+; ..\kernel.c	   216  }
+	ret
+.L336:
+	
+__set_running_component_function_end:
+	.size	set_running_component,__set_running_component_function_end-set_running_component
+.L163:
+	; End of function
+	
+	.sdecl	'.text.kernel.create_component',code,cluster('create_component')
+	.sect	'.text.kernel.create_component'
+	.align	2
+	
+	.global	create_component
+
+; ..\kernel.c	   217  
+; ..\kernel.c	   218  int create_component(hwc_t component)
+; Function create_component
+.L96:
+create_component:	.type	func
+	mov.aa	a15,a4
+.L459:
+
+; ..\kernel.c	   219  {
+; ..\kernel.c	   220      component->next_release_time = component->offset;
+	ld.w	d15,[a15]24
+.L541:
+	st.w	[a15]28,d15
+.L542:
+
+; ..\kernel.c	   221      component->absolute_deadline = component->offset + component->relative_deadline;
+	ld.w	d15,[a15]24
+.L543:
+	ld.w	d0,[a15]20
+.L544:
+	add	d15,d0
+	st.w	[a15]36,d15
+.L545:
+
+; ..\kernel.c	   222      component->remaining_budget = 0;
+	mov	d4,#0
+	st.w	[a15]32,d4
+.L546:
+
+; ..\kernel.c	   223  
+; ..\kernel.c	   224      memset(component->runnable_tasks, 0x00, sizeof(component->runnable_tasks));
+	mov	d5,#40
+	lea	a4,[a15]40
+.L458:
+	call	memset
+.L547:
+
+; ..\kernel.c	   225      memset(component->suspended_tasks, 0x00, sizeof(component->suspended_tasks));
+	mov	d4,#0
+	lea	a4,[a15]80
+.L548:
+	mov	d5,#40
+	call	memset
+.L549:
+
+; ..\kernel.c	   226      component->runnable_tasks_bitmap = 0x00000000;
+	mov	d2,#0
+	st.w	[a15]120,d2
+.L550:
+
+; ..\kernel.c	   227  
+; ..\kernel.c	   228      components[n_components] = component;
+	ld.w	d15,n_components
+.L551:
+	movh.a	a2,#@his(components)
+	lea	a2,[a2]@los(components)
+.L552:
+	addsc.a	a2,a2,d15,#2
+.L553:
+	st.a	[a2],a15
+.L554:
+
+; ..\kernel.c	   229      n_components++;
+	add	d15,#1
+	st.w	n_components,d15
+.L555:
+
+; ..\kernel.c	   230  
+; ..\kernel.c	   231      return 0;
+; ..\kernel.c	   232  }
+	ret
+.L340:
+	
+__create_component_function_end:
+	.size	create_component,__create_component_function_end-create_component
+.L173:
+	; End of function
+	
+	.sdecl	'.text.kernel.create_task',code,cluster('create_task')
+	.sect	'.text.kernel.create_task'
+	.align	2
+	
+	.global	create_task
+
+; ..\kernel.c	   233  
+; ..\kernel.c	   234  int create_task(hwc_t component, swc_t task, task_attr_t attr, void (*func)(void *), uint32_t is_suspended_on_creation)
+; Function create_task
+.L98:
+create_task:	.type	func
+	sub.a	a10,#16
+.L460:
+
+; ..\kernel.c	   235  {
+; ..\kernel.c	   236      struct task_attr_s default_attr = TASK_ATTR_DEFAULT;
+	movh.a	a15,#@his(.5.ini)
+	lea	a15,[a15]@los(.5.ini)
+.L560:
+	mov.aa	a2,a10
+	mov.a	a12,#2
+.L28:
+	ld.w	d15,[a15+]
+	st.w	[a2+],d15
+	loop	a12,.L28				; predicted taken
+.L561:
+
+; ..\kernel.c	   237  
+; ..\kernel.c	   238      uint32_t fcx;
+; ..\kernel.c	   239      context_t *cx;
+; ..\kernel.c	   240  
+; ..\kernel.c	   241      if (attr == NULL)
+	jnz.a	a6,.L29				; predicted taken
+.L461:
+
+; ..\kernel.c	   242          attr = &default_attr;
+	mov.aa	a6,a10
+.L29:
+
+; ..\kernel.c	   243  
+; ..\kernel.c	   244      fcx = __mfcr(FCX);
+	mfcr	d0,#65080
+.L462:
+
+; ..\kernel.c	   245      task->lcx = fcx - 1;
+	add	d15,d0,#-1
+	st.w	[a5]16,d15
+.L562:
+
+; ..\kernel.c	   246      __mtcr(FCX, fcx - 2);
+	add	d15,d0,#-2
+.L563:
+	mtcr	#65080,d15
+	isync
+.L356:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+; ..\intrinsic.h	   176  }
+; ..\intrinsic.h	   177  
+; ..\intrinsic.h	   178  //! Insert NEZ.A instruction
+; ..\intrinsic.h	   179  inline uint32_t neza(void *p) {
+; ..\intrinsic.h	   180      int ret;
+; ..\intrinsic.h	   181      __asm("nez.a %0,%1":"=d"(ret):"a"(p));
+; ..\intrinsic.h	   182      return ret;
+; ..\intrinsic.h	   183  }
+; ..\intrinsic.h	   184  
+; ..\intrinsic.h	   185  //! Find the maximum value in an uint16_t array
+; ..\intrinsic.h	   186  inline uint16_t ixmaxu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   187          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   188          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   189  {
+; ..\intrinsic.h	   190      uint16_t value;
+; ..\intrinsic.h	   191      uint64_t e;
+; ..\intrinsic.h	   192  
+; ..\intrinsic.h	   193      __asm(""
+; ..\intrinsic.h	   194              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   195              " mov16  %1.0,#1    ; maximum index 0, working index 1  \n"
+; ..\intrinsic.h	   196              " ld.hu  %1.1,[%2+] ; maximum value is 1st element      \n"
+; ..\intrinsic.h	   197              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   198              " mov16  %1.0,#0    ; maximum index 0, working index 0  \n"
+; ..\intrinsic.h	   199              " mov16  %1.1,#0    ; maximum value is UINT_MIN         \n"
+; ..\intrinsic.h	   200              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   201              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   202              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   203              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   204              " ixmax.u  %1,%1,d15  ; Find max (IP pipeline)          \n"
+; ..\intrinsic.h	   205              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   206              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   207              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   208              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   209              " st16.h [%4],%1.0  ; *indexp = maximum index           \n"
+; ..\intrinsic.h	   210              " mov    %0,%1.1    ; value = maximum value             \n"
+; ..\intrinsic.h	   211              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   212      return value;
+; ..\intrinsic.h	   213  }
+; ..\intrinsic.h	   214  
+; ..\intrinsic.h	   215  //! Find the minimum value in an uint16_t array
+; ..\intrinsic.h	   216  inline uint16_t ixminu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   217          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   218          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   219  {
+; ..\intrinsic.h	   220      uint16_t value;
+; ..\intrinsic.h	   221      uint64_t e;
+; ..\intrinsic.h	   222  
+; ..\intrinsic.h	   223      __asm(""
+; ..\intrinsic.h	   224              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   225              " mov16  %1.0,#1    ; minimum index 0, working index 1  \n"
+; ..\intrinsic.h	   226              " ld.hu  %1.1,[%2+] ; minimum value is 1st element      \n"
+; ..\intrinsic.h	   227              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   228              " mov16  %1.0,#0    ; minimum index 0, working index 0  \n"
+; ..\intrinsic.h	   229              " mov16  %1.1,#-1   ; minimum value is UINT_MAX         \n"
+; ..\intrinsic.h	   230              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   231              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   232              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   233              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   234              " ixmin.u %1,%1,d15  ; Find min (IP pipeline)           \n"
+; ..\intrinsic.h	   235              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   236              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   237              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   238              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   239              " st16.h [%4],%1.0  ; *indexp = miniumum index          \n"
+; ..\intrinsic.h	   240              " mov    %0,%1.1    ; value = minimum value             \n"
+; ..\intrinsic.h	   241              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   242      return value;
+; ..\intrinsic.h	   243  }
+; ..\intrinsic.h	   244  
+; ..\intrinsic.h	   245  //! Find the maximum value in an uint32_t array
+; ..\intrinsic.h	   246  inline uint32_t ixmax32(uint32_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   247          const unsigned *n, //!< [in] number of elements
+; ..\intrinsic.h	   248          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   249  {
+; ..\intrinsic.h	   250      uint32_t value;
+; ..\intrinsic.h	   251      __asm(""
+; ..\intrinsic.h	   252              " mov.d    d0,%1 \n"
+; ..\intrinsic.h	   253              " mov      d14,#0      ;initialize the data reference           \n"
+; ..\intrinsic.h	   254              " ld16.w   d15,[%1]    ;load first value                        \n"
+; ..\intrinsic.h	   255              " max      d14,d14,d15 ;take the max of two values              \n"
+; ..\intrinsic.h	   256              " jlt      d15,d14,*+8 ;check if we need the address of the max \n"
+; ..\intrinsic.h	   257              " mov16.aa a15,%1      ;take the address of the new max         \n"
+; ..\intrinsic.h	   258              " mov16    %0,d15      ; take the value of the new max          \n"
+; ..\intrinsic.h	   259              " ld.w     d15,[+%1]4  ;load next value                         \n"
+; ..\intrinsic.h	   260              " loop     %2,*-14                                              \n"
+; ..\intrinsic.h	   261              " jz16.a   %3,*+10     ; if indexp==NULL jump +8                \n"
+; ..\intrinsic.h	   262              " mov16.d  d15,a15                                              \n"
+; ..\intrinsic.h	   263              " sub16    d15,d0,d15                                           \n"
+; ..\intrinsic.h	   264              " sh16     d15,#2                                               \n"
+; ..\intrinsic.h	   265              " st16.w   [%3],d15  ; *indexp = maxiumum index                 \n"
+; ..\intrinsic.h	   266              :"=d"(value):"a"(array),"a"(n-1),"a"(indexp):"d0","a15","d14","d15");
+; ..\intrinsic.h	   267      return value;
+; ..\intrinsic.h	   268  }
+; ..\intrinsic.h	   269  
+; ..\intrinsic.h	   270  //! Insert loop executing NOP instruction cnt times
+; ..\intrinsic.h	   271  inline void nops(void *cnt) {
+; ..\intrinsic.h	   272  #if defined(__TASKING__)
+; ..\intrinsic.h	   273      __asm(" nop16\n"
+; ..\intrinsic.h	   274              " nop16\n"
+; ..\intrinsic.h	   275              " loop %0,*-4"
+; ..\intrinsic.h	   276              ::"a"(cnt));
+; ..\intrinsic.h	   277  #elif defined(__GNU__)
+; ..\intrinsic.h	   278      __asm("0: nop16\n"
+; ..\intrinsic.h	   279              " nop16\n"
+; ..\intrinsic.h	   280              " loop %%0,0b"
+; ..\intrinsic.h	   281              ::"a"(cnt));
+; ..\intrinsic.h	   282  #endif
+; ..\intrinsic.h	   283  }
+; ..\intrinsic.h	   284  
+; ..\intrinsic.h	   285  //! Insert n NOPs instruction
+; ..\intrinsic.h	   286  #define NOPS(n)   __asm(".DUP " #n "\n\tnop16\n\t.ENDM\n")
+; ..\intrinsic.h	   287  
+; ..\intrinsic.h	   288  //! Reset instruction cache
+; ..\intrinsic.h	   289  inline void reset_icache(void) {
+; ..\intrinsic.h	   290  #if defined(__TC1796__) ||  defined(__TC1766__)
+; ..\intrinsic.h	   291      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   292      PMI_CON0.U = 2; // Cache bypassed
+; ..\intrinsic.h	   293      PMI_CON1.U = 1; // All cache lines are invalidated
+; ..\intrinsic.h	   294      nops((void*)64);       //  wait while busy
+; ..\intrinsic.h	   295      PMI_CON1.U = 0; // Normal code cache (ICACHE) operation
+; ..\intrinsic.h	   296      PMI_CON0.U = 0; // Cache enabled
+; ..\intrinsic.h	   297      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   298  #elif defined(__TC1797__) || defined(__TC1767__)
+; ..\intrinsic.h	   299      PMI_CON1.U = 1;
+; ..\intrinsic.h	   300      while (PMI_CON1.U)
+; ..\intrinsic.h	   301          ;
+; ..\intrinsic.h	   302  #else
+; ..\intrinsic.h	   303  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   304  #endif
+; ..\intrinsic.h	   305  }
+; ..\intrinsic.h	   306  //! Enable instruction cache
+; ..\intrinsic.h	   307  inline void enable_icache(void) {
+; ..\intrinsic.h	   308  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   309      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   310      PMI_CON0.U = 0; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   311      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   312  #else
+; ..\intrinsic.h	   313  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   314  #endif
+; ..\intrinsic.h	   315  }
+; ..\intrinsic.h	   316  
+; ..\intrinsic.h	   317  //! Disable instruction cache
+; ..\intrinsic.h	   318  inline void disable_icache(void) {
+; ..\intrinsic.h	   319  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   320      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   321      PMI_CON0.U = 2; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   322      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   323  #else
+; ..\intrinsic.h	   324  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   325  #endif
+; ..\intrinsic.h	   326  }
+; ..\intrinsic.h	   327  
+; ..\intrinsic.h	   328  //! Convert function pointer to function running uncached (Segment A)
+; ..\intrinsic.h	   329  inline void *uncached(void(*f)(void)) {
+; ..\intrinsic.h	   330      return (void*) __insert(10L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   331  }
+; ..\intrinsic.h	   332  //! Convert function pointer to function running cached (Segment 8)
+; ..\intrinsic.h	   333  inline void *cached(void(*f)(void)) {
+; ..\intrinsic.h	   334      return (void*) __insert(8L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   335  }
+; ..\intrinsic.h	   336  /*! Busy delay
+; ..\intrinsic.h	   337   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   338   */
+; ..\intrinsic.h	   339  inline void delay_us(uint32_t _microseconds) {
+; ..\intrinsic.h	   340      nops((void *) (_microseconds * FREQ_CPU_MHZ / 2 / 2));
+; ..\intrinsic.h	   341  }
+; ..\intrinsic.h	   342  
+; ..\intrinsic.h	   343  /*! Busy delay
+; ..\intrinsic.h	   344   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   345   */
+; ..\intrinsic.h	   346  
+; ..\intrinsic.h	   347  inline void delay_ms_f(float _milliseconds) {
+; ..\intrinsic.h	   348  
+; ..\intrinsic.h	   349  uint32_t x;
+; ..\intrinsic.h	   350  x = (_milliseconds*FREQ_CPU_MHZ)/2;
+; ..\intrinsic.h	   351  
+; ..\intrinsic.h	   352  #if defined(__TASKING__)
+; ..\intrinsic.h	   353      __asm( "  mov.u d15,#1000 \n"
+; ..\intrinsic.h	   354              "  mov.a a15,d15  \n"
+; ..\intrinsic.h	   355              "  nop16          \n"
+; ..\intrinsic.h	   356              "  nop16          \n"
+; ..\intrinsic.h	   357              "  loop a15,*-4    \n"
+; ..\intrinsic.h	   358              "  loop %0,*-8   \n"
+; ..\intrinsic.h	   359              ::"a"(x): "a15","d15");
+; ..\intrinsic.h	   360  #elif defined(__GNU__)
+; ..\intrinsic.h	   361  
+; ..\intrinsic.h	   362      __asm("    mov.u %d15,1000 \n"
+; ..\intrinsic.h	   363              "1:  mov.a %a15,%d15  \n"
+; ..\intrinsic.h	   364              "0:  nop              \n"
+; ..\intrinsic.h	   365              "    nop              \n"
+; ..\intrinsic.h	   366              "    loop %a15,0b     \n"
+; ..\intrinsic.h	   367              "    loop %%0,1b      \n"
+; ..\intrinsic.h	   368              ::"a"(_milliseconds*2/FREQ_CPU_MHZ): "d15","a15");
+; ..\intrinsic.h	   369  #endif
+; ..\intrinsic.h	   370  }
+; ..\intrinsic.h	   371  inline void delay_ms(uint32_t _milliseconds) {
+; ..\intrinsic.h	   372  #if defined(__TASKING__)
+; ..\intrinsic.h	   373      __asm( "  mov.u d15,#1000 \n"
+; ..\intrinsic.h	   374              "  mov.a a15,d15  \n"
+; ..\intrinsic.h	   375              "  nop16          \n"
+; ..\intrinsic.h	   376              "  nop16          \n"
+; ..\intrinsic.h	   377              "  loop a15,*-4    \n"
+; ..\intrinsic.h	   378              "  loop %0,*-8   \n"
+; ..\intrinsic.h	   379              ::"a"((_milliseconds*FREQ_CPU_MHZ)/2): "a15","d15");
+; ..\intrinsic.h	   380  #elif defined(__GNU__)
+; ..\intrinsic.h	   381  
+; ..\intrinsic.h	   382      __asm("    mov.u %d15,1000 \n"
+; ..\intrinsic.h	   383              "1:  mov.a %a15,%d15  \n"
+; ..\intrinsic.h	   384              "0:  nop              \n"
+; ..\intrinsic.h	   385              "    nop              \n"
+; ..\intrinsic.h	   386              "    loop %a15,0b     \n"
+; ..\intrinsic.h	   387              "    loop %%0,1b      \n"
+; ..\intrinsic.h	   388              ::"a"(_milliseconds*2/FREQ_CPU_MHZ): "d15","a15");
+; ..\intrinsic.h	   389  #endif
+; ..\intrinsic.h	   390  }
+; ..\intrinsic.h	   391  
+; ..\intrinsic.h	   392  inline void delay_ms_half(uint32_t _milliseconds) {
+; ..\intrinsic.h	   393  #if defined(__TASKING__)
+; ..\intrinsic.h	   394      __asm( "  mov.u d15,#1000 \n"
+; ..\intrinsic.h	   395              "  mov.a a15,d15  \n"
+; ..\intrinsic.h	   396              "  nop16          \n"
+; ..\intrinsic.h	   397              "  nop16          \n"
+; ..\intrinsic.h	   398              "  loop a15,*-4    \n"
+; ..\intrinsic.h	   399              "  loop %0,*-8   \n"
+; ..\intrinsic.h	   400              ::"a"((_milliseconds*FREQ_CPU_MHZ)/4): "a15","d15");
+; ..\intrinsic.h	   401  #elif defined(__GNU__)
+; ..\intrinsic.h	   402  
+; ..\intrinsic.h	   403      __asm("    mov.u %d15,1000 \n"
+; ..\intrinsic.h	   404              "1:  mov.a %a15,%d15  \n"
+; ..\intrinsic.h	   405              "0:  nop              \n"
+; ..\intrinsic.h	   406              "    nop              \n"
+; ..\intrinsic.h	   407              "    loop %a15,0b     \n"
+; ..\intrinsic.h	   408              "    loop %%0,1b      \n"
+; ..\intrinsic.h	   409              ::"a"(_milliseconds*2/FREQ_CPU_MHZ): "d15","a15");
+; ..\intrinsic.h	   410  #endif
+; ..\intrinsic.h	   411  }
+; ..\intrinsic.h	   412  
+; ..\intrinsic.h	   413  /*! Convert context pointer to address pointer
+; ..\intrinsic.h	   414   \param[in] cx context pointer
+; ..\intrinsic.h	   415   \return address pointer
+; ..\intrinsic.h	   416   */
+; ..\intrinsic.h	   417  inline context_t *cx_to_addr(uint32_t cx) {
+; ..\intrinsic.h	   418      uint32_t seg_nr = __extru(cx, 16, 4);
+	extr.u	d15,d0,#16,#4
+.L564:
+
+; ..\intrinsic.h	   419      return (context_t *) __insert(seg_nr << 28, cx, 6, 16);
+	sh	d15,d15,#28
+.L565:
+	insert	d15,d15,d0,#6,#16
+.L566:
+	mov.a	a15,d15
+.L357:
+
+; ..\kernel.c	   247  
+; ..\kernel.c	   248      cx = cx_to_addr(fcx);
+; ..\kernel.c	   249      cx->u.psw = 0 << 12 // Protection Register Set PRS=0
+; ..\kernel.c	   250              | attr->mode << 10 // I/O Privilege
+	ld.bu	d15,[a6]
+.L567:
+	sha	d15,d15,#10
+.L568:
+
+; ..\kernel.c	   251              | 0 << 9 // Current task uses a user stack IS=0
+; ..\kernel.c	   252              | 0 << 8 // Write permission to global registers A0, A1, A8, A9 is disabled
+; ..\kernel.c	   253              | 1L << 7 // Call depth counting is enabled CDE=1
+; ..\kernel.c	   254              | attr->call_depth_overflow; // Call Depth Overflow
+	or	d15,#128
+	ld.w	d1,[a6]2
+.L569:
+	or	d15,d1
+	st.w	[a15]4,d15
+.L570:
+
+; ..\kernel.c	   255      cx->u.a10 = task->stack + *task->stack; // stack grow down
+	ld.w	d15,[a5]40
+.L571:
+	addsc.a	a2,a5,d15,#2
+	lea	a2,[a2]40
+.L572:
+	st.a	[a15]8,a2
+.L573:
+
+; ..\kernel.c	   256      cx->u.a11 = 0; // New task has no return address
+	mov.a	a2,#0
+.L574:
+	st.a	[a15]12,a2
+.L575:
+
+; ..\kernel.c	   257      cx->u.pcxi = 0; // No previous context;
+	mov	d15,#0
+	st.w	[a15],d15
+.L576:
+
+; ..\kernel.c	   258      cx--;
+; ..\kernel.c	   259      cx->l.pcxi = 0L << 24 // Previous CPU Priority Number PCPN=0
+; ..\kernel.c	   260              | 1L << 23 // Previous Interrupt Enable PIE=1
+; ..\kernel.c	   261              | 1L << 22 // Upper Context Tag.
+; ..\kernel.c	   262              | fcx; // Previous Context Pointer is the upper context
+	insert	d15,d0,#3,#22,#2
+	st.w	[a15]-64,d15
+.L577:
+
+; ..\kernel.c	   263      cx->l.pc = func; // init new task start address
+	st.a	[a15]-60,a7
+.L361:
+
+; ..\kernel.c	   264  
+; ..\kernel.c	   265  //    cx->l.a4 = arg;   // we don't need
+; ..\kernel.c	   266  //    task->arg = arg;
+; ..\kernel.c	   267  
+; ..\kernel.c	   268      uint32_t i = task->priority;
+	ld.w	d0,[a5]20
+.L463:
+
+; ..\kernel.c	   269  
+; ..\kernel.c	   270      if (is_suspended_on_creation)
+; ..\kernel.c	   271      {
+; ..\kernel.c	   272      	// the first release time of the task on the time line
+; ..\kernel.c	   273          task->next_release_time = component->offset;
+	ld.w	d15,[a4]24
+.L578:
+	jeq	d4,#0,.L30				; predicted not taken
+.L579:
+	st.w	[a5]12,d15
+.L580:
+
+; ..\kernel.c	   274          task->absolute_deadline = component->offset + task->relative_deadline;
+	ld.w	d1,[a4]24
+.L581:
+	ld.w	d15,[a5]8
+.L582:
+	add	d1,d15
+	st.w	[a5]4,d1
+.L583:
+
+; ..\kernel.c	   275          (component->suspended_tasks)[i] = task;
+	addsc.a	a15,a4,d0,#2
+.L584:
+	st.a	[a15]80,a5
+.L585:
+	j	.L31
+.L30:
+
+; ..\kernel.c	   276      }
+; ..\kernel.c	   277      else	// start IDLE task by marking it is runnable from the task creation.
+; ..\kernel.c	   278      {
+; ..\kernel.c	   279      	// the first release time of the task on the time line
+; ..\kernel.c	   280          task->next_release_time = component->offset;
+	st.w	[a5]12,d15
+.L586:
+
+; ..\kernel.c	   281          task->absolute_deadline = component->offset + task->relative_deadline;
+	ld.w	d1,[a4]24
+.L587:
+	ld.w	d15,[a5]8
+.L588:
+	add	d1,d15
+	st.w	[a5]4,d1
+.L589:
+
+; ..\kernel.c	   282          (component->runnable_tasks)[i] = task;
+	addsc.a	a15,a4,d0,#2
+.L590:
+	st.a	[a15]40,a5
+.L591:
+
+; ..\kernel.c	   283          __putbit(1, (int*)&(component->runnable_tasks_bitmap), i); // mark current thread ready
+	imask	e0,#1,d0,#1
+.L464:
+	ldmst	[a4]120,e0
+.L31:
+
+; ..\kernel.c	   284      }
+; ..\kernel.c	   285      return 0;
+	mov	d2,#0
+.L592:
+
+; ..\kernel.c	   286  }
+	ret
+.L342:
+	
+__create_task_function_end:
+	.size	create_task,__create_task_function_end-create_task
+.L178:
+	; End of function
+	
+	.sdecl	'.text.kernel.get_running_task',code,cluster('get_running_task')
+	.sect	'.text.kernel.get_running_task'
+	.align	2
+	
+	.global	get_running_task
+
+; ..\kernel.c	   287  
+; ..\kernel.c	   288  swc_t get_running_task(void)
+; Function get_running_task
+.L100:
+get_running_task:	.type	func
+
+; ..\kernel.c	   289  {
+; ..\kernel.c	   290  	return running_task;
+	ld.a	a2,running_task
+.L526:
+
+; ..\kernel.c	   291  }
+	ret
+.L335:
+	
+__get_running_task_function_end:
+	.size	get_running_task,__get_running_task_function_end-get_running_task
+.L158:
+	; End of function
+	
+	.sdecl	'.text.kernel.get_jiffies',code,cluster('get_jiffies')
+	.sect	'.text.kernel.get_jiffies'
+	.align	2
+	
+	.global	get_jiffies
+
+; ..\kernel.c	   292  
+; ..\kernel.c	   293  uint32_t get_jiffies(void)
+; Function get_jiffies
+.L102:
+get_jiffies:	.type	func
+
+; ..\kernel.c	   294  {
+; ..\kernel.c	   295      return jiffies;
+	ld.w	d2,jiffies
+.L536:
+
+; ..\kernel.c	   296  }
+	ret
+.L339:
+	
+__get_jiffies_function_end:
+	.size	get_jiffies,__get_jiffies_function_end-get_jiffies
+.L168:
+	; End of function
+	
+	.sdecl	'.text.kernel.init_timer_interrupt',code,cluster('init_timer_interrupt')
+	.sect	'.text.kernel.init_timer_interrupt'
+	.align	2
+	
+	.global	init_timer_interrupt
+
+; ..\kernel.c	   297  
+; ..\kernel.c	   298  inline void init_timer_interrupt(void)
+; Function init_timer_interrupt
+.L104:
+init_timer_interrupt:	.type	func
+
+; ..\kernel.c	   299  {
+; ..\kernel.c	   300  	/* Schedule module */
+; ..\kernel.c	   301  	sWalker = sHead;
+	ld.a	a15,sHead
+.L597:
+
+; ..\kernel.c	   302  	STM_CMP0.U = 1;
+	mov	d15,#1
+	st.a	sWalker,a15
+.L598:
+	st.w	0xf0000230,d15
+.L599:
+
+; ..\kernel.c	   303  	STM_CMCON.B.MSIZE0 = 0;
+	ld.bu	d15,0xf0000238
+.L600:
+	insert	d15,d15,#0,#0,#5
+	st.b	0xf0000238,d15
+.L601:
+
+; ..\kernel.c	   304  	STM_CMCON.B.MSTART0 = 16;
+	mov	d15,#16
+	ld.bu	d0,0xf0000239
+.L602:
+	insert	d15,d0,d15,#0,#5
+	st.b	0xf0000239,d15
+.L603:
+
+; ..\kernel.c	   305  	STM_ICR.B.CMP0EN = 1;
+	lea	a15,0xf000023c
+	ld.bu	d15,[a15]
+.L604:
+	or	d15,#1
+	st.b	[a15],d15
+.L605:
+
+; ..\kernel.c	   306  	STM_ICR.B.CMP0OS = 0;
+	ld.bu	d15,[a15]
+.L606:
+	insert	d15,d15,#0,#2,#1
+	st.b	[a15],d15
+.L607:
+
+; ..\kernel.c	   307  	STM_SRC0.U = 0x1000 | SCHEDULER_PRIORITY;
+	mov	d15,#4112
+	st.w	0xf00002fc,d15
+.L608:
+
+; ..\kernel.c	   308  
+; ..\kernel.c	   309      /* CAN componentizing module */
+; ..\kernel.c	   310      STM_CMP1.U = 3;
+	mov	d15,#3
+	st.w	0xf0000234,d15
+.L609:
+
+; ..\kernel.c	   311      STM_CMCON.B.MSIZE1 = 1;
+	ld.bu	d15,0xf000023a
+.L610:
+	insert	d15,d15,#1,#0,#5
+	st.b	0xf000023a,d15
+.L611:
+
+; ..\kernel.c	   312      STM_CMCON.B.MSTART1 = 15;
+	ld.bu	d0,0xf000023b
+.L612:
+	insert	d15,d0,#15,#0,#5
+	st.b	0xf000023b,d15
+.L613:
+
+; ..\kernel.c	   313      STM_ICR.B.CMP1EN = 1;
+	ld.bu	d15,[a15]
+.L614:
+	or	d15,#16
+	st.b	[a15],d15
+.L615:
+
+; ..\kernel.c	   314      STM_ICR.B.CMP1OS = 1;
+	ld.bu	d15,[a15]
+.L616:
+	or	d15,#64
+	st.b	[a15],d15
+.L617:
+
+; ..\kernel.c	   315      STM_SRC1.U = 0x1000 | CANCOM_PRIORITY;
+	mov	d15,#4111
+	st.w	0xf00002f8,d15
+.L618:
+
+; ..\kernel.c	   316  }
+	ret
+.L363:
+	
+__init_timer_interrupt_function_end:
+	.size	init_timer_interrupt,__init_timer_interrupt_function_end-init_timer_interrupt
+.L183:
+	; End of function
+	
+	.sdecl	'.text.kernel.start_kernel',code,cluster('start_kernel')
+	.sect	'.text.kernel.start_kernel'
+	.align	2
+	
+	.global	start_kernel
+
+; ..\kernel.c	   317  
+; ..\kernel.c	   318  inline void start_kernel(void)
+; Function start_kernel
+.L106:
+start_kernel:	.type	func
+
+; ..\kernel.c	   319  {
+; ..\kernel.c	   320  	running_task = ground_component->runnable_tasks[31 - __clz(running_component->runnable_tasks_bitmap)];
+	ld.a	a15,ground_component
+.L623:
+	ld.a	a2,running_component
+.L624:
+	ld.w	d15,[a2]120
+.L625:
+	clz	d15,d15
+.L626:
+	rsub	d15,d15,#31
+.L627:
+	addsc.a	a15,a15,d15,#2
+	ld.a	a15,[a15]40
+.L628:
+	st.a	running_task,a15
+.L629:
+
+; ..\kernel.c	   321  
+; ..\kernel.c	   322     	__dsync();
+	dsync
+.L630:
+
+; ..\kernel.c	   323      __mtcr(PCXI, running_task->lcx);
+	ld.w	d15,[a15]16
+.L631:
+	mtcr	#65024,d15
+	isync
+.L632:
+
+; ..\kernel.c	   324      __rslcx();
+	rslcx
+.L633:
+
+; ..\kernel.c	   325      //__asm(" mov d2,#0"); what is this?
+; ..\kernel.c	   326      __asm(" rfe");
+	 rfe
+.L634:
+
+; ..\kernel.c	   327  }
+	ret
+.L364:
+	
+__start_kernel_function_end:
+	.size	start_kernel,__start_kernel_function_end-start_kernel
+.L188:
+	; End of function
+	
+	.sdecl	'.text.kernel.schedule',code,cluster('schedule')
+	.sect	'.text.kernel.schedule'
+	.align	2
+	
+	.global	schedule
+
+; ..\kernel.c	   328  
+; ..\kernel.c	   329  inline void schedule(void)
+; Function schedule
+.L108:
+schedule:	.type	func
+
+; ..\kernel.c	   330  {
+; ..\kernel.c	   331     	/* RM scheduler */
+; ..\kernel.c	   332  	/*
+; ..\kernel.c	   333     	running_task = (running_component->runnable_tasks)[31 - __clz(running_component->runnable_tasks_bitmap)];
+; ..\kernel.c	   334     	*/
+; ..\kernel.c	   335  
+; ..\kernel.c	   336  	/* Event-driven scheduler */
+; ..\kernel.c	   337  	if(sIsFirstCycle == TRUE)			  { running_task = sWalker->idleTask; }
+	movh.a	a14,#@his(.L966)
+	lea	a14,[a14]@los(.L966)
+	j	.cocofun_6
+.L966:
+.L639:
+
+; ..\kernel.c	   338  	else if(sWalker->isFinished == FALSE) { running_task = sWalker->runnableTask; }
+; ..\kernel.c	   339  	else								  { running_task = sWalker->idleTask; }
+; ..\kernel.c	   340  
+; ..\kernel.c	   341     	__dsync();
+	dsync
+.L640:
+
+; ..\kernel.c	   342      __mtcr(PCXI, running_task->lcx);
+	ld.w	d15,[a15]16
+.L641:
+	mtcr	#65024,d15
+	isync
+.L642:
+
+; ..\kernel.c	   343      __rslcx();
+	rslcx
+.L643:
+
+; ..\kernel.c	   344      //__asm(" mov d2,#0"); what is this?
+; ..\kernel.c	   345      __asm(" rfe");
+	 rfe
+.L644:
+
+; ..\kernel.c	   346  }
+	ret
+.L366:
+	
+__schedule_function_end:
+	.size	schedule,__schedule_function_end-schedule
+.L193:
+	; End of function
+	
+	.sdecl	'.text.kernel..cocofun_6',code,cluster('.cocofun_6')
+	.sect	'.text.kernel..cocofun_6'
+	.align	2
+; Function .cocofun_6
+.L110:
+.cocofun_6:	.type	func
+; Function body .cocofun_6, coco_iter:0
+	ld.bu	d15,sIsFirstCycle
+.L957:
+	jeq	d15,#1,.L35				; prediction unknown
+.L958:
+	ld.a	a15,sWalker
+.L959:
+	ld.bu	d15,[a15]8
+.L960:
+	jne	d15,#0,.L36				; predicted not taken
+.L961:
+	ld.a	a15,[a15]12
+.L962:
+	j	.L37
+.L36:
+.L35:
+	ld.a	a15,sWalker
+.L963:
+	ld.a	a15,[a15]16
+.L37:
+	st.a	running_task,a15
+	ji	a14
+.L288:
+	; End of function
+	.sdecl	'.text.kernel.syscall_trap_handler',code,cluster('syscall_trap_handler')
+	.sect	'.text.kernel.syscall_trap_handler'
+	.align	2
+	
+
+; ..\kernel.c	   347  
+; ..\kernel.c	   348  static void syscall_trap_handler(void) {
+; Function syscall_trap_handler
+.L112:
+syscall_trap_handler:	.type	func
+
+; ..\kernel.c	   349      int tin, priority;
+; ..\kernel.c	   350  
+; ..\kernel.c	   351      __asm(" mov %0,d15 \n"
+	 mov d15,d15 
+ svlcx        
+.L465:
+
+; ..\kernel.c	   352              " svlcx        "
+; ..\kernel.c	   353              : "=d"(tin)); // put d15 in C variable tin
+; ..\kernel.c	   354  
+; ..\kernel.c	   355      running_task->lcx = __mfcr(PCXI);
+	ld.a	a15,running_task
+.L775:
+	mfcr	d0,#65024
+.L776:
+	st.w	[a15]16,d0
+.L777:
+
+; ..\kernel.c	   356      priority = running_task->priority;
+	ld.a	a2,running_task
+.L778:
+	ld.w	d0,[a2]20
+.L467:
+
+; ..\kernel.c	   357  
+; ..\kernel.c	   358      switch (tin) {
+; ..\kernel.c	   359      case SYSCALL_SUSPEND:
+	jeq	d15,#2,.L38				; prediction unknown
+.L779:
+
+; ..\kernel.c	   360      	/*
+; ..\kernel.c	   361      	(running_component->runnable_tasks)[priority] = NULL;
+; ..\kernel.c	   362          (running_component->suspended_tasks)[priority] = running_task;
+; ..\kernel.c	   363          __putbit(neza((running_component->runnable_tasks)[priority]), (int*)&(running_component->runnable_tasks_bitmap), priority);
+; ..\kernel.c	   364          */
+; ..\kernel.c	   365  
+; ..\kernel.c	   366      	sWalker->isFinished = TRUE;
+; ..\kernel.c	   367          break;
+; ..\kernel.c	   368      case SYSCALL_ABORT:
+	jeq	d15,#4,.L39				; prediction unknown
+.L780:
+	j	.L40
+.L38:
+	ld.a	a15,sWalker
+.L781:
+	mov	d15,#1
+	st.b	[a15]8,d15
+.L466:
+	j	.L41
+.L39:
+
+; ..\kernel.c	   369      	if (running_component->dual_state == DUAL_HIGH)
+	ld.a	a15,running_component
+.L782:
+	ld.w	d15,[a15]
+.L468:
+	jne	d15,#1,.L42				; predicted taken
+.L783:
+
+; ..\kernel.c	   370      	{
+; ..\kernel.c	   371  			// Suspend current running task
+; ..\kernel.c	   372  			running_component->runnable_tasks[priority] = NULL;
+	addsc.a	a15,a15,d0,#2
+.L784:
+	mov.a	a4,#0
+.L469:
+	st.a	[a15]40,a4
+.L785:
+
+; ..\kernel.c	   373  			running_component->suspended_tasks[priority] = running_task;
+	st.a	[a15]80,a2
+.L409:
+
+; ..\intrinsic.h	   181      __asm("nez.a %0,%1":"=d"(ret):"a"(p));      (inlined)
+	nez.a d15,a4
+.L410:
+
+; ..\kernel.c	   374  			__putbit(neza((running_component->runnable_tasks)[priority]), (int*)&(running_component->runnable_tasks_bitmap), priority);
+	ld.a	a15,running_component
+.L415:
+	imask	e0,d15,d0,#1
+.L416:
+	ldmst	[a15]120,e0
+.L418:
+
+; ..\kernel.c	   375  
+; ..\kernel.c	   376      		hwc_t trust_component = running_component->link_component;
+	ld.a	a15,running_component
+.L786:
+	ld.a	a4,[a15]8
+.L470:
+	call	set_running_component
+.L42:
+
+; ..\kernel.c	   377      		set_running_component(trust_component);
+; ..\kernel.c	   378      	}
+; ..\kernel.c	   379      	break;
+; ..\kernel.c	   380      case SYSCALL_RESUME:
+; ..\kernel.c	   381          break;
+; ..\kernel.c	   382  
+; ..\kernel.c	   383      default:
+.L40:
+
+; ..\kernel.c	   384          break;
+; ..\kernel.c	   385      }
+; ..\kernel.c	   386  
+; ..\kernel.c	   387      schedule();
+.L41:
+	movh.a	a14,#@his(.L967)
+	lea	a14,[a14]@los(.L967)
+	j	.cocofun_6
+.L967:
+.L471:
+	dsync
+.L787:
+	ld.w	d15,[a15]16
+.L788:
+	mtcr	#65024,d15
+	isync
+.L789:
+	rslcx
+.L790:
+
+; ..\kernel.c	   345      __asm(" rfe");      (inlined)
+	 rfe
+.L419:
+
+; ..\kernel.c	   388  }
+	ret
+.L405:
+	
+__syscall_trap_handler_function_end:
+	.size	syscall_trap_handler,__syscall_trap_handler_function_end-syscall_trap_handler
+.L253:
+	; End of function
+	
+	.sdecl	'.text.trapvec.006',code,cluster('syscall_trap')
+	.sect	'.text.trapvec.006'
+	
+	.global	syscall_trap
+
+; ..\kernel.c	   389  
+; ..\kernel.c	   390  //! Trap vector table entry to trap class 6 handler enables interrupts
+; ..\kernel.c	   391  void __trap_fast(6) syscall_trap(void)
+; Function syscall_trap
+.L114:
+syscall_trap:	.type	func
+
+; ..\kernel.c	   392  {
+; ..\kernel.c	   393  	__asm(" mtcr #65068,%0 \n"  /* 65068 = ICR */
+; ..\kernel.c	   394              " isync      \n"
+; ..\kernel.c	   395              " jg syscall_trap_handler"
+; ..\kernel.c	   396              ::"d"(1 << 8 | USER_INTERRUPT_LEVEL),"a"(syscall_trap_handler):"a4", "a5", "d15");//
+	mov	d8,#259
+	movh.a	a15,#@his(syscall_trap_handler)
+	lea	a15,[a15]@los(syscall_trap_handler)
+.L795:
+	
+	 mtcr #65068,d8 
+ isync      
+ jg syscall_trap_handler
+	
+.L796:
+
+; ..\kernel.c	   397  }
+	rfe
+.L421:
+	
+__syscall_trap_function_end:
+	.size	syscall_trap,__syscall_trap_function_end-syscall_trap
+.L258:
+	; End of function
+	
+	.sdecl	'.text.kernel.set_delayed_output',code,cluster('set_delayed_output')
+	.sect	'.text.kernel.set_delayed_output'
+	.align	2
+	
+	.global	set_delayed_output
+
+; ..\kernel.c	   398  
+; ..\kernel.c	   399  void set_delayed_output(int mo_id, uint32_t timer)
+; Function set_delayed_output
+.L116:
+set_delayed_output:	.type	func
+
+; ..\kernel.c	   400  {
+; ..\kernel.c	   401  	delayed_output_pending[mo_id] = timer;
+	movh.a	a15,#@his(delayed_output_pending)
+	lea	a15,[a15]@los(delayed_output_pending)
+.L649:
+	addsc.a	a15,a15,d4,#2
+.L650:
+	st.w	[a15],d5
+.L651:
+
+; ..\kernel.c	   402  }
+	ret
+.L368:
+	
+__set_delayed_output_function_end:
+	.size	set_delayed_output,__set_delayed_output_function_end-set_delayed_output
+.L198:
+	; End of function
+	
+	.sdecl	'.text.kernel.link',code,cluster('link')
+	.sect	'.text.kernel.link'
+	.align	2
+	
+	.global	link
+
+; ..\kernel.c	   403  
+; ..\kernel.c	   404  void link(hwc_t high, hwc_t trust)
+; Function link
+.L118:
+link:	.type	func
+
+; ..\kernel.c	   405  {
+; ..\kernel.c	   406  	high->dual_state = DUAL_HIGH;
+	mov	d15,#1
+	st.w	[a4],d15
+.L664:
+
+; ..\kernel.c	   407  	high->link_component = trust;
+	st.a	[a4]8,a5
+.L665:
+
+; ..\kernel.c	   408  
+; ..\kernel.c	   409  	trust->dual_state = DUAL_TRUST;
+	mov	d15,#2
+	st.w	[a5],d15
+.L666:
+
+; ..\kernel.c	   410  	trust->link_component = high;
+	st.a	[a5]8,a4
+.L667:
+
+; ..\kernel.c	   411  }
+	ret
+.L375:
+	
+__link_function_end:
+	.size	link,__link_function_end-link
+.L208:
+	; End of function
+	
+	.sdecl	'.text.kernel.work_area_start',code,cluster('work_area_start')
+	.sect	'.text.kernel.work_area_start'
+	.align	2
+	
+	.global	work_area_start
+
+; ..\kernel.c	   412  
+; ..\kernel.c	   413  void work_area_start(void)
+; Function work_area_start
+.L120:
+work_area_start:	.type	func
+
+; ..\kernel.c	   414  {
+; ..\kernel.c	   415  	running_component->is_finished = FALSE;
+	ld.a	a15,running_component
+.L672:
+	mov	d15,#0
+	st.w	[a15]4,d15
+.L673:
+
+; ..\kernel.c	   416  }
+	ret
+.L378:
+	
+__work_area_start_function_end:
+	.size	work_area_start,__work_area_start_function_end-work_area_start
+.L213:
+	; End of function
+	
+	.sdecl	'.text.kernel.work_area_end',code,cluster('work_area_end')
+	.sect	'.text.kernel.work_area_end'
+	.align	2
+	
+	.global	work_area_end
+
+; ..\kernel.c	   417  
+; ..\kernel.c	   418  void work_area_end(void)
+; Function work_area_end
+.L122:
+work_area_end:	.type	func
+
+; ..\kernel.c	   419  {
+; ..\kernel.c	   420  	running_component->is_finished = TRUE;
+	ld.a	a15,running_component
+.L678:
+	mov	d15,#1
+	st.w	[a15]4,d15
+.L679:
+
+; ..\kernel.c	   421  }
+	ret
+.L379:
+	
+__work_area_end_function_end:
+	.size	work_area_end,__work_area_end_function_end-work_area_end
+.L218:
+	; End of function
+	
+	.sdecl	'.text.kernel.check_high_finished',code,cluster('check_high_finished')
+	.sect	'.text.kernel.check_high_finished'
+	.align	2
+	
+	.global	check_high_finished
+
+; ..\kernel.c	   422  
+; ..\kernel.c	   423  uint32_t check_high_finished(void)
+; Function check_high_finished
+.L124:
+check_high_finished:	.type	func
+
+; ..\kernel.c	   424  {
+; ..\kernel.c	   425  	return running_component->link_component->is_finished;
+	ld.a	a15,running_component
+.L684:
+	ld.a	a15,[a15]8
+.L685:
+	ld.w	d2,[a15]4
+.L686:
+
+; ..\kernel.c	   426  }
+	ret
+.L380:
+	
+__check_high_finished_function_end:
+	.size	check_high_finished,__check_high_finished_function_end-check_high_finished
+.L223:
+	; End of function
+	
+	.sdecl	'.text.kernel.schedule_event_driven_ISR',code,cluster('schedule_event_driven_ISR')
+	.sect	'.text.kernel.schedule_event_driven_ISR'
+	.align	2
+	
+	.global	schedule_event_driven_ISR
+
+; ..\kernel.c	   427  
+; ..\kernel.c	   428  void schedule_event_driven_ISR(void)
+; Function schedule_event_driven_ISR
+.L126:
+schedule_event_driven_ISR:	.type	func
+
+; ..\kernel.c	   429  {
+; ..\kernel.c	   430  	uword nextInterruptTime;
+; ..\kernel.c	   431  
+; ..\kernel.c	   432  	running_task->lcx = __mfcr(PCXI);
+	ld.a	a15,running_task
+.L801:
+	mfcr	d15,#65024
+.L802:
+	st.w	[a15]16,d15
+.L803:
+
+; ..\kernel.c	   433  
+; ..\kernel.c	   434  	if( sIsFirstCycle == FALSE) {
+	ld.bu	d15,sIsFirstCycle
+.L804:
+	jne	d15,#0,.L47				; prediction unknown
+.L805:
+
+; ..\kernel.c	   435  		sWalker = sWalker->next;
+	ld.a	a15,sWalker
+.L806:
+	ld.a	a15,[a15]20
+.L807:
+	st.a	sWalker,a15
+.L808:
+	j	.L48
+.L47:
+
+; ..\kernel.c	   436  	} else {
+; ..\kernel.c	   437  		sIsFirstCycle = FALSE;
+	mov	d15,#0
+	st.b	sIsFirstCycle,d15
+.L809:
+
+; ..\kernel.c	   438  		STM_CMCON.B.MSIZE0 = 31;
+	ld.bu	d15,0xf0000238
+.L810:
+	or	d15,#31
+	st.b	0xf0000238,d15
+.L811:
+
+; ..\kernel.c	   439  		STM_CMCON.B.MSTART0 = 13;
+	ld.bu	d0,0xf0000239
+.L812:
+	insert	d15,d0,#13,#0,#5
+	st.b	0xf0000239,d15
+.L48:
+
+; ..\kernel.c	   440  	}
+; ..\kernel.c	   441  
+; ..\kernel.c	   442  	sWalker->isFinished = FALSE;
+	ld.a	a15,sWalker
+.L813:
+	mov	d15,#0
+	st.b	[a15]8,d15
+.L814:
+
+; ..\kernel.c	   443  	running_task = sWalker->runnableTask;
+	ld.a	a2,[a15]12
+.L815:
+	st.a	running_task,a2
+.L816:
+
+; ..\kernel.c	   444  
+; ..\kernel.c	   445  	if(sWalker == sTail) {
+; ..\kernel.c	   446  		nextInterruptTime = sHyperPeriod - sWalker->releaseTime + sWalker->next->releaseTime;
+	ld.a	a2,[a15]20
+.L817:
+	ld.w	d15,[a2]
+.L818:
+	ld.w	d0,[a15]
+.L819:
+	ld.a	a2,sTail
+.L820:
+	jne.a	a15,a2,.L49				; unsupported prediction taken forward branch
+.L821:
+	ld.w	d4,sHyperPeriod
+.L822:
+	sub	d4,d0
+.L472:
+	add	d4,d15
+.L823:
+	j	.L50
+.L49:
+
+; ..\kernel.c	   447  	} else {
+; ..\kernel.c	   448  		nextInterruptTime = sWalker->next->releaseTime - sWalker->releaseTime;
+	sub	d4,d15,d0
+.L50:
+
+; ..\kernel.c	   449  	}
+; ..\kernel.c	   450  	config_timer(nextInterruptTime, 0);
+	mov	d5,#0
+	call	config_timer
+.L473:
+
+; ..\kernel.c	   451  
+; ..\kernel.c	   452  	//printf("clock diff : %ld", (unsigned long long)(clock() - start));
+; ..\kernel.c	   453  
+; ..\kernel.c	   454  	__dsync();
+	dsync
+.L824:
+
+; ..\kernel.c	   455  	__mtcr(PCXI, running_task->lcx);
+	ld.a	a15,running_task
+.L825:
+	ld.w	d15,[a15]16
+.L826:
+	mtcr	#65024,d15
+	isync
+.L827:
+
+; ..\kernel.c	   456  	__asm("ji a11");
+	ji a11
+.L828:
+
+; ..\kernel.c	   457  }
+	ret
+.L422:
+	
+__schedule_event_driven_ISR_function_end:
+	.size	schedule_event_driven_ISR,__schedule_event_driven_ISR_function_end-schedule_event_driven_ISR
+.L263:
+	; End of function
+	
+	.sdecl	'.text.kernel.schedule_EDF_ISR',code,cluster('schedule_EDF_ISR')
+	.sect	'.text.kernel.schedule_EDF_ISR'
+	.align	2
+	
+	.global	schedule_EDF_ISR
+
+; ..\kernel.c	   458  
+; ..\kernel.c	   459  void schedule_EDF_ISR(void)
+; Function schedule_EDF_ISR
+.L128:
+schedule_EDF_ISR:	.type	func
+	sub.a	a10,#8
+.L474:
+
+; ..\kernel.c	   460  {
+; ..\kernel.c	   461      static uint32_t is_first_time = TRUE;
+; ..\kernel.c	   462      int i, j;
+; ..\kernel.c	   463  //    clock_t start = clock();
+; ..\kernel.c	   464  
+; ..\kernel.c	   465      running_task->lcx = __mfcr(PCXI);
+	ld.a	a15,running_task
+.L833:
+	mfcr	d15,#65024
+.L834:
+	st.w	[a15]16,d15
+.L835:
+
+; ..\kernel.c	   466  
+; ..\kernel.c	   467      /* schedule next timer interrupt */
+; ..\kernel.c	   468  	if (jiffies == 0)
+; ..\kernel.c	   469  	{
+; ..\kernel.c	   470  		STM_CMP0.U = (uint32_t) (STM_TIM0.U + (uint32_t) TIMER_TICKS);
+	lea	a15,0xf0000230
+.L836:
+	ld.w	d15,jiffies
+.L837:
+	jne	d15,#0,.L51				; prediction unknown
+.L838:
+	ld.w	d15,0xf0000210
+.L839:
+	addi	d15,d15,#9000
+	st.w	[a15],d15
+.L840:
+
+; ..\kernel.c	   471  		STM_CMCON.B.MSIZE0 = 31;
+	ld.bu	d15,0xf0000238
+.L841:
+	or	d15,#31
+	st.b	0xf0000238,d15
+.L842:
+
+; ..\kernel.c	   472  		STM_CMCON.B.MSTART0 = 0;
+	ld.bu	d15,0xf0000239
+.L843:
+	insert	d15,d15,#0,#0,#5
+	st.b	0xf0000239,d15
+.L844:
+	j	.L52
+.L51:
+
+; ..\kernel.c	   473  	}
+; ..\kernel.c	   474  	else
+; ..\kernel.c	   475  	{
+; ..\kernel.c	   476  		STM_CMP0.U = (uint32_t) (STM_CMP0.U + (uint32_t) TIMER_TICKS);
+	ld.w	d15,[a15]
+.L845:
+	addi	d15,d15,#9000
+	st.w	[a15],d15
+.L52:
+
+; ..\kernel.c	   477  	}
+; ..\kernel.c	   478  
+; ..\kernel.c	   479      if (is_first_time)
+	ld.w	d15,_999001_is_first_time
+.L846:
+	jeq	d15,#0,.L53				; prediction unknown
+.L847:
+
+; ..\kernel.c	   480      {
+; ..\kernel.c	   481          jiffies = 0;
+	mov	d15,#0
+	st.w	jiffies,d15
+.L848:
+
+; ..\kernel.c	   482          is_first_time = FALSE;
+	st.w	_999001_is_first_time,d15
+.L849:
+	j	.L54
+.L53:
+
+; ..\kernel.c	   483      }
+; ..\kernel.c	   484      else
+; ..\kernel.c	   485      {
+; ..\kernel.c	   486          jiffies++;
+	ld.w	d15,jiffies
+.L850:
+	add	d15,#1
+	st.w	jiffies,d15
+.L851:
+
+; ..\kernel.c	   487          running_component->remaining_budget--;
+	ld.a	a15,running_component
+.L852:
+	ld.w	d15,[a15]32
+.L853:
+	add	d15,#-1
+	st.w	[a15]32,d15
+.L54:
+
+; ..\kernel.c	   488      }
+; ..\kernel.c	   489      /* NOTE: some variables such as next_release_time, deadline are based on absolute time */
+; ..\kernel.c	   490  
+; ..\kernel.c	   491      /* release tasks at the start of each period */
+; ..\kernel.c	   492      for (i = 0; i < n_components - 1; i++) {
+; ..\kernel.c	   493          for (j = 0; j < MAX_PRIORITY; j++) {
+; ..\kernel.c	   494  
+; ..\kernel.c	   495          	if (components[i]->runnable_tasks[j] != NULL && components[i]->runnable_tasks[j]->absolute_deadline == jiffies)
+	mov	d8,#0
+	movh.a	a12,#@his(components)
+.L475:
+	ld.w	d15,n_components
+.L854:
+	add	d15,#-1
+	lea	a12,[a12]@los(components)
+	st.a	[a10],a12
+.L855:
+	jlt	d15,#1,.L55				; predicted not taken
+.L56:
+	mov	d9,#0
+	mov.aa	a13,a12
+.L477:
+	add.a	a12,#4
+.L856:
+	mov.a	a14,#9
+.L57:
+	ld.a	a2,[a13]
+.L857:
+	addsc.a	a15,a2,d9,#2
+	lea	a4,[a15]40
+	ld.a	a15,[a4]
+.L858:
+	jz.a	a15,.L58				; predicted not taken
+.L859:
+	ld.w	d0,jiffies
+.L58:
+
+; ..\kernel.c	   496          	{
+; ..\kernel.c	   497          		// Deadline miss of high performance component
+; ..\kernel.c	   498          		if (components[i]->dual_state == DUAL_HIGH)
+; ..\kernel.c	   499          		{
+; ..\kernel.c	   500          			// Switch to trust (turn on the trust component)
+; ..\kernel.c	   501          		}
+; ..\kernel.c	   502          		else if (components[i]->dual_state == DUAL_TRUST)
+; ..\kernel.c	   503          		{
+; ..\kernel.c	   504          			// ERROR: SYSTEM FAILURE
+; ..\kernel.c	   505          			// Nothing to do (at this time)
+; ..\kernel.c	   506          		}
+; ..\kernel.c	   507          	}
+; ..\kernel.c	   508  
+; ..\kernel.c	   509          	if (components[i]->runnable_tasks[j] != NULL && components[i]->runnable_tasks[j]->next_release_time == jiffies) {
+	jz.a	a15,.L59				; predicted not taken
+.L860:
+	lea	a5,[a15]12
+	ld.w	d0,[a5]
+.L861:
+	ld.w	d15,jiffies
+.L862:
+	jne	d15,d0,.L60				; predicted not taken
+.L863:
+
+; ..\kernel.c	   510          		/* end of period while running */
+; ..\kernel.c	   511          		/* set next release time and skip this instance */
+; ..\kernel.c	   512          		(components[i]->runnable_tasks)[j]->next_release_time += (components[i]->runnable_tasks)[j]->period;
+	ld.w	d15,[a15]24
+.L864:
+	add	d0,d15
+	st.w	[a5],d0
+.L865:
+	j	.L61
+.L60:
+.L59:
+
+; ..\kernel.c	   513          	}
+; ..\kernel.c	   514          	else if (components[i]->suspended_tasks[j] != NULL && components[i]->suspended_tasks[j]->next_release_time == jiffies) {
+	addsc.a	a15,a2,d9,#2
+	ld.a	a15,[a15]80
+.L866:
+	jz.a	a15,.L62				; predicted not taken
+.L867:
+	ld.w	d15,[a15]12
+.L868:
+	ld.w	d0,jiffies
+.L869:
+	jne	d15,d0,.L63				; predicted taken
+.L870:
+
+; ..\kernel.c	   515              	/* normal operation */
+; ..\kernel.c	   516              	/* end of period while suspended */
+; ..\kernel.c	   517          		/* release this task */
+; ..\kernel.c	   518          		components[i]->runnable_tasks[j] = components[i]->suspended_tasks[j];
+	st.a	[a4],a15
+.L871:
+
+; ..\kernel.c	   519          		components[i]->suspended_tasks[j] = NULL;
+	ld.a	a15,[a13]
+.L872:
+	addsc.a	a15,a15,d9,#2
+.L873:
+	mov.a	a2,#0
+.L874:
+	st.a	[a15]80,a2
+.L875:
+
+; ..\kernel.c	   520          		__putbit(1, (int*)&(components[i]->runnable_tasks_bitmap), j);
+	ld.a	a15,[a13]
+	imask	e0,#1,d9,#1
+	ldmst	[a15]120,e0
+.L876:
+
+; ..\kernel.c	   521  
+; ..\kernel.c	   522          		/* set next release time */
+; ..\kernel.c	   523          		components[i]->runnable_tasks[j]->next_release_time += (components[i]->runnable_tasks)[j]->period;
+	ld.a	a15,[a13]
+.L877:
+	addsc.a	a15,a15,d9,#2
+	lea	a2,[a15]40
+	ld.a	a15,[a2]
+.L878:
+	ld.w	d0,[a15]12
+.L879:
+	ld.w	d15,[a15]24
+.L880:
+	add	d0,d15
+	st.w	[a15]12,d0
+.L881:
+
+; ..\kernel.c	   524                  /* set next deadline */
+; ..\kernel.c	   525          		components[i]->runnable_tasks[j]->absolute_deadline += (components[i]->runnable_tasks)[j]->period;
+	ld.a	a15,[a2]
+.L882:
+	mov.aa	a4,a15
+	ld.w	d0,[+a4]4
+.L883:
+	ld.w	d15,[a15]24
+.L884:
+	add	d0,d15
+	st.w	[a4],d0
+.L885:
+
+; ..\kernel.c	   526          		/* get the release time */
+; ..\kernel.c	   527          		components[i]->runnable_tasks[j]->release_timestamp = clock();
+	ld.a	a15,[a2]
+.L886:
+	call	clock
+.L887:
+	st.d	[a15]28,e2
+.L63:
+.L62:
+.L61:
+	add	d9,#1
+.L888:
+	loop	a14,.L57				; predicted taken
+.L889:
+	add	d8,#1
+	ld.w	d15,n_components
+.L890:
+	add	d15,#-1
+.L891:
+	jlt	d8,d15,.L56				; predicted taken
+.L55:
+
+; ..\kernel.c	   528          	}
+; ..\kernel.c	   529          }
+; ..\kernel.c	   530      }
+; ..\kernel.c	   531  
+; ..\kernel.c	   532      /* replenish new server execution budget at the start of each server period */
+; ..\kernel.c	   533      for (i = 0; i < n_components - 1; i++) {
+	mov	d2,#0
+	ld.w	d0,n_components
+.L476:
+	add	d0,#-1
+	ld.a	a2,[a10]
+.L892:
+	j	.L64
+.L65:
+
+; ..\kernel.c	   534      	if (components[i]->next_release_time == jiffies) {
+	ld.a	a15,[a2]
+.L893:
+	lea	a4,[a15]28
+	ld.w	d1,[a4]
+.L894:
+	ld.w	d15,jiffies
+.L895:
+	jne	d15,d1,.L66				; predicted not taken
+.L896:
+
+; ..\kernel.c	   535      		/* set next release time */
+; ..\kernel.c	   536      		components[i]->next_release_time += components[i]->period;
+	ld.w	d15,[a15]12
+.L897:
+	add	d1,d15
+	st.w	[a4],d1
+.L898:
+
+; ..\kernel.c	   537      		/* set next deadline */
+; ..\kernel.c	   538      		components[i]->absolute_deadline += components[i]->period;
+	ld.w	d15,[a15]36
+.L899:
+	ld.w	d1,[a15]12
+.L900:
+	add	d15,d1
+	st.w	[a15]36,d15
+.L901:
+
+; ..\kernel.c	   539      		/* replenish the component budget */
+; ..\kernel.c	   540      		components[i]->remaining_budget = components[i]->budget;
+	ld.w	d15,[a15]16
+.L902:
+	st.w	[a15]32,d15
+.L66:
+	add.a	a2,#4
+	add	d2,#1
+.L64:
+	jlt	d2,d0,.L65				; predicted taken
+.L427:
+
+; ..\kernel.c	   541      	}
+; ..\kernel.c	   542      }
+; ..\kernel.c	   543  
+; ..\kernel.c	   544      /* parent scheduler */
+; ..\kernel.c	   545      int earliest_deadline = INT_MAX;
+	ld.w	d1,__const_7fffffff
+.L478:
+
+; ..\kernel.c	   546      hwc_t next_component = ground_component;
+	ld.a	a2,ground_component
+.L479:
+
+; ..\kernel.c	   547      for (i = 0; i < n_components - 1; i++) {
+	mov	d2,#0
+	ld.a	a4,[a10]
+.L903:
+	j	.L67
+.L68:
+
+; ..\kernel.c	   548          if (components[i]->remaining_budget > 0) {
+	ld.a	a15,[a4]
+.L904:
+	ld.w	d15,[a15]32
+.L905:
+	jeq	d15,#0,.L69				; predicted not taken
+.L906:
+
+; ..\kernel.c	   549              if (components[i]->absolute_deadline < earliest_deadline) {
+	ld.w	d15,[a15]36
+.L907:
+	jge.u	d15,d1,.L70				; predicted not taken
+.L908:
+
+; ..\kernel.c	   550                  earliest_deadline = components[i]->absolute_deadline;
+; ..\kernel.c	   551                  next_component = components[i];
+	mov	d1,d15
+	mov.aa	a2,a15
+.L70:
+.L69:
+	add.a	a4,#4
+	add	d2,#1
+.L67:
+	jlt	d2,d0,.L68				; predicted taken
+.L909:
+
+; ..\kernel.c	   552              }
+; ..\kernel.c	   553          }
+; ..\kernel.c	   554      }
+; ..\kernel.c	   555      running_component = next_component;
+	st.a	running_component,a2
+.L910:
+
+; ..\kernel.c	   556  
+; ..\kernel.c	   557     	/* RM scheduler */
+; ..\kernel.c	   558     	running_task = (running_component->runnable_tasks)[31 - __clz(running_component->runnable_tasks_bitmap)];
+	ld.w	d15,[a2]120
+.L911:
+	clz	d15,d15
+.L912:
+	rsub	d15,d15,#31
+.L913:
+	addsc.a	a15,a2,d15,#2
+	ld.a	a15,[a15]40
+.L914:
+	st.a	running_task,a15
+.L915:
+
+; ..\kernel.c	   559  
+; ..\kernel.c	   560     	//printf("clock diff : %ld", (unsigned long long)(clock() - start));
+; ..\kernel.c	   561  
+; ..\kernel.c	   562      __dsync();
+	dsync
+.L916:
+
+; ..\kernel.c	   563      __mtcr(PCXI, running_task->lcx);
+	ld.w	d15,[a15]16
+.L917:
+	mtcr	#65024,d15
+	isync
+.L918:
+
+; ..\kernel.c	   564      __asm("ji a11");
+	ji a11
+.L919:
+
+; ..\kernel.c	   565  }
+	ret
+.L424:
+	
+__schedule_EDF_ISR_function_end:
+	.size	schedule_EDF_ISR,__schedule_EDF_ISR_function_end-schedule_EDF_ISR
+.L268:
+	; End of function
+	
+	.sdecl	'.text.kernel.cancom_timer_interrupt_handler',code,cluster('cancom_timer_interrupt_handler')
+	.sect	'.text.kernel.cancom_timer_interrupt_handler'
+	.align	2
+	
+	.global	cancom_timer_interrupt_handler
+
+; ..\kernel.c	   566  
+; ..\kernel.c	   567  void cancom_timer_interrupt_handler(void)
+; Function cancom_timer_interrupt_handler
+.L130:
+cancom_timer_interrupt_handler:	.type	func
+
+; ..\kernel.c	   568  {
+; ..\kernel.c	   569      ubyte msgid;
+; ..\kernel.c	   570  
+; ..\kernel.c	   571      running_task->lcx = __mfcr(PCXI);
+	ld.a	a15,running_task
+.L924:
+	mfcr	d15,#65024
+.L925:
+	st.w	[a15]16,d15
+.L432:
+
+; ..\kernel.c	   572  
+; ..\kernel.c	   573      /* handle delayed outputs */
+; ..\kernel.c	   574      for (ubyte k = 0; k < 20; k++) {
+; ..\kernel.c	   575      	if (delayed_output_pending[k] == jiffies) {
+	mov	d8,#0
+	movh.a	a15,#@his(delayed_output_pending)
+.L480:
+	lea	a15,[a15]@los(delayed_output_pending)
+.L926:
+	lea	a12,19
+.L71:
+	ld.w	d15,[a15]
+.L927:
+	ld.w	d0,jiffies
+.L928:
+	jne	d15,d0,.L72				; predicted taken
+.L929:
+
+; ..\kernel.c	   576      		CAN_vTransmit(k);
+	mov	d4,d8
+.L481:
+	call	CAN_vTransmit
+.L482:
+
+; ..\kernel.c	   577      		delayed_output_pending[k] = 0;
+	mov	d15,#0
+	st.w	[a15],d15
+.L72:
+	add	d8,#1
+	add.a	a15,#4
+.L930:
+	loop	a12,.L71				; predicted taken
+.L433:
+
+; ..\kernel.c	   578      	}
+; ..\kernel.c	   579      }
+; ..\kernel.c	   580  
+; ..\kernel.c	   581      /* CAN message sending as componentized architecture */
+; ..\kernel.c	   582  	msgid = can(canSlotWalker);
+	ld.w	d15,canSlotWalker
+	movh.a	a15,#@his(canTdmMap)
+	lea	a15,[a15]@los(canTdmMap)
+	addsc.a	a15,a15,d15,#0
+	ld.bu	d4,[a15]
+.L483:
+
+; ..\kernel.c	   583  	if ( canMsgValidbit[msgid] == TRUE ) {
+	movh.a	a15,#@his(canMsgValidbit)
+	lea	a15,[a15]@los(canMsgValidbit)
+.L931:
+	addsc.a	a15,a15,d4,#0
+	ld.bu	d15,[a15]
+.L932:
+	jne	d15,#1,.L73				; predicted taken
+.L933:
+
+; ..\kernel.c	   584  		CAN_vTransmit(msgid);
+	call	CAN_vTransmit
+.L484:
+
+; ..\kernel.c	   585  		canMsgValidbit[msgid] = FALSE;
+	mov	d15,#0
+	st.b	[a15],d15
+.L73:
+	ld.w	d0,canSlotWalker
+.L934:
+
+; ..\kernel.c	   586  	}
+; ..\kernel.c	   587  	if ( ++canSlotWalker == N_CAN_SLOT ) {
+	add	d0,#1
+.L935:
+	eq	d15,d0,#50
+.L936:
+
+; ..\kernel.c	   588  		canSlotWalker = 0;
+; ..\kernel.c	   589  	}
+; ..\kernel.c	   590  
+; ..\kernel.c	   591  	__dsync();
+	cmov	d0,d15,#0
+	st.w	canSlotWalker,d0
+.L937:
+	dsync
+.L938:
+
+; ..\kernel.c	   592  	__mtcr(PCXI, running_task->lcx);
+	ld.a	a15,running_task
+.L939:
+	ld.w	d15,[a15]16
+.L940:
+	mtcr	#65024,d15
+	isync
+.L941:
+
+; ..\kernel.c	   593  	__asm("ji a11");
+	ji a11
+.L942:
+
+; ..\kernel.c	   594  }
+	ret
+.L430:
+	
+__cancom_timer_interrupt_handler_function_end:
+	.size	cancom_timer_interrupt_handler,__cancom_timer_interrupt_handler_function_end-cancom_timer_interrupt_handler
+.L273:
+	; End of function
+	
+	.sdecl	'.text.intvec.010',code
+	.sect	'.text.intvec.010'
+
+; ..\kernel.c	   595  
+; ..\kernel.c	   596  /* timer interrupt handler */
+; ..\kernel.c	   597  void __interrupt(SCHEDULER_PRIORITY) schedule_timer_interrupt(void) {
+	movh.a	a14,#@his(schedule_timer_interrupt)
+	lea	a14,[a14]@los(schedule_timer_interrupt)
+	ji	a14
+	.sdecl	'.text.kernel.schedule_timer_interrupt',code,cluster('schedule_timer_interrupt')
+	.sect	'.text.kernel.schedule_timer_interrupt'
+	.align	2
+	
+	.global	schedule_timer_interrupt
+; Function schedule_timer_interrupt
+.L132:
+schedule_timer_interrupt:	.type	func
+
+; ..\kernel.c	   598  	__asm(" st.t  0xf0000240:0,#1 \n"  // enable interrupts again. Same as STM_ISRR.B.CMP0IRR = 1
+	 st.t  0xf0000240:0,#1 
+ svlcx        
+ jla schedule_event_driven_ISR 
+ rslcx
+.L947:
+
+; ..\kernel.c	   599            " svlcx        \n"
+; ..\kernel.c	   600            " jla schedule_event_driven_ISR \n" // schedule_EDF_ISR, schedule_event_driven_ISR
+; ..\kernel.c	   601  		  " rslcx");
+; ..\kernel.c	   602  }
+	rfe
+.L435:
+	
+__schedule_timer_interrupt_function_end:
+	.size	schedule_timer_interrupt,__schedule_timer_interrupt_function_end-schedule_timer_interrupt
+.L278:
+	; End of function
+	
+	.sdecl	'.text.intvec.00f',code
+	.sect	'.text.intvec.00f'
+
+; ..\kernel.c	   603  
+; ..\kernel.c	   604  void __interrupt(CANCOM_PRIORITY) cancom_timer_interrupt(void) {
+	movh.a	a14,#@his(cancom_timer_interrupt)
+	lea	a14,[a14]@los(cancom_timer_interrupt)
+	ji	a14
+	.sdecl	'.text.kernel.cancom_timer_interrupt',code,cluster('cancom_timer_interrupt')
+	.sect	'.text.kernel.cancom_timer_interrupt'
+	.align	2
+	
+	.global	cancom_timer_interrupt
+; Function cancom_timer_interrupt
+.L134:
+cancom_timer_interrupt:	.type	func
+
+; ..\kernel.c	   605  	__asm(" st.t  0xf0000240:0,#1 \n"  // enable interrupts again. Same as STM_ISRR.B.CMP1IRR = 1
+	 st.t  0xf0000240:0,#1 
+ svlcx        
+ jla cancom_timer_interrupt_handler 
+ rslcx
+.L952:
+
+; ..\kernel.c	   606            " svlcx        \n"
+; ..\kernel.c	   607            " jla cancom_timer_interrupt_handler \n"
+; ..\kernel.c	   608  		  " rslcx");
+; ..\kernel.c	   609  }
+	rfe
+.L436:
+	
+__cancom_timer_interrupt_function_end:
+	.size	cancom_timer_interrupt,__cancom_timer_interrupt_function_end-cancom_timer_interrupt
+.L283:
+	; End of function
+	
+	.sdecl	'.data.kernel.delayed_output_pending',data,cluster('delayed_output_pending')
+	.sect	'.data.kernel.delayed_output_pending'
+	.global	delayed_output_pending
+	.align	2
+delayed_output_pending:	.type	object
+	.size	delayed_output_pending,80
+	.space	80
+	.sdecl	'.bss.kernel.components',data,cluster('components')
+	.sect	'.bss.kernel.components'
+	.global	components
+	.align	4
+components:	.type	object
+	.size	components,20
+	.space	20
+	.sdecl	'.zdata.kernel.n_components',data,cluster('n_components')
+	.sect	'.zdata.kernel.n_components'
+	.global	n_components
+	.align	2
+n_components:	.type	object
+	.size	n_components,4
+	.space	4
+	.sdecl	'.zdata.kernel.jiffies',data,cluster('jiffies')
+	.sect	'.zdata.kernel.jiffies'
+	.global	jiffies
+	.align	2
+jiffies:	.type	object
+	.size	jiffies,4
+	.space	4
+	.sdecl	'.zdata.kernel.running_component',data,cluster('running_component')
+	.sect	'.zdata.kernel.running_component'
+	.global	running_component
+	.align	4
+running_component:	.type	object
+	.size	running_component,4
+	.space	4
+	.sdecl	'.zbss.kernel.running_task',data,cluster('running_task')
+	.sect	'.zbss.kernel.running_task'
+	.global	running_task
+	.align	4
+running_task:	.type	object
+	.size	running_task,4
+	.space	4
+	.sdecl	'.bss.kernel.canMsgValidbit',data,cluster('canMsgValidbit')
+	.sect	'.bss.kernel.canMsgValidbit'
+	.global	canMsgValidbit
+canMsgValidbit:	.type	object
+	.size	canMsgValidbit,30
+	.space	30
+	.sdecl	'.bss.kernel.canTdmMap',data,cluster('canTdmMap')
+	.sect	'.bss.kernel.canTdmMap'
+	.global	canTdmMap
+canTdmMap:	.type	object
+	.size	canTdmMap,50
+	.space	50
+	.sdecl	'.zbss.kernel.canSlotWalker',data,cluster('canSlotWalker')
+	.sect	'.zbss.kernel.canSlotWalker'
+	.global	canSlotWalker
+	.align	2
+canSlotWalker:	.type	object
+	.size	canSlotWalker,4
+	.space	4
+	.sdecl	'.zbss.kernel.sIsFirstCycle',data,cluster('sIsFirstCycle')
+	.sect	'.zbss.kernel.sIsFirstCycle'
+	.global	sIsFirstCycle
+sIsFirstCycle:	.type	object
+	.size	sIsFirstCycle,1
+	.space	1
+	.sdecl	'.zbss.kernel.sHyperPeriod',data,cluster('sHyperPeriod')
+	.sect	'.zbss.kernel.sHyperPeriod'
+	.global	sHyperPeriod
+	.align	2
+sHyperPeriod:	.type	object
+	.size	sHyperPeriod,4
+	.space	4
+	.sdecl	'.zbss.kernel.sHead',data,cluster('sHead')
+	.sect	'.zbss.kernel.sHead'
+	.global	sHead
+	.align	4
+sHead:	.type	object
+	.size	sHead,4
+	.space	4
+	.sdecl	'.zbss.kernel.sTail',data,cluster('sTail')
+	.sect	'.zbss.kernel.sTail'
+	.global	sTail
+	.align	4
+sTail:	.type	object
+	.size	sTail,4
+	.space	4
+	.sdecl	'.zbss.kernel.sWalker',data,cluster('sWalker')
+	.sect	'.zbss.kernel.sWalker'
+	.global	sWalker
+	.align	4
+sWalker:	.type	object
+	.size	sWalker,4
+	.space	4
+	.sdecl	'.bss.kernel.sInfoPool',data,cluster('sInfoPool')
+	.sect	'.bss.kernel.sInfoPool'
+	.global	sInfoPool
+	.align	4
+sInfoPool:	.type	object
+	.size	sInfoPool,480
+	.space	480
+	.sdecl	'.bss.kernel.sInfoDirtybit',data,cluster('sInfoDirtybit')
+	.sect	'.bss.kernel.sInfoDirtybit'
+	.global	sInfoDirtybit
+sInfoDirtybit:	.type	object
+	.size	sInfoDirtybit,20
+	.space	20
+	.sdecl	'.rodata.kernel..1.str',data,rom
+	.sect	'.rodata.kernel..1.str'
+.1.str:	.type	object
+	.size	.1.str,26
+	.byte	83,116,97,114,116,105,110,103
+	.byte	32,71,97,114,100,97,32,75
+	.byte	101,114,110,101,108,46,46,46
+	.byte	10
+	.space	1
+	.sdecl	'.rodata.kernel..2.str',data,rom
+	.sect	'.rodata.kernel..2.str'
+.2.str:	.type	object
+	.size	.2.str,21
+	.byte	32,32,32,32,80,76,76,32
+	.byte	105,110,105,116,105,97,108,105
+	.byte	122,101,100,10
+	.space	1
+	.sdecl	'.rodata.kernel..3.str',data,rom
+	.sect	'.rodata.kernel..3.str'
+.3.str:	.type	object
+	.size	.3.str,21
+	.byte	32,32,32,32,76,69,68,32
+	.byte	105,110,105,116,105,97,108,105
+	.byte	122,101,100,10
+	.space	1
+	.sdecl	'.rodata.kernel..4.str',data,rom
+	.sect	'.rodata.kernel..4.str'
+.4.str:	.type	object
+	.size	.4.str,21
+	.byte	32,32,32,32,67,65,78,32
+	.byte	105,110,105,116,105,97,108,105
+	.byte	122,101,100,10
+	.space	1
+	.sdecl	'.rodata.kernel..5.ini',data,rom
+	.sect	'.rodata.kernel..5.ini'
+	.align	4
+.5.ini:	.type	object
+	.size	.5.ini,12
+	.byte	2
+	.space	5
+	.word	128
+	.space	2
+	.sdecl	'.zdata.kernel._999001_is_first_time',data,cluster('_999001_is_first_time')
+	.sect	'.zdata.kernel._999001_is_first_time'
+	.align	2
+_999001_is_first_time:	.type	object
+	.size	_999001_is_first_time,4
+	.word	1
+	.calls	'config_timer','__rt_udivmod'
+	.calls	'__INDIRECT__','syscall_trap_handler'
+	.calls	'initSInfoPool','memset'
+	.calls	'addScheduleInfo','getSInfoFromPool'
+	.calls	'init_hardware','printf'
+	.calls	'init_hardware','pll_init'
+	.calls	'init_hardware','can_init'
+	.calls	'init_hardware','initSInfoPool'
+	.calls	'can_init','CAN_vInit'
+	.calls	'can_init','memset'
+	.calls	'request','CAN_vLoadData'
+	.calls	'create_component','memset'
+	.calls	'syscall_trap_handler','set_running_component'
+	.calls	'schedule_event_driven_ISR','config_timer'
+	.calls	'schedule_EDF_ISR','clock'
+	.calls	'cancom_timer_interrupt_handler','CAN_vTransmit'
+	.calls	'schedule','.cocofun_6'
+	.calls	'syscall_trap_handler','.cocofun_6'
+	.calls	'initSInfoPool','',0
+	.calls	'getSInfoFromPool','',0
+	.calls	'freeSInfo','',0
+	.calls	'addScheduleInfo','',0
+	.calls	'config_timer','',0
+	.calls	'init_hardware','',0
+	.calls	'can_init','',0
+	.calls	'request','',0
+	.calls	'get_running_component','',0
+	.calls	'set_running_component','',0
+	.calls	'create_component','',0
+	.calls	'create_task','',16
+	.calls	'get_running_task','',0
+	.calls	'get_jiffies','',0
+	.calls	'init_timer_interrupt','',0
+	.calls	'start_kernel','',0
+	.calls	'schedule','',0
+	.calls	'.cocofun_6','',0
+	.calls	'syscall_trap_handler','',0
+	.calls	'syscall_trap','',0
+	.calls	'set_delayed_output','',0
+	.calls	'link','',0
+	.calls	'work_area_start','',0
+	.calls	'work_area_end','',0
+	.calls	'check_high_finished','',0
+	.calls	'schedule_event_driven_ISR','',0
+	.calls	'schedule_EDF_ISR','',8
+	.calls	'cancom_timer_interrupt_handler','',0
+	.calls	'schedule_timer_interrupt','',0
+	.extern	memset
+	.extern	clock
+	.extern	_Errno
+	.extern	printf
+	.extern	CAN_vInit
+	.extern	CAN_vTransmit
+	.extern	CAN_vLoadData
+	.extern	pll_init
+	.extern	ground_component
+	.extern	__printf_noarg
+	.extern	__rt_udivmod
+	.extern	__INDIRECT__
+	.calls	'cancom_timer_interrupt','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L136:
+	.word	3070
+	.half	3
+	.word	.L137
+	.byte	4
+.L135:
+	.byte	1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L138
+	.byte	2
+	.byte	'endinit_clear',0,3,1,159,1,13,1,1
+.L321:
+	.byte	3
+	.byte	'int',0,4,5,4
+	.byte	'x',0,1,159,1,31
+	.word	179
+	.byte	5,0,2
+	.byte	'endinit_set',0,3,1,169,1,13,1,1,4
+	.byte	'x',0,1,169,1,29
+	.word	179
+	.byte	5,0
+.L338:
+	.byte	3
+	.byte	'unsigned int',0,4,7
+.L408:
+	.byte	6
+	.byte	'neza',0,3,1,179,1,17
+	.word	232
+	.byte	1,1,7
+	.byte	'void',0,8
+	.word	265
+.L411:
+	.byte	4
+	.byte	'p',0,1,179,1,28
+	.word	271
+.L413:
+	.byte	5,0,2
+	.byte	'nops',0,3,1,143,2,13,1,1,4
+	.byte	'cnt',0,1,143,2,24
+	.word	271
+	.byte	5,0,9,1,75,9,64,10,1,76,5,64,11
+	.byte	'pcxi',0,4
+	.word	232
+	.byte	2,35,0,11
+	.byte	'psw',0,4
+	.word	232
+	.byte	2,35,4,11
+	.byte	'a10',0,4
+	.word	271
+	.byte	2,35,8,11
+	.byte	'a11',0,4
+	.word	271
+	.byte	2,35,12,11
+	.byte	'd8',0,4
+	.word	232
+	.byte	2,35,16,11
+	.byte	'd9',0,4
+	.word	232
+	.byte	2,35,20,11
+	.byte	'd10',0,4
+	.word	232
+	.byte	2,35,24,11
+	.byte	'd11',0,4
+	.word	232
+	.byte	2,35,28,11
+	.byte	'a12',0,4
+	.word	232
+	.byte	2,35,32,11
+	.byte	'a13',0,4
+	.word	232
+	.byte	2,35,36,11
+	.byte	'a14',0,4
+	.word	232
+	.byte	2,35,40,11
+	.byte	'a15',0,4
+	.word	232
+	.byte	2,35,44,11
+	.byte	'd12',0,4
+	.word	232
+	.byte	2,35,48,11
+	.byte	'd13',0,4
+	.word	232
+	.byte	2,35,52,11
+	.byte	'd14',0,4
+	.word	232
+	.byte	2,35,56,11
+	.byte	'd15',0,4
+	.word	232
+	.byte	2,35,60,0,11
+	.byte	'u',0,64
+	.word	322
+	.byte	2,35,0,10,1,94,5,64,11
+	.byte	'pcxi',0,4
+	.word	232
+	.byte	2,35,0,12,1,1,13
+	.word	271
+	.byte	0
+.L347:
+	.byte	8
+	.word	565
+	.byte	11
+	.byte	'pc',0,4
+	.word	574
+	.byte	2,35,4,11
+	.byte	'a2',0,4
+	.word	232
+	.byte	2,35,8,11
+	.byte	'a3',0,4
+	.word	232
+	.byte	2,35,12,11
+	.byte	'd0',0,4
+	.word	232
+	.byte	2,35,16,11
+	.byte	'd1',0,4
+	.word	232
+	.byte	2,35,20,11
+	.byte	'd2',0,4
+	.word	232
+	.byte	2,35,24,11
+	.byte	'd3',0,4
+	.word	232
+	.byte	2,35,28,11
+	.byte	'a4',0,4
+	.word	271
+	.byte	2,35,32,11
+	.byte	'a5',0,4
+	.word	232
+	.byte	2,35,36,11
+	.byte	'a6',0,4
+	.word	232
+	.byte	2,35,40,11
+	.byte	'a7',0,4
+	.word	232
+	.byte	2,35,44,11
+	.byte	'd4',0,4
+	.word	232
+	.byte	2,35,48,11
+	.byte	'd5',0,4
+	.word	232
+	.byte	2,35,52,11
+	.byte	'd6',0,4
+	.word	232
+	.byte	2,35,56,11
+	.byte	'd7',0,4
+	.word	232
+	.byte	2,35,60,0,11
+	.byte	'l',0,64
+	.word	546
+	.byte	2,35,0,0
+.L353:
+	.byte	8
+	.word	317
+.L355:
+	.byte	6
+	.byte	'cx_to_addr',0,3,1,161,3,19
+	.word	772
+	.byte	1,1
+.L358:
+	.byte	4
+	.byte	'cx',0,1,161,3,39
+	.word	232
+.L360:
+	.byte	5,0
+.L324:
+	.byte	2
+	.byte	'led_init',0,3,2,12,13,1,1
+.L327:
+	.byte	5,0
+.L328:
+	.byte	2
+	.byte	'led_off_all',0,3,2,23,13,1,1
+.L331:
+	.byte	5,0
+.L365:
+	.byte	2
+	.byte	'schedule',0,3,3,201,2,13,1,1
+.L420:
+	.byte	5,0,14
+	.byte	'__imaskldmst',0,1,1,1,1,8
+	.word	179
+	.byte	13
+	.word	890
+	.byte	13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	0,15
+	.byte	'__insert',0
+	.word	179
+	.byte	1,1,1,1,13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	0,15
+	.byte	'__extru',0
+	.word	232
+	.byte	1,1,1,1,13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	0,15
+	.byte	'__clz',0
+	.word	179
+	.byte	1,1,1,1,13
+	.word	179
+	.byte	0,14
+	.byte	'__mtcr',0,1,1,1,1,13
+	.word	179
+	.byte	13
+	.word	179
+	.byte	0,16
+	.word	179
+	.byte	15
+	.byte	'__mfcr',0
+	.word	1032
+	.byte	1,1,1,1,13
+	.word	179
+	.byte	0,17
+	.byte	'__rslcx',0,1,1,1,1,17
+	.byte	'__dsync',0,1,1,1,1,18
+	.byte	'memset',0,4,48,17
+	.word	271
+	.byte	1,1,1,1,19,4,48,33
+	.word	271
+	.byte	19,4,48,36
+	.word	179
+	.byte	19,4,48,41
+	.word	232
+	.byte	0,3
+	.byte	'unsigned long long int',0,8,7,20
+	.byte	'clock',0,5,84,21
+	.word	1129
+	.byte	1,1,1,1,21
+	.word	157
+	.byte	22
+	.word	186
+	.byte	5,0,21
+	.word	199
+	.byte	22
+	.word	219
+	.byte	5,0,21
+	.word	248
+	.byte	22
+	.word	276
+	.byte	5,0,21
+	.word	289
+	.byte	22
+	.word	302
+	.byte	5,0,21
+	.word	777
+	.byte	22
+	.word	800
+	.byte	5,0,18
+	.byte	'printf',0,6,140,1,16
+	.word	179
+	.byte	1,1,1,1
+.L402:
+	.byte	3
+	.byte	'char',0,1,6,23
+	.word	1253
+	.byte	8
+	.word	1261
+	.byte	24
+	.word	1266
+	.byte	19,6,140,1,38
+	.word	1271
+	.byte	25,6,140,1,50,0,21
+	.word	814
+	.byte	5,0,21
+	.word	832
+	.byte	5,0,26
+	.byte	'CAN_vInit',0,7,129,1,6,1,1,1,1,27
+	.byte	'CAN_vTransmit',0,7,133,1,6,1,1,1,1
+.L386:
+	.byte	3
+	.byte	'unsigned char',0,1,8,4
+	.byte	'ubObjNr',0,7,133,1,26
+	.word	1347
+	.byte	0,27
+	.byte	'CAN_vLoadData',0,7,135,1,6,1,1,1,1,4
+	.byte	'ubObjNr',0,7,135,1,26
+	.word	1347
+.L373:
+	.byte	8
+	.word	1347
+	.byte	4
+	.byte	'pubData',0,7,135,1,42
+	.word	1422
+	.byte	0,20
+	.byte	'pll_init',0,8,92,5
+	.word	179
+	.byte	1,1,1,1,28
+	.byte	'hwc_s',0,8,36,16,124,11
+	.byte	'dual_state',0,4
+	.word	232
+	.byte	2,35,0,11
+	.byte	'is_finished',0,4
+	.word	232
+	.byte	2,35,4,8
+	.word	1466
+	.byte	11
+	.byte	'link_component',0,4
+	.word	1518
+	.byte	2,35,8,11
+	.byte	'period',0,4
+	.word	232
+	.byte	2,35,12,11
+	.byte	'budget',0,4
+	.word	232
+	.byte	2,35,16,11
+	.byte	'relative_deadline',0,4
+	.word	232
+	.byte	2,35,20,11
+	.byte	'offset',0,4
+	.word	232
+	.byte	2,35,24,11
+	.byte	'next_release_time',0,4
+	.word	232
+	.byte	2,35,28,11
+	.byte	'remaining_budget',0,4
+	.word	232
+	.byte	2,35,32,11
+	.byte	'absolute_deadline',0,4
+	.word	232
+	.byte	2,35,36,28
+	.byte	'swc_s',0,8,23,16,44,11
+	.byte	'task_state',0,4
+	.word	232
+	.byte	2,35,0,11
+	.byte	'absolute_deadline',0,4
+	.word	232
+	.byte	2,35,4,11
+	.byte	'relative_deadline',0,4
+	.word	232
+	.byte	2,35,8,11
+	.byte	'next_release_time',0,4
+	.word	232
+	.byte	2,35,12,11
+	.byte	'lcx',0,4
+	.word	232
+	.byte	2,35,16,11
+	.byte	'priority',0,4
+	.word	232
+	.byte	2,35,20,11
+	.byte	'period',0,4
+	.word	232
+	.byte	2,35,24,11
+	.byte	'release_timestamp',0,8
+	.word	1129
+	.byte	2,35,28,8
+	.word	232
+	.byte	11
+	.byte	'arg',0,4
+	.word	1888
+	.byte	2,35,36,29,4
+	.word	232
+	.byte	30,0,0,11
+	.byte	'stack',0,4
+	.word	1906
+	.byte	2,35,40,0,8
+	.word	1702
+.L334:
+	.byte	31
+	.byte	'swc_t',0,8,34,4
+	.word	1931
+	.byte	29,40
+	.word	1936
+	.byte	30,9,0,11
+	.byte	'runnable_tasks',0,40
+	.word	1950
+	.byte	2,35,40,11
+	.byte	'suspended_tasks',0,40
+	.word	1950
+	.byte	2,35,80,11
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	232
+	.byte	2,35,120,0,8
+	.word	1466
+	.byte	8
+	.word	1702
+.L332:
+	.byte	31
+	.byte	'hwc_t',0,8,50,4
+	.word	1518
+.L350:
+	.byte	28
+	.byte	'task_attr_s',0,8,52,16,12,32
+	.byte	'user_e',0,9,9,6,1,33
+	.byte	'USER0',0,0,33
+	.byte	'USER1',0,1,33
+	.byte	'SUPER',0,2,0,11
+	.byte	'mode',0,1
+	.word	2081
+	.byte	2,35,0,11
+	.byte	'call_depth_overflow',0,4
+	.word	232
+	.byte	2,35,2,11
+	.byte	'stacksize',0,4
+	.word	232
+	.byte	2,35,6,0,8
+	.word	2064
+	.byte	8
+	.word	2064
+.L345:
+	.byte	31
+	.byte	'task_attr_t',0,8,56,4
+	.word	2186
+	.byte	28
+	.byte	'ScheduleInfo',0,3,37,8,24,11
+	.byte	'releaseTime',0,4
+	.word	232
+	.byte	2,35,0,11
+	.byte	'deadline',0,4
+	.word	232
+	.byte	2,35,4,11
+	.byte	'isFinished',0,1
+	.word	1347
+	.byte	2,35,8,11
+	.byte	'runnableTask',0,4
+	.word	1936
+	.byte	2,35,12,11
+	.byte	'idleTask',0,4
+	.word	1936
+	.byte	2,35,16,11
+	.byte	'next',0,4
+	.word	.L388-.L136
+	.byte	2,35,20,0
+.L388:
+	.byte	8
+	.word	2211
+	.byte	34
+	.byte	'__INDIRECT__',0,3,1,1,1,1,1,31
+	.byte	'__prof_adm',0,3,1,1
+	.word	271
+	.byte	35,1,8
+	.word	2387
+	.byte	31
+	.byte	'__codeptr',0,3,1,1
+	.word	2389
+	.byte	9,10,145,19,18,4,10,10,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,36
+	.byte	'CNT1',0,4
+	.word	2424
+	.byte	12,20,2,35,0,37,4
+	.word	2424
+	.byte	2,18,2,35,0,36
+	.byte	'TOS',0,4
+	.word	2424
+	.byte	2,16,2,35,0,36
+	.byte	'SRPN',0,4
+	.word	2424
+	.byte	8,8,2,35,0,36
+	.byte	'CPPN',0,4
+	.word	2424
+	.byte	8,0,2,35,0,0,11
+	.byte	'B',0,4
+	.word	2418
+	.byte	2,35,0,11
+	.byte	'I',0,4
+	.word	179
+	.byte	2,35,0,11
+	.byte	'U',0,4
+	.word	232
+	.byte	2,35,0,0,16
+	.word	2412
+	.byte	31
+	.byte	'PCP_GPR6_type',0,10,158,19,3
+	.word	2549
+	.byte	9,10,160,19,18,4,10,10,162,19,2,4,36
+	.byte	'Z',0,4
+	.word	2424
+	.byte	1,31,2,35,0,36
+	.byte	'N',0,4
+	.word	2424
+	.byte	1,30,2,35,0,36
+	.byte	'C',0,4
+	.word	2424
+	.byte	1,29,2,35,0,36
+	.byte	'V',0,4
+	.word	2424
+	.byte	1,28,2,35,0,36
+	.byte	'CNZ',0,4
+	.word	2424
+	.byte	1,27,2,35,0,36
+	.byte	'IEN',0,4
+	.word	2424
+	.byte	1,26,2,35,0,36
+	.byte	'CEN',0,4
+	.word	2424
+	.byte	1,25,2,35,0,37,4
+	.word	2424
+	.byte	1,24,2,35,0,36
+	.byte	'DPTR',0,4
+	.word	2424
+	.byte	8,16,2,35,0,37,4
+	.word	2424
+	.byte	16,0,2,35,0,0,11
+	.byte	'B',0,4
+	.word	2583
+	.byte	2,35,0,11
+	.byte	'I',0,4
+	.word	179
+	.byte	2,35,0,11
+	.byte	'U',0,4
+	.word	232
+	.byte	2,35,0,0,16
+	.word	2577
+	.byte	31
+	.byte	'PCP_GPR7_type',0,10,178,19,3
+	.word	2759
+	.byte	31
+	.byte	'size_t',0,11,21,25
+	.word	232
+	.byte	31
+	.byte	'clock_t',0,5,32,33
+	.word	1129
+	.byte	3
+	.byte	'unsigned short int',0,2,7,31
+	.byte	'uint16_t',0,12,24,33
+	.word	2818
+	.byte	31
+	.byte	'uint32_t',0,12,26,33
+	.word	232
+	.byte	38
+	.byte	'_Errno',0,13,19,21
+	.word	179
+	.byte	1,1,31
+	.byte	'context_t',0,1,112,3
+	.word	317
+	.byte	31
+	.byte	'_iob_flag_t',0,6,75,25
+	.word	2818
+	.byte	31
+	.byte	'ubyte',0,14,69,24
+	.word	1347
+	.byte	31
+	.byte	'ushort',0,14,71,24
+	.word	2818
+	.byte	31
+	.byte	'uword',0,14,73,24
+	.word	232
+	.byte	38
+	.byte	'ground_component',0,3,14,14
+	.word	2050
+	.byte	1,1
+.L437:
+	.byte	29,80
+	.word	232
+	.byte	30,19,0
+.L438:
+	.byte	29,20
+	.word	2050
+	.byte	30,4,0
+.L439:
+	.byte	16
+	.word	232
+.L440:
+	.byte	29,30
+	.word	1347
+	.byte	30,29,0
+.L441:
+	.byte	29,50
+	.word	1347
+	.byte	30,49,0,31
+	.byte	'sInfo',0,3,35,29
+	.word	2211
+.L442:
+	.byte	29,224,3
+	.word	2211
+	.byte	30,19,0
+.L443:
+	.byte	29,20
+	.word	1347
+	.byte	30,19,0,0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L137:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,36
+	.byte	0,3,8,11,15,62,15,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,11,0,0,0,6,46,1,3,8,32,13,58,15,59,15,57
+	.byte	15,73,19,54,15,39,12,0,0,7,59,0,3,8,0,0,8,15,0,73,19,0,0,9,23,1,58,15,59,15,57,15,11,15,0,0,10,19,1,58
+	.byte	15,59,15,57,15,11,15,0,0,11,13,0,3,8,11,15,73,19,56,9,0,0,12,21,1,54,15,39,12,0,0,13,5,0,73,19,0,0,14
+	.byte	46,1,3,8,54,15,39,12,63,12,60,12,0,0,15,46,1,3,8,73,19,54,15,39,12,63,12,60,12,0,0,16,53,0,73,19,0,0,17
+	.byte	46,0,3,8,54,15,39,12,63,12,60,12,0,0,18,46,1,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0,19
+	.byte	5,0,58,15,59,15,57,15,73,19,0,0,20,46,0,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0,21,46
+	.byte	1,49,19,0,0,22,5,0,49,19,0,0,23,38,0,73,19,0,0,24,55,0,73,19,0,0,25,24,0,58,15,59,15,57,15,0,0,26,46,0
+	.byte	3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,27,46,1,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12
+	.byte	0,0,28,19,1,3,8,58,15,59,15,57,15,11,15,0,0,29,1,1,11,15,73,19,0,0,30,33,0,47,15,0,0,31,22,0,3,8,58,15
+	.byte	59,15,57,15,73,19,0,0,32,4,1,3,8,58,15,59,15,57,15,11,15,0,0,33,40,0,3,8,28,13,0,0,34,46,0,3,8,58,15,59
+	.byte	15,57,15,54,15,63,12,60,12,0,0,35,21,0,54,15,0,0,36,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,37,13,0
+	.byte	11,15,73,19,13,15,12,15,56,9,0,0,38,52,0,3,8,58,15,59,15,57,15,73,19,63,12,60,12,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L138:
+	.word	.L486-.L485
+.L485:
+	.half	3
+	.word	.L488-.L487
+.L487:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\intrinsic.h',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0
+	.byte	'..\\kernel.c',0,0,0,0
+	.byte	'string.h',0,1,0,0
+	.byte	'time.h',0,1,0,0
+	.byte	'stdio.h',0,1,0,0
+	.byte	'..\\CAN.h',0,0,0,0
+	.byte	'..\\kernel.h',0,0,0,0
+	.byte	'..\\constants.h',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdlib.h',0,1,0,0
+	.byte	'stdint.h',0,1,0,0
+	.byte	'errno.h',0,1,0,0
+	.byte	'..\\MAIN.h',0,0,0,0,0
+.L488:
+.L486:
+	.sdecl	'.debug_info',debug,cluster('can_init')
+	.sect	'.debug_info'
+.L139:
+	.word	206
+	.half	3
+	.word	.L140
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L142,.L141
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'can_init',0,1,178,1,5
+	.word	.L321
+	.byte	1,1,1
+	.word	.L88,.L322,.L87
+	.byte	4
+	.word	.L88,.L322
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('can_init')
+	.sect	'.debug_abbrev'
+.L140:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('can_init')
+	.sect	'.debug_line'
+.L141:
+	.word	.L490-.L489
+.L489:
+	.half	3
+	.word	.L492-.L491
+.L491:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L492:
+	.byte	5,11,7,0,5,2
+	.word	.L88
+	.byte	3,179,1,1,5,18,9
+	.half	.L493-.L88
+	.byte	3,2,1,5,9,3,1,1,5,50,9
+	.half	.L494-.L493
+	.byte	1,5,16,3,127,1,5,9,9
+	.half	.L495-.L494
+	.byte	3,1,1,5,50,9
+	.half	.L496-.L495
+	.byte	1,5,9,9
+	.half	.L497-.L496
+	.byte	3,1,1,5,20,9
+	.half	.L498-.L497
+	.byte	1,5,44,9
+	.half	.L499-.L498
+	.byte	1,5,2,9
+	.half	.L500-.L499
+	.byte	3,3,1,9
+	.half	.L501-.L500
+	.byte	3,1,1,9
+	.half	.L502-.L501
+	.byte	3,5,1,9
+	.half	.L503-.L502
+	.byte	3,1,1,9
+	.half	.L504-.L503
+	.byte	3,1,1,5,1,9
+	.half	.L505-.L504
+	.byte	3,3,1,7,9
+	.half	.L143-.L505
+	.byte	0,1,1
+.L490:
+	.sdecl	'.debug_ranges',debug,cluster('can_init')
+	.sect	'.debug_ranges'
+.L142:
+	.word	-1,.L88,0,.L143-.L88,0,0
+	.sdecl	'.debug_info',debug,cluster('init_hardware')
+	.sect	'.debug_info'
+.L144:
+	.word	262
+	.half	3
+	.word	.L145
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L147,.L146
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'init_hardware',0,1,165,1,6,1,1,1
+	.word	.L86,.L323,.L85
+	.byte	4
+	.word	.L86,.L323
+	.byte	5
+	.word	.L324,.L325,.L326
+	.byte	6
+	.word	.L327,.L325,.L326
+	.byte	0,5
+	.word	.L328,.L329,.L330
+	.byte	6
+	.word	.L331,.L329,.L330
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('init_hardware')
+	.sect	'.debug_abbrev'
+.L145:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,29,1,49,16,17,1,18,1,0,0,6,11,0,49,16,17,1,18,1
+	.byte	0,0,0
+	.sdecl	'.debug_line',debug,cluster('init_hardware')
+	.sect	'.debug_line'
+.L146:
+	.word	.L507-.L506
+.L506:
+	.half	3
+	.word	.L509-.L508
+.L508:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0,0
+.L509:
+	.byte	5,12,7,0,5,2
+	.word	.L86
+	.byte	3,166,1,1,5,13,9
+	.half	.L510-.L86
+	.byte	3,1,1,5,12,9
+	.half	.L511-.L510
+	.byte	3,1,1,4,2,5,18,9
+	.half	.L325-.L511
+	.byte	3,229,126,1,5,16,9
+	.half	.L512-.L325
+	.byte	1,9
+	.half	.L513-.L512
+	.byte	3,1,1,4,1,5,12,9
+	.half	.L326-.L513
+	.byte	3,156,1,1,4,2,5,11,9
+	.half	.L329-.L326
+	.byte	3,238,126,1,5,14,9
+	.half	.L514-.L329
+	.byte	1,4,1,5,10,9
+	.half	.L330-.L514
+	.byte	3,148,1,1,5,12,9
+	.half	.L515-.L330
+	.byte	3,1,1,5,19,9
+	.half	.L516-.L515
+	.byte	3,1,1,5,1,9
+	.half	.L148-.L516
+	.byte	3,1,0,1,1
+.L507:
+	.sdecl	'.debug_ranges',debug,cluster('init_hardware')
+	.sect	'.debug_ranges'
+.L147:
+	.word	-1,.L86,0,.L148-.L86,0,0
+	.sdecl	'.debug_info',debug,cluster('get_running_component')
+	.sect	'.debug_info'
+.L149:
+	.word	219
+	.half	3
+	.word	.L150
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L152,.L151
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'get_running_component',0,1,208,1,7
+	.word	.L332
+	.byte	1,1,1
+	.word	.L92,.L333,.L91
+	.byte	4
+	.word	.L92,.L333
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('get_running_component')
+	.sect	'.debug_abbrev'
+.L150:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('get_running_component')
+	.sect	'.debug_line'
+.L151:
+	.word	.L518-.L517
+.L517:
+	.half	3
+	.word	.L520-.L519
+.L519:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L520:
+	.byte	5,12,7,0,5,2
+	.word	.L92
+	.byte	3,209,1,1,5,1,9
+	.half	.L521-.L92
+	.byte	3,1,1,7,9
+	.half	.L153-.L521
+	.byte	0,1,1
+.L518:
+	.sdecl	'.debug_ranges',debug,cluster('get_running_component')
+	.sect	'.debug_ranges'
+.L152:
+	.word	-1,.L92,0,.L153-.L92,0,0
+	.sdecl	'.debug_info',debug,cluster('get_running_task')
+	.sect	'.debug_info'
+.L154:
+	.word	214
+	.half	3
+	.word	.L155
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L157,.L156
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'get_running_task',0,1,160,2,7
+	.word	.L334
+	.byte	1,1,1
+	.word	.L100,.L335,.L99
+	.byte	4
+	.word	.L100,.L335
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('get_running_task')
+	.sect	'.debug_abbrev'
+.L155:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('get_running_task')
+	.sect	'.debug_line'
+.L156:
+	.word	.L523-.L522
+.L522:
+	.half	3
+	.word	.L525-.L524
+.L524:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L525:
+	.byte	5,9,7,0,5,2
+	.word	.L100
+	.byte	3,161,2,1,5,1,9
+	.half	.L526-.L100
+	.byte	3,1,1,7,9
+	.half	.L158-.L526
+	.byte	0,1,1
+.L523:
+	.sdecl	'.debug_ranges',debug,cluster('get_running_task')
+	.sect	'.debug_ranges'
+.L157:
+	.word	-1,.L100,0,.L158-.L100,0,0
+	.sdecl	'.debug_info',debug,cluster('set_running_component')
+	.sect	'.debug_info'
+.L159:
+	.word	238
+	.half	3
+	.word	.L160
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L162,.L161
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'set_running_component',0,1,213,1,6,1,1,1
+	.word	.L94,.L336,.L93
+	.byte	4
+	.byte	'component',0,1,213,1,34
+	.word	.L332,.L337
+	.byte	5
+	.word	.L94,.L336
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('set_running_component')
+	.sect	'.debug_abbrev'
+.L160:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('set_running_component')
+	.sect	'.debug_line'
+.L161:
+	.word	.L528-.L527
+.L527:
+	.half	3
+	.word	.L530-.L529
+.L529:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L530:
+	.byte	5,20,7,0,5,2
+	.word	.L94
+	.byte	3,214,1,1,5,1,9
+	.half	.L531-.L94
+	.byte	3,1,1,7,9
+	.half	.L163-.L531
+	.byte	0,1,1
+.L528:
+	.sdecl	'.debug_ranges',debug,cluster('set_running_component')
+	.sect	'.debug_ranges'
+.L162:
+	.word	-1,.L94,0,.L163-.L94,0,0
+	.sdecl	'.debug_info',debug,cluster('get_jiffies')
+	.sect	'.debug_info'
+.L164:
+	.word	209
+	.half	3
+	.word	.L165
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L167,.L166
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'get_jiffies',0,1,165,2,10
+	.word	.L338
+	.byte	1,1,1
+	.word	.L102,.L339,.L101
+	.byte	4
+	.word	.L102,.L339
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('get_jiffies')
+	.sect	'.debug_abbrev'
+.L165:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('get_jiffies')
+	.sect	'.debug_line'
+.L166:
+	.word	.L533-.L532
+.L532:
+	.half	3
+	.word	.L535-.L534
+.L534:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L535:
+	.byte	5,12,7,0,5,2
+	.word	.L102
+	.byte	3,166,2,1,5,1,9
+	.half	.L536-.L102
+	.byte	3,1,1,7,9
+	.half	.L168-.L536
+	.byte	0,1,1
+.L533:
+	.sdecl	'.debug_ranges',debug,cluster('get_jiffies')
+	.sect	'.debug_ranges'
+.L167:
+	.word	-1,.L102,0,.L168-.L102,0,0
+	.sdecl	'.debug_info',debug,cluster('create_component')
+	.sect	'.debug_info'
+.L169:
+	.word	237
+	.half	3
+	.word	.L170
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L172,.L171
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'create_component',0,1,218,1,5
+	.word	.L321
+	.byte	1,1,1
+	.word	.L96,.L340,.L95
+	.byte	4
+	.byte	'component',0,1,218,1,28
+	.word	.L332,.L341
+	.byte	5
+	.word	.L96,.L340
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('create_component')
+	.sect	'.debug_abbrev'
+.L170:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('create_component')
+	.sect	'.debug_line'
+.L171:
+	.word	.L538-.L537
+.L537:
+	.half	3
+	.word	.L540-.L539
+.L539:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L540:
+	.byte	5,5,7,0,5,2
+	.word	.L96
+	.byte	3,217,1,1,5,45,9
+	.half	.L459-.L96
+	.byte	3,2,1,5,34,9
+	.half	.L541-.L459
+	.byte	1,5,45,9
+	.half	.L542-.L541
+	.byte	3,1,1,5,65,9
+	.half	.L543-.L542
+	.byte	1,5,54,9
+	.half	.L544-.L543
+	.byte	1,5,34,1,5,35,9
+	.half	.L545-.L544
+	.byte	3,1,1,5,33,1,5,45,9
+	.half	.L546-.L545
+	.byte	3,2,1,5,21,1,5,45,9
+	.half	.L458-.L546
+	.byte	1,5,40,9
+	.half	.L547-.L458
+	.byte	3,1,1,5,21,1,5,46,9
+	.half	.L548-.L547
+	.byte	1,5,40,9
+	.half	.L549-.L548
+	.byte	3,1,1,5,38,1,5,16,9
+	.half	.L550-.L549
+	.byte	3,2,1,5,5,9
+	.half	.L551-.L550
+	.byte	1,5,15,9
+	.half	.L552-.L551
+	.byte	1,5,30,9
+	.half	.L553-.L552
+	.byte	1,5,17,9
+	.half	.L554-.L553
+	.byte	3,1,1,5,1,9
+	.half	.L555-.L554
+	.byte	3,3,1,7,9
+	.half	.L173-.L555
+	.byte	0,1,1
+.L538:
+	.sdecl	'.debug_ranges',debug,cluster('create_component')
+	.sect	'.debug_ranges'
+.L172:
+	.word	-1,.L96,0,.L173-.L96,0,0
+	.sdecl	'.debug_info',debug,cluster('create_task')
+	.sect	'.debug_info'
+.L174:
+	.word	445
+	.half	3
+	.word	.L175
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L177,.L176
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'create_task',0,1,234,1,5
+	.word	.L321
+	.byte	1,1,1
+	.word	.L98,.L342,.L97
+	.byte	4
+	.byte	'component',0,1,234,1,23
+	.word	.L332,.L343
+	.byte	4
+	.byte	'task',0,1,234,1,40
+	.word	.L334,.L344
+	.byte	4
+	.byte	'attr',0,1,234,1,58
+	.word	.L345,.L346
+	.byte	4
+	.byte	'func',0,1,234,1,71
+	.word	.L347,.L348
+	.byte	4
+	.byte	'is_suspended_on_creation',0,1,234,1,95
+	.word	.L338,.L349
+	.byte	5
+	.word	.L98,.L342
+	.byte	6
+	.byte	'default_attr',0,1,236,1,24
+	.word	.L350,.L351
+	.byte	6
+	.byte	'fcx',0,1,238,1,14
+	.word	.L338,.L352
+	.byte	6
+	.byte	'cx',0,1,239,1,16
+	.word	.L353,.L354
+	.byte	7
+	.word	.L355,.L356,.L357
+	.byte	8
+	.word	.L358,.L359
+	.byte	9
+	.word	.L360,.L356,.L357
+	.byte	0,5
+	.word	.L361,.L342
+	.byte	6
+	.byte	'i',0,1,140,2,14
+	.word	.L338,.L362
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('create_task')
+	.sect	'.debug_abbrev'
+.L175:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,7,29,1,49,16,17,1,18,1,0,0,8,5,0,49,16,2,6,0,0,9,11,0,49,16,17
+	.byte	1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('create_task')
+	.sect	'.debug_line'
+.L176:
+	.word	.L557-.L556
+.L556:
+	.half	3
+	.word	.L559-.L558
+.L558:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0
+	.byte	'..\\intrinsic.h',0,0,0,0,0
+.L559:
+	.byte	5,5,7,0,5,2
+	.word	.L98
+	.byte	3,233,1,1,5,39,9
+	.half	.L460-.L98
+	.byte	3,2,1,5,37,9
+	.half	.L560-.L460
+	.byte	1,5,5,9
+	.half	.L561-.L560
+	.byte	3,5,1,5,17,7,9
+	.half	.L461-.L561
+	.byte	3,1,1,9
+	.half	.L29-.L461
+	.byte	3,2,1,5,21,9
+	.half	.L462-.L29
+	.byte	3,1,1,5,15,1,5,21,9
+	.half	.L562-.L462
+	.byte	3,1,1,5,11,9
+	.half	.L563-.L562
+	.byte	1,4,2,5,30,9
+	.half	.L356-.L563
+	.byte	3,172,1,1,5,42,9
+	.half	.L564-.L356
+	.byte	3,1,1,5,34,9
+	.half	.L565-.L564
+	.byte	1,5,5,9
+	.half	.L566-.L565
+	.byte	1,4,1,5,19,9
+	.half	.L357-.L566
+	.byte	3,215,126,1,5,26,9
+	.half	.L567-.L357
+	.byte	1,5,13,9
+	.half	.L568-.L567
+	.byte	3,3,1,5,19,3,1,1,5,13,9
+	.half	.L569-.L568
+	.byte	1,5,15,3,123,1,5,31,9
+	.half	.L570-.L569
+	.byte	3,6,1,5,29,9
+	.half	.L571-.L570
+	.byte	1,5,15,9
+	.half	.L572-.L571
+	.byte	1,5,17,9
+	.half	.L573-.L572
+	.byte	3,1,1,5,15,9
+	.half	.L574-.L573
+	.byte	1,5,18,9
+	.half	.L575-.L574
+	.byte	3,1,1,5,16,1,5,13,9
+	.half	.L576-.L575
+	.byte	3,5,1,5,16,3,125,1,5,14,9
+	.half	.L577-.L576
+	.byte	3,4,1,5,22,9
+	.half	.L361-.L577
+	.byte	3,5,1,5,44,9
+	.half	.L463-.L361
+	.byte	3,5,1,5,5,9
+	.half	.L578-.L463
+	.byte	3,125,1,5,33,7,9
+	.half	.L579-.L578
+	.byte	3,3,1,5,44,9
+	.half	.L580-.L579
+	.byte	3,1,1,5,59,9
+	.half	.L581-.L580
+	.byte	1,5,53,9
+	.half	.L582-.L581
+	.byte	1,5,33,1,5,37,9
+	.half	.L583-.L582
+	.byte	3,1,1,5,41,9
+	.half	.L584-.L583
+	.byte	1,5,52,9
+	.half	.L585-.L584
+	.byte	3,126,1,5,33,9
+	.half	.L30-.L585
+	.byte	3,7,1,5,44,9
+	.half	.L586-.L30
+	.byte	3,1,1,5,59,9
+	.half	.L587-.L586
+	.byte	1,5,53,9
+	.half	.L588-.L587
+	.byte	1,5,33,1,5,36,9
+	.half	.L589-.L588
+	.byte	3,1,1,5,40,9
+	.half	.L590-.L589
+	.byte	1,5,9,9
+	.half	.L591-.L590
+	.byte	3,1,1,5,12,9
+	.half	.L31-.L591
+	.byte	3,2,1,5,1,9
+	.half	.L592-.L31
+	.byte	3,1,1,7,9
+	.half	.L178-.L592
+	.byte	0,1,1
+.L557:
+	.sdecl	'.debug_ranges',debug,cluster('create_task')
+	.sect	'.debug_ranges'
+.L177:
+	.word	-1,.L98,0,.L178-.L98,0,0
+	.sdecl	'.debug_info',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_info'
+.L179:
+	.word	215
+	.half	3
+	.word	.L180
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L182,.L181
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'init_timer_interrupt',0,2,1,170,2,13,1,1,1
+	.word	.L104,.L363,.L103
+	.byte	4
+	.word	.L104,.L363
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_abbrev'
+.L180:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,32,13,58,15,59,15,57,15
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_line'
+.L181:
+	.word	.L594-.L593
+.L593:
+	.half	3
+	.word	.L596-.L595
+.L595:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L596:
+	.byte	5,12,7,0,5,2
+	.word	.L104
+	.byte	3,172,2,1,5,15,9
+	.half	.L597-.L104
+	.byte	3,1,1,5,10,3,127,1,5,13,9
+	.half	.L598-.L597
+	.byte	3,1,1,9
+	.half	.L599-.L598
+	.byte	3,1,1,5,21,9
+	.half	.L600-.L599
+	.byte	1,5,24,9
+	.half	.L601-.L600
+	.byte	3,1,1,5,13,1,5,22,9
+	.half	.L602-.L601
+	.byte	1,5,11,9
+	.half	.L603-.L602
+	.byte	3,1,1,5,19,9
+	.half	.L604-.L603
+	.byte	1,5,11,9
+	.half	.L605-.L604
+	.byte	3,1,1,5,19,9
+	.half	.L606-.L605
+	.byte	1,5,22,9
+	.half	.L607-.L606
+	.byte	3,1,1,5,13,1,5,18,9
+	.half	.L608-.L607
+	.byte	3,3,1,5,16,1,9
+	.half	.L609-.L608
+	.byte	3,1,1,5,24,9
+	.half	.L610-.L609
+	.byte	1,5,16,9
+	.half	.L611-.L610
+	.byte	3,1,1,5,25,9
+	.half	.L612-.L611
+	.byte	1,5,14,9
+	.half	.L613-.L612
+	.byte	3,1,1,5,22,9
+	.half	.L614-.L613
+	.byte	1,5,14,9
+	.half	.L615-.L614
+	.byte	3,1,1,5,22,9
+	.half	.L616-.L615
+	.byte	1,5,25,9
+	.half	.L617-.L616
+	.byte	3,1,1,5,16,1,5,1,9
+	.half	.L618-.L617
+	.byte	3,1,1,7,9
+	.half	.L183-.L618
+	.byte	0,1,1
+.L594:
+	.sdecl	'.debug_ranges',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_ranges'
+.L182:
+	.word	-1,.L104,0,.L183-.L104,0,0
+	.sdecl	'.debug_info',debug,cluster('start_kernel')
+	.sect	'.debug_info'
+.L184:
+	.word	207
+	.half	3
+	.word	.L185
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L187,.L186
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'start_kernel',0,2,1,190,2,13,1,1,1
+	.word	.L106,.L364,.L105
+	.byte	4
+	.word	.L106,.L364
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('start_kernel')
+	.sect	'.debug_abbrev'
+.L185:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,32,13,58,15,59,15,57,15
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('start_kernel')
+	.sect	'.debug_line'
+.L186:
+	.word	.L620-.L619
+.L619:
+	.half	3
+	.word	.L622-.L621
+.L621:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L622:
+	.byte	5,17,7,0,5,2
+	.word	.L106
+	.byte	3,191,2,1,5,61,9
+	.half	.L623-.L106
+	.byte	1,5,78,9
+	.half	.L624-.L623
+	.byte	1,5,60,9
+	.half	.L625-.L624
+	.byte	1,5,53,9
+	.half	.L626-.L625
+	.byte	1,5,49,9
+	.half	.L627-.L626
+	.byte	1,5,15,9
+	.half	.L628-.L627
+	.byte	1,5,12,9
+	.half	.L629-.L628
+	.byte	3,2,1,5,30,9
+	.half	.L630-.L629
+	.byte	3,1,1,5,11,9
+	.half	.L631-.L630
+	.byte	1,5,12,9
+	.half	.L632-.L631
+	.byte	3,1,1,5,5,9
+	.half	.L633-.L632
+	.byte	3,2,1,5,1,9
+	.half	.L634-.L633
+	.byte	3,1,1,7,9
+	.half	.L188-.L634
+	.byte	0,1,1
+.L620:
+	.sdecl	'.debug_ranges',debug,cluster('start_kernel')
+	.sect	'.debug_ranges'
+.L187:
+	.word	-1,.L106,0,.L188-.L106,0,0
+	.sdecl	'.debug_info',debug,cluster('schedule')
+	.sect	'.debug_info'
+.L189:
+	.word	187
+	.half	3
+	.word	.L190
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L192,.L191
+	.byte	2
+	.word	.L135
+	.byte	3
+	.word	.L365
+	.byte	1
+	.word	.L108,.L366,.L107
+	.byte	4
+	.word	.L367
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('schedule')
+	.sect	'.debug_abbrev'
+.L190:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,49,16,63,12,17,1,18,1,64,6
+	.byte	0,0,4,11,0,85,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('schedule')
+	.sect	'.debug_line'
+.L191:
+	.word	.L636-.L635
+.L635:
+	.half	3
+	.word	.L638-.L637
+.L637:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L638:
+	.byte	5,5,7,0,5,2
+	.word	.L108
+	.byte	3,208,2,1,5,12,9
+	.half	.L639-.L108
+	.byte	3,4,1,5,30,9
+	.half	.L640-.L639
+	.byte	3,1,1,5,11,9
+	.half	.L641-.L640
+	.byte	1,5,12,9
+	.half	.L642-.L641
+	.byte	3,1,1,5,5,9
+	.half	.L643-.L642
+	.byte	3,2,1,5,1,9
+	.half	.L644-.L643
+	.byte	3,1,1,7,9
+	.half	.L193-.L644
+	.byte	0,1,1
+.L636:
+	.sdecl	'.debug_ranges',debug,cluster('schedule')
+	.sect	'.debug_ranges'
+.L192:
+	.word	-1,.L108,0,.L193-.L108,0,0
+.L367:
+	.word	-1,.L108,0,.L366-.L108,-1,.L110,0,.L288-.L110,0,0
+	.sdecl	'.debug_info',debug,cluster('set_delayed_output')
+	.sect	'.debug_info'
+.L194:
+	.word	250
+	.half	3
+	.word	.L195
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L197,.L196
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'set_delayed_output',0,1,143,3,6,1,1,1
+	.word	.L116,.L368,.L115
+	.byte	4
+	.byte	'mo_id',0,1,143,3,29
+	.word	.L321,.L369
+	.byte	4
+	.byte	'timer',0,1,143,3,45
+	.word	.L338,.L370
+	.byte	5
+	.word	.L116,.L368
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('set_delayed_output')
+	.sect	'.debug_abbrev'
+.L195:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('set_delayed_output')
+	.sect	'.debug_line'
+.L196:
+	.word	.L646-.L645
+.L645:
+	.half	3
+	.word	.L648-.L647
+.L647:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L648:
+	.byte	5,2,7,0,5,2
+	.word	.L116
+	.byte	3,144,3,1,5,24,9
+	.half	.L649-.L116
+	.byte	1,5,32,9
+	.half	.L650-.L649
+	.byte	1,5,1,9
+	.half	.L651-.L650
+	.byte	3,1,1,7,9
+	.half	.L198-.L651
+	.byte	0,1,1
+.L646:
+	.sdecl	'.debug_ranges',debug,cluster('set_delayed_output')
+	.sect	'.debug_ranges'
+.L197:
+	.word	-1,.L116,0,.L198-.L116,0,0
+	.sdecl	'.debug_info',debug,cluster('request')
+	.sect	'.debug_info'
+.L199:
+	.word	238
+	.half	3
+	.word	.L200
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L202,.L201
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'request',0,1,200,1,6,1,1,1
+	.word	.L90,.L371,.L89
+	.byte	4
+	.byte	'mo_id',0,1,200,1,18
+	.word	.L321,.L372
+	.byte	4
+	.byte	'data',0,1,200,1,32
+	.word	.L373,.L374
+	.byte	5
+	.word	.L90,.L371
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('request')
+	.sect	'.debug_abbrev'
+.L200:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('request')
+	.sect	'.debug_line'
+.L201:
+	.word	.L653-.L652
+.L652:
+	.half	3
+	.word	.L655-.L654
+.L654:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L655:
+	.byte	5,7,7,0,5,2
+	.word	.L90
+	.byte	3,201,1,1,5,21,9
+	.half	.L656-.L90
+	.byte	1,5,2,9
+	.half	.L657-.L656
+	.byte	1,5,27,7,9
+	.half	.L658-.L657
+	.byte	3,1,1,5,25,1,5,17,9
+	.half	.L659-.L658
+	.byte	3,1,1,5,31,9
+	.half	.L457-.L659
+	.byte	1,5,1,7,9
+	.half	.L25-.L457
+	.byte	3,2,1,7,9
+	.half	.L203-.L25
+	.byte	0,1,1
+.L653:
+	.sdecl	'.debug_ranges',debug,cluster('request')
+	.sect	'.debug_ranges'
+.L202:
+	.word	-1,.L90,0,.L203-.L90,0,0
+	.sdecl	'.debug_info',debug,cluster('link')
+	.sect	'.debug_info'
+.L204:
+	.word	235
+	.half	3
+	.word	.L205
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L207,.L206
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'link',0,1,148,3,6,1,1,1
+	.word	.L118,.L375,.L117
+	.byte	4
+	.byte	'high',0,1,148,3,17
+	.word	.L332,.L376
+	.byte	4
+	.byte	'trust',0,1,148,3,29
+	.word	.L332,.L377
+	.byte	5
+	.word	.L118,.L375
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('link')
+	.sect	'.debug_abbrev'
+.L205:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('link')
+	.sect	'.debug_line'
+.L206:
+	.word	.L661-.L660
+.L660:
+	.half	3
+	.word	.L663-.L662
+.L662:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L663:
+	.byte	5,21,7,0,5,2
+	.word	.L118
+	.byte	3,149,3,1,5,19,1,5,23,9
+	.half	.L664-.L118
+	.byte	3,1,1,5,22,9
+	.half	.L665-.L664
+	.byte	3,2,1,5,20,1,5,24,9
+	.half	.L666-.L665
+	.byte	3,1,1,5,1,9
+	.half	.L667-.L666
+	.byte	3,1,1,7,9
+	.half	.L208-.L667
+	.byte	0,1,1
+.L661:
+	.sdecl	'.debug_ranges',debug,cluster('link')
+	.sect	'.debug_ranges'
+.L207:
+	.word	-1,.L118,0,.L208-.L118,0,0
+	.sdecl	'.debug_info',debug,cluster('work_area_start')
+	.sect	'.debug_info'
+.L209:
+	.word	209
+	.half	3
+	.word	.L210
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L212,.L211
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'work_area_start',0,1,157,3,6,1,1,1
+	.word	.L120,.L378,.L119
+	.byte	4
+	.word	.L120,.L378
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('work_area_start')
+	.sect	'.debug_abbrev'
+.L210:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('work_area_start')
+	.sect	'.debug_line'
+.L211:
+	.word	.L669-.L668
+.L668:
+	.half	3
+	.word	.L671-.L670
+.L670:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L671:
+	.byte	5,2,7,0,5,2
+	.word	.L120
+	.byte	3,158,3,1,5,35,9
+	.half	.L672-.L120
+	.byte	1,5,33,1,5,1,9
+	.half	.L673-.L672
+	.byte	3,1,1,7,9
+	.half	.L213-.L673
+	.byte	0,1,1
+.L669:
+	.sdecl	'.debug_ranges',debug,cluster('work_area_start')
+	.sect	'.debug_ranges'
+.L212:
+	.word	-1,.L120,0,.L213-.L120,0,0
+	.sdecl	'.debug_info',debug,cluster('work_area_end')
+	.sect	'.debug_info'
+.L214:
+	.word	207
+	.half	3
+	.word	.L215
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L217,.L216
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'work_area_end',0,1,162,3,6,1,1,1
+	.word	.L122,.L379,.L121
+	.byte	4
+	.word	.L122,.L379
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('work_area_end')
+	.sect	'.debug_abbrev'
+.L215:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('work_area_end')
+	.sect	'.debug_line'
+.L216:
+	.word	.L675-.L674
+.L674:
+	.half	3
+	.word	.L677-.L676
+.L676:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L677:
+	.byte	5,2,7,0,5,2
+	.word	.L122
+	.byte	3,163,3,1,5,35,9
+	.half	.L678-.L122
+	.byte	1,5,33,1,5,1,9
+	.half	.L679-.L678
+	.byte	3,1,1,7,9
+	.half	.L218-.L679
+	.byte	0,1,1
+.L675:
+	.sdecl	'.debug_ranges',debug,cluster('work_area_end')
+	.sect	'.debug_ranges'
+.L217:
+	.word	-1,.L122,0,.L218-.L122,0,0
+	.sdecl	'.debug_info',debug,cluster('check_high_finished')
+	.sect	'.debug_info'
+.L219:
+	.word	217
+	.half	3
+	.word	.L220
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L222,.L221
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'check_high_finished',0,1,167,3,10
+	.word	.L338
+	.byte	1,1,1
+	.word	.L124,.L380,.L123
+	.byte	4
+	.word	.L124,.L380
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('check_high_finished')
+	.sect	'.debug_abbrev'
+.L220:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('check_high_finished')
+	.sect	'.debug_line'
+.L221:
+	.word	.L681-.L680
+.L680:
+	.half	3
+	.word	.L683-.L682
+.L682:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L683:
+	.byte	5,9,7,0,5,2
+	.word	.L124
+	.byte	3,168,3,1,5,26,9
+	.half	.L684-.L124
+	.byte	1,5,42,9
+	.half	.L685-.L684
+	.byte	1,5,1,9
+	.half	.L686-.L685
+	.byte	3,1,1,7,9
+	.half	.L223-.L686
+	.byte	0,1,1
+.L681:
+	.sdecl	'.debug_ranges',debug,cluster('check_high_finished')
+	.sect	'.debug_ranges'
+.L222:
+	.word	-1,.L124,0,.L223-.L124,0,0
+	.sdecl	'.debug_info',debug,cluster('addScheduleInfo')
+	.sect	'.debug_info'
+.L224:
+	.word	381
+	.half	3
+	.word	.L225
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L227,.L226
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'addScheduleInfo',0,1,95,6,1,1,1
+	.word	.L82,.L381,.L81
+	.byte	4
+	.byte	'releaseTime',0,1,95,28
+	.word	.L338,.L382
+	.byte	4
+	.byte	'deadline',0,1,95,47
+	.word	.L338,.L383
+	.byte	4
+	.byte	'runnableTask',0,1,95,63
+	.word	.L334,.L384
+	.byte	4
+	.byte	'idleTask',0,1,95,83
+	.word	.L334,.L385
+	.byte	5
+	.word	.L82,.L381
+	.byte	6
+	.byte	'didAdd',0,1,97,8
+	.word	.L386,.L387
+	.byte	6
+	.byte	'prevSInfo',0,1,98,9
+	.word	.L388,.L389
+	.byte	6
+	.byte	'walker',0,1,98,21
+	.word	.L388,.L390
+	.byte	6
+	.byte	'newSInfo',0,1,99,9
+	.word	.L388,.L391
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('addScheduleInfo')
+	.sect	'.debug_abbrev'
+.L225:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('addScheduleInfo')
+	.sect	'.debug_line'
+.L226:
+	.word	.L688-.L687
+.L687:
+	.half	3
+	.word	.L690-.L689
+.L689:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L690:
+	.byte	5,6,7,0,5,2
+	.word	.L82
+	.byte	3,222,0,1,5,15,9
+	.half	.L446-.L82
+	.byte	3,2,1,5,36,9
+	.half	.L448-.L446
+	.byte	3,2,1,5,2,9
+	.half	.L444-.L448
+	.byte	3,1,1,5,5,7,9
+	.half	.L691-.L444
+	.byte	3,7,1,5,3,9
+	.half	.L692-.L691
+	.byte	3,2,1,5,24,9
+	.half	.L693-.L692
+	.byte	3,121,1,5,21,9
+	.half	.L694-.L693
+	.byte	3,1,1,5,25,9
+	.half	.L695-.L694
+	.byte	3,1,1,5,23,1,5,25,9
+	.half	.L447-.L695
+	.byte	3,1,1,5,21,9
+	.half	.L696-.L447
+	.byte	3,1,1,5,2,9
+	.half	.L697-.L696
+	.byte	3,1,1,5,9,7,9
+	.half	.L698-.L697
+	.byte	3,1,1,9
+	.half	.L699-.L698
+	.byte	3,1,1,5,15,9
+	.half	.L700-.L699
+	.byte	3,1,1,5,19,9
+	.half	.L701-.L700
+	.byte	3,126,1,5,10,9
+	.half	.L11-.L701
+	.byte	3,4,1,5,13,9
+	.half	.L449-.L11
+	.byte	3,1,1,5,24,9
+	.half	.L451-.L449
+	.byte	3,1,1,5,27,9
+	.half	.L14-.L451
+	.byte	3,1,1,5,4,9
+	.half	.L702-.L14
+	.byte	1,5,12,7,9
+	.half	.L703-.L702
+	.byte	3,1,1,5,17,3,1,1,5,5,9
+	.half	.L450-.L703
+	.byte	1,5,12,7,9
+	.half	.L704-.L450
+	.byte	3,1,1,5,20,9
+	.half	.L16-.L704
+	.byte	3,1,1,5,21,9
+	.half	.L705-.L16
+	.byte	3,1,1,5,5,9
+	.half	.L706-.L705
+	.byte	3,1,1,5,14,9
+	.half	.L15-.L706
+	.byte	3,2,1,5,19,9
+	.half	.L707-.L15
+	.byte	3,1,1,5,24,9
+	.half	.L13-.L707
+	.byte	3,118,1,5,2,7,9
+	.half	.L12-.L13
+	.byte	3,14,1,5,18,7,9
+	.half	.L708-.L12
+	.byte	3,1,1,5,15,9
+	.half	.L709-.L708
+	.byte	3,1,1,5,9,9
+	.half	.L710-.L709
+	.byte	3,1,1,5,1,9
+	.half	.L18-.L710
+	.byte	3,2,1,9
+	.half	.L228-.L18
+	.byte	0,1,1
+.L688:
+	.sdecl	'.debug_ranges',debug,cluster('addScheduleInfo')
+	.sect	'.debug_ranges'
+.L227:
+	.word	-1,.L82,0,.L228-.L82,0,0
+	.sdecl	'.debug_info',debug,cluster('initSInfoPool')
+	.sect	'.debug_info'
+.L229:
+	.word	247
+	.half	3
+	.word	.L230
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L232,.L231
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'initSInfoPool',0,1,51,6,1,1,1
+	.word	.L76,.L392,.L75
+	.byte	4
+	.byte	'hyperPeriodUs',0,1,51,26
+	.word	.L338,.L393
+	.byte	5
+	.word	.L76,.L392
+	.byte	6
+	.byte	'i',0,1,53,6
+	.word	.L321,.L394
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('initSInfoPool')
+	.sect	'.debug_abbrev'
+.L230:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('initSInfoPool')
+	.sect	'.debug_line'
+.L231:
+	.word	.L712-.L711
+.L711:
+	.half	3
+	.word	.L714-.L713
+.L713:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L714:
+	.byte	5,18,7,0,5,2
+	.word	.L76
+	.byte	3,53,1,5,16,1,5,22,9
+	.half	.L715-.L76
+	.byte	3,4,1,5,11,3,127,1,5,3,9
+	.half	.L716-.L715
+	.byte	3,1,1,5,15,9
+	.half	.L717-.L716
+	.byte	3,125,1,5,11,9
+	.half	.L718-.L717
+	.byte	3,2,1,5,3,9
+	.half	.L719-.L718
+	.byte	3,1,1,5,27,9
+	.half	.L720-.L719
+	.byte	3,126,1,5,25,9
+	.half	.L2-.L720
+	.byte	3,1,1,5,28,9
+	.half	.L721-.L2
+	.byte	1,5,30,9
+	.half	.L722-.L721
+	.byte	3,127,1,5,20,9
+	.half	.L723-.L722
+	.byte	3,2,1,5,27,9
+	.half	.L724-.L723
+	.byte	3,126,1,5,10,7,9
+	.half	.L725-.L724
+	.byte	3,4,1,5,8,9
+	.half	.L726-.L725
+	.byte	1,9
+	.half	.L727-.L726
+	.byte	3,1,1,5,1,9
+	.half	.L728-.L727
+	.byte	3,1,1,7,9
+	.half	.L233-.L728
+	.byte	0,1,1
+.L712:
+	.sdecl	'.debug_ranges',debug,cluster('initSInfoPool')
+	.sect	'.debug_ranges'
+.L232:
+	.word	-1,.L76,0,.L233-.L76,0,0
+	.sdecl	'.debug_info',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_info'
+.L234:
+	.word	227
+	.half	3
+	.word	.L235
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L237,.L236
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'getSInfoFromPool',0,1,64,8
+	.word	.L388
+	.byte	1,1
+	.word	.L78,.L395,.L77
+	.byte	4
+	.word	.L78,.L395
+	.byte	5
+	.byte	'i',0,1,66,6
+	.word	.L321,.L396
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_abbrev'
+.L235:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_line'
+.L236:
+	.word	.L730-.L729
+.L729:
+	.half	3
+	.word	.L732-.L731
+.L731:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L732:
+	.byte	5,6,7,0,5,2
+	.word	.L78
+	.byte	3,195,0,1,5,12,9
+	.half	.L733-.L78
+	.byte	3,2,1,5,27,9
+	.half	.L734-.L733
+	.byte	3,125,1,5,19,9
+	.half	.L3-.L734
+	.byte	3,1,1,5,3,9
+	.half	.L735-.L3
+	.byte	1,5,23,7,9
+	.half	.L736-.L735
+	.byte	3,1,1,5,21,1,5,1,9
+	.half	.L737-.L736
+	.byte	3,6,1,5,30,7,9
+	.half	.L4-.L737
+	.byte	3,120,1,5,27,9
+	.half	.L738-.L4
+	.byte	1,5,9,7,9
+	.half	.L739-.L738
+	.byte	3,7,1,5,1,9
+	.half	.L740-.L739
+	.byte	3,1,1,7,9
+	.half	.L238-.L740
+	.byte	0,1,1
+.L730:
+	.sdecl	'.debug_ranges',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_ranges'
+.L237:
+	.word	-1,.L78,0,.L238-.L78,0,0
+	.sdecl	'.debug_info',debug,cluster('freeSInfo')
+	.sect	'.debug_info'
+.L239:
+	.word	236
+	.half	3
+	.word	.L240
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L242,.L241
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'freeSInfo',0,1,77,6,1,1,1
+	.word	.L80,.L397,.L79
+	.byte	4
+	.byte	'target',0,1,77,23
+	.word	.L388,.L398
+	.byte	5
+	.word	.L80,.L397
+	.byte	6
+	.byte	'i',0,1,79,6
+	.word	.L321,.L399
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('freeSInfo')
+	.sect	'.debug_abbrev'
+.L240:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('freeSInfo')
+	.sect	'.debug_line'
+.L241:
+	.word	.L742-.L741
+.L741:
+	.half	3
+	.word	.L744-.L743
+.L743:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L744:
+	.byte	5,25,7,0,5,2
+	.word	.L80
+	.byte	3,207,0,1,5,23,1,5,20,9
+	.half	.L745-.L80
+	.byte	3,1,1,5,22,9
+	.half	.L746-.L745
+	.byte	3,1,1,5,25,9
+	.half	.L747-.L746
+	.byte	3,1,1,5,23,9
+	.half	.L748-.L747
+	.byte	1,5,20,9
+	.half	.L749-.L748
+	.byte	3,1,1,5,17,9
+	.half	.L750-.L749
+	.byte	3,1,1,5,7,9
+	.half	.L751-.L750
+	.byte	3,3,1,5,4,9
+	.half	.L752-.L751
+	.byte	3,1,1,5,27,9
+	.half	.L753-.L752
+	.byte	3,126,1,5,3,9
+	.half	.L7-.L753
+	.byte	3,1,1,5,21,7,9
+	.half	.L754-.L7
+	.byte	3,1,1,5,1,9
+	.half	.L755-.L754
+	.byte	3,4,1,5,30,7,9
+	.half	.L8-.L755
+	.byte	3,122,1,5,27,9
+	.half	.L756-.L8
+	.byte	1,5,1,7,9
+	.half	.L757-.L756
+	.byte	3,6,1,7,9
+	.half	.L243-.L757
+	.byte	0,1,1
+.L742:
+	.sdecl	'.debug_ranges',debug,cluster('freeSInfo')
+	.sect	'.debug_ranges'
+.L242:
+	.word	-1,.L80,0,.L243-.L80,0,0
+	.sdecl	'.debug_info',debug,cluster('config_timer')
+	.sect	'.debug_info'
+.L244:
+	.word	265
+	.half	3
+	.word	.L245
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L247,.L246
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'config_timer',0,1,135,1,6,1,1,1
+	.word	.L84,.L400,.L83
+	.byte	4
+	.byte	'us',0,1,135,1,25
+	.word	.L338,.L401
+	.byte	4
+	.byte	'sel',0,1,135,1,34
+	.word	.L402,.L403
+	.byte	5
+	.word	.L84,.L400
+	.byte	6
+	.byte	'additionalU',0,1,137,1,15
+	.word	.L338,.L404
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('config_timer')
+	.sect	'.debug_abbrev'
+.L245:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('config_timer')
+	.sect	'.debug_line'
+.L246:
+	.word	.L759-.L758
+.L758:
+	.half	3
+	.word	.L761-.L760
+.L760:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L761:
+	.byte	5,6,7,0,5,2
+	.word	.L84
+	.byte	3,134,1,1,5,21,9
+	.half	.L454-.L84
+	.byte	3,4,1,5,19,9
+	.half	.L452-.L454
+	.byte	1,5,15,9
+	.half	.L453-.L452
+	.byte	3,6,1,5,7,9
+	.half	.L762-.L453
+	.byte	3,4,1,7,9
+	.half	.L763-.L762
+	.byte	3,8,1,5,1,7,9
+	.half	.L764-.L763
+	.byte	3,6,1,5,35,7,9
+	.half	.L20-.L764
+	.byte	3,115,1,5,38,9
+	.half	.L455-.L20
+	.byte	1,5,14,1,5,1,9
+	.half	.L765-.L455
+	.byte	3,13,1,5,35,7,9
+	.half	.L21-.L765
+	.byte	3,123,1,5,38,9
+	.half	.L456-.L21
+	.byte	1,5,14,1,9
+	.half	.L766-.L456
+	.byte	3,1,1,5,22,9
+	.half	.L767-.L766
+	.byte	1,5,14,9
+	.half	.L768-.L767
+	.byte	3,1,1,5,23,9
+	.half	.L769-.L768
+	.byte	1,5,1,9
+	.half	.L770-.L769
+	.byte	3,3,1,7,9
+	.half	.L248-.L770
+	.byte	0,1,1
+.L759:
+	.sdecl	'.debug_ranges',debug,cluster('config_timer')
+	.sect	'.debug_ranges'
+.L247:
+	.word	-1,.L84,0,.L248-.L84,0,0
+	.sdecl	'.debug_info',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_info'
+.L249:
+	.word	362
+	.half	3
+	.word	.L250
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L252,.L251
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'syscall_trap_handler',0,1,220,2,13,1,1
+	.word	.L112,.L405,.L111
+	.byte	4
+	.word	.L112,.L405
+	.byte	5
+	.byte	'tin',0,1,221,2,9
+	.word	.L321,.L406
+	.byte	5
+	.byte	'priority',0,1,221,2,14
+	.word	.L321,.L407
+	.byte	6
+	.word	.L408,.L409,.L410
+	.byte	7
+	.word	.L411,.L412
+	.byte	8
+	.word	.L413,.L414
+	.byte	5
+	.byte	'ret',0,2,180,1,9
+	.word	.L321,.L417
+	.byte	0,0,6
+	.word	.L408,.L415,.L416
+	.byte	7
+	.word	.L411,.L412
+	.byte	0,9
+	.word	.L418,.L41
+	.byte	6
+	.word	.L365,.L41,.L419
+	.byte	10
+	.word	.L420,.L41,.L419
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_abbrev'
+.L250:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,6,29,1,49,16
+	.byte	17,1,18,1,0,0,7,5,0,49,16,2,6,0,0,8,11,1,49,16,85,6,0,0,9,11,0,17,1,18,1,0,0,10,11,0,49,16,17,1,18,1,0
+	.byte	0,0
+	.sdecl	'.debug_line',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_line'
+.L251:
+	.word	.L772-.L771
+.L771:
+	.half	3
+	.word	.L774-.L773
+.L773:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0
+	.byte	'..\\intrinsic.h',0,0,0,0,0
+.L774:
+	.byte	5,5,7,0,5,2
+	.word	.L112
+	.byte	3,222,2,1,9
+	.half	.L465-.L112
+	.byte	3,4,1,5,31,9
+	.half	.L775-.L465
+	.byte	1,5,23,9
+	.half	.L776-.L775
+	.byte	1,5,16,9
+	.half	.L777-.L776
+	.byte	3,1,1,5,28,9
+	.half	.L778-.L777
+	.byte	1,5,10,9
+	.half	.L467-.L778
+	.byte	3,3,1,7,9
+	.half	.L779-.L467
+	.byte	3,9,1,7,9
+	.half	.L780-.L779
+	.byte	1,5,6,9
+	.half	.L38-.L780
+	.byte	3,126,1,5,28,9
+	.half	.L781-.L38
+	.byte	1,5,26,1,5,9,9
+	.half	.L466-.L781
+	.byte	3,1,1,5,10,9
+	.half	.L39-.L466
+	.byte	3,2,1,5,27,9
+	.half	.L782-.L39
+	.byte	1,5,6,9
+	.half	.L468-.L782
+	.byte	1,5,37,7,9
+	.half	.L783-.L468
+	.byte	3,3,1,5,50,9
+	.half	.L784-.L783
+	.byte	1,5,48,9
+	.half	.L469-.L784
+	.byte	1,5,49,9
+	.half	.L785-.L469
+	.byte	3,1,1,4,2,5,5,9
+	.half	.L409-.L785
+	.byte	3,192,126,1,4,1,5,4,9
+	.half	.L410-.L409
+	.byte	3,193,1,1,5,31,9
+	.half	.L418-.L410
+	.byte	3,2,1,5,48,9
+	.half	.L786-.L418
+	.byte	1,5,5,9
+	.half	.L41-.L786
+	.byte	3,89,1,5,12,9
+	.half	.L471-.L41
+	.byte	3,4,1,5,30,9
+	.half	.L787-.L471
+	.byte	3,1,1,5,11,9
+	.half	.L788-.L787
+	.byte	1,5,12,9
+	.half	.L789-.L788
+	.byte	3,1,1,5,5,9
+	.half	.L790-.L789
+	.byte	3,2,1,5,1,9
+	.half	.L419-.L790
+	.byte	3,43,1,7,9
+	.half	.L253-.L419
+	.byte	0,1,1
+.L772:
+	.sdecl	'.debug_ranges',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_ranges'
+.L252:
+	.word	-1,.L112,0,.L253-.L112,0,0
+.L414:
+	.word	-1,.L112,.L409-.L112,.L410-.L112,.L415-.L112,.L416-.L112,0,0
+	.sdecl	'.debug_info',debug,cluster('syscall_trap')
+	.sect	'.debug_info'
+.L254:
+	.word	206
+	.half	3
+	.word	.L255
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L257,.L256
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'syscall_trap',0,1,135,3,21,1,1,1
+	.word	.L114,.L421,.L113
+	.byte	4
+	.word	.L114,.L421
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('syscall_trap')
+	.sect	'.debug_abbrev'
+.L255:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('syscall_trap')
+	.sect	'.debug_line'
+.L256:
+	.word	.L792-.L791
+.L791:
+	.half	3
+	.word	.L794-.L793
+.L793:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L794:
+	.byte	5,26,7,0,5,2
+	.word	.L114
+	.byte	3,139,3,1,5,54,1,5,2,9
+	.half	.L795-.L114
+	.byte	3,125,1,5,1,9
+	.half	.L796-.L795
+	.byte	3,4,1,7,9
+	.half	.L258-.L796
+	.byte	0,1,1
+.L792:
+	.sdecl	'.debug_ranges',debug,cluster('syscall_trap')
+	.sect	'.debug_ranges'
+.L257:
+	.word	-1,.L114,0,.L258-.L114,0,0
+	.sdecl	'.debug_info',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_info'
+.L259:
+	.word	251
+	.half	3
+	.word	.L260
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L262,.L261
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'schedule_event_driven_ISR',0,1,172,3,6,1,1,1
+	.word	.L126,.L422,.L125
+	.byte	4
+	.word	.L126,.L422
+	.byte	5
+	.byte	'nextInterruptTime',0,1,174,3,8
+	.word	.L338,.L423
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_abbrev'
+.L260:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_line'
+.L261:
+	.word	.L798-.L797
+.L797:
+	.half	3
+	.word	.L800-.L799
+.L799:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L800:
+	.byte	5,2,7,0,5,2
+	.word	.L126
+	.byte	3,175,3,1,5,28,9
+	.half	.L801-.L126
+	.byte	1,5,20,9
+	.half	.L802-.L801
+	.byte	1,5,6,9
+	.half	.L803-.L802
+	.byte	3,2,1,5,2,9
+	.half	.L804-.L803
+	.byte	1,5,13,7,9
+	.half	.L805-.L804
+	.byte	3,1,1,5,20,9
+	.half	.L806-.L805
+	.byte	1,5,11,9
+	.half	.L807-.L806
+	.byte	1,5,26,9
+	.half	.L808-.L807
+	.byte	1,5,19,9
+	.half	.L47-.L808
+	.byte	3,2,1,5,17,1,5,14,9
+	.half	.L809-.L47
+	.byte	3,1,1,5,22,9
+	.half	.L810-.L809
+	.byte	1,5,14,9
+	.half	.L811-.L810
+	.byte	3,1,1,5,23,9
+	.half	.L812-.L811
+	.byte	1,5,2,9
+	.half	.L48-.L812
+	.byte	3,3,1,5,24,9
+	.half	.L813-.L48
+	.byte	1,5,22,1,5,24,9
+	.half	.L814-.L813
+	.byte	3,1,1,5,15,9
+	.half	.L815-.L814
+	.byte	1,5,68,9
+	.half	.L816-.L815
+	.byte	3,3,1,5,74,9
+	.half	.L817-.L816
+	.byte	1,5,45,9
+	.half	.L818-.L817
+	.byte	1,5,16,9
+	.half	.L819-.L818
+	.byte	3,127,1,5,2,9
+	.half	.L820-.L819
+	.byte	1,5,23,7,9
+	.half	.L821-.L820
+	.byte	3,1,1,5,36,9
+	.half	.L822-.L821
+	.byte	1,5,59,9
+	.half	.L472-.L822
+	.byte	1,5,87,9
+	.half	.L823-.L472
+	.byte	1,5,50,9
+	.half	.L49-.L823
+	.byte	3,2,1,5,34,9
+	.half	.L50-.L49
+	.byte	3,2,1,5,9,9
+	.half	.L473-.L50
+	.byte	3,4,1,5,15,9
+	.half	.L824-.L473
+	.byte	3,1,1,5,27,9
+	.half	.L825-.L824
+	.byte	1,5,8,9
+	.half	.L826-.L825
+	.byte	1,5,2,9
+	.half	.L827-.L826
+	.byte	3,1,1,5,1,9
+	.half	.L828-.L827
+	.byte	3,1,1,7,9
+	.half	.L263-.L828
+	.byte	0,1,1
+.L798:
+	.sdecl	'.debug_ranges',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_ranges'
+.L262:
+	.word	-1,.L126,0,.L263-.L126,0,0
+	.sdecl	'.debug_info',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_info'
+.L264:
+	.word	339
+	.half	3
+	.word	.L265
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L267,.L266
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'schedule_EDF_ISR',0,1,203,3,6,1,1,1
+	.word	.L128,.L424,.L127
+	.byte	4
+	.word	.L128,.L424
+	.byte	5
+	.byte	'is_first_time',0,1,205,3,21
+	.word	.L338
+	.byte	5,3
+	.word	_999001_is_first_time
+	.byte	6
+	.byte	'i',0,1,206,3,9
+	.word	.L321,.L425
+	.byte	6
+	.byte	'j',0,1,206,3,12
+	.word	.L321,.L426
+	.byte	4
+	.word	.L427,.L424
+	.byte	6
+	.byte	'earliest_deadline',0,1,161,4,9
+	.word	.L321,.L428
+	.byte	6
+	.byte	'next_component',0,1,162,4,11
+	.word	.L332,.L429
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_abbrev'
+.L265:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,6,52,0
+	.byte	3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_line'
+.L266:
+	.word	.L830-.L829
+.L829:
+	.half	3
+	.word	.L832-.L831
+.L831:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L832:
+	.byte	5,6,7,0,5,2
+	.word	.L128
+	.byte	3,202,3,1,5,5,9
+	.half	.L474-.L128
+	.byte	3,6,1,5,31,9
+	.half	.L833-.L474
+	.byte	1,5,23,9
+	.half	.L834-.L833
+	.byte	1,5,11,9
+	.half	.L835-.L834
+	.byte	3,5,1,5,6,9
+	.half	.L836-.L835
+	.byte	3,126,1,5,2,9
+	.half	.L837-.L836
+	.byte	1,5,36,7,9
+	.half	.L838-.L837
+	.byte	3,2,1,5,39,9
+	.half	.L839-.L838
+	.byte	1,5,14,1,9
+	.half	.L840-.L839
+	.byte	3,1,1,5,22,9
+	.half	.L841-.L840
+	.byte	1,5,14,9
+	.half	.L842-.L841
+	.byte	3,1,1,5,23,9
+	.half	.L843-.L842
+	.byte	1,5,64,9
+	.half	.L844-.L843
+	.byte	3,126,1,5,36,9
+	.half	.L51-.L844
+	.byte	3,6,1,5,39,9
+	.half	.L845-.L51
+	.byte	1,5,14,1,5,9,9
+	.half	.L52-.L845
+	.byte	3,3,1,5,5,9
+	.half	.L846-.L52
+	.byte	1,5,19,7,9
+	.half	.L847-.L846
+	.byte	3,2,1,5,17,1,5,23,9
+	.half	.L848-.L847
+	.byte	3,1,1,5,20,9
+	.half	.L849-.L848
+	.byte	3,127,1,5,9,9
+	.half	.L53-.L849
+	.byte	3,5,1,5,16,9
+	.half	.L850-.L53
+	.byte	1,5,9,9
+	.half	.L851-.L850
+	.byte	3,1,1,5,26,9
+	.half	.L852-.L851
+	.byte	1,5,44,9
+	.half	.L853-.L852
+	.byte	1,5,12,9
+	.half	.L54-.L853
+	.byte	3,5,1,5,14,3,3,1,5,21,9
+	.half	.L475-.L54
+	.byte	3,125,1,5,34,9
+	.half	.L854-.L475
+	.byte	1,5,14,3,3,1,5,37,9
+	.half	.L855-.L854
+	.byte	3,125,1,5,16,7,9
+	.half	.L56-.L855
+	.byte	3,1,1,5,42,1,5,40,9
+	.half	.L477-.L56
+	.byte	3,127,1,5,37,9
+	.half	.L856-.L477
+	.byte	3,1,1,5,24,9
+	.half	.L57-.L856
+	.byte	3,2,1,5,43,9
+	.half	.L857-.L57
+	.byte	1,5,14,9
+	.half	.L858-.L857
+	.byte	1,5,113,7,9
+	.half	.L859-.L858
+	.byte	1,5,14,9
+	.half	.L58-.L859
+	.byte	3,14,1,5,90,7,9
+	.half	.L860-.L58
+	.byte	1,5,113,9
+	.half	.L861-.L860
+	.byte	1,5,110,9
+	.half	.L862-.L861
+	.byte	1,5,102,7,9
+	.half	.L863-.L862
+	.byte	3,3,1,5,65,9
+	.half	.L864-.L863
+	.byte	1,5,110,9
+	.half	.L865-.L864
+	.byte	1,5,49,9
+	.half	.L59-.L865
+	.byte	3,2,1,5,19,9
+	.half	.L866-.L59
+	.byte	1,5,97,7,9
+	.half	.L867-.L866
+	.byte	1,5,120,9
+	.half	.L868-.L867
+	.byte	1,5,117,9
+	.half	.L869-.L868
+	.byte	1,5,44,7,9
+	.half	.L870-.L869
+	.byte	3,4,1,5,21,9
+	.half	.L871-.L870
+	.byte	3,1,1,5,41,9
+	.half	.L872-.L871
+	.byte	1,5,47,9
+	.half	.L873-.L872
+	.byte	1,5,45,9
+	.half	.L874-.L873
+	.byte	1,5,11,9
+	.half	.L875-.L874
+	.byte	3,1,1,5,21,9
+	.half	.L876-.L875
+	.byte	3,3,1,5,40,9
+	.half	.L877-.L876
+	.byte	1,5,43,9
+	.half	.L878-.L877
+	.byte	1,5,100,9
+	.half	.L879-.L878
+	.byte	1,5,63,9
+	.half	.L880-.L879
+	.byte	1,5,40,9
+	.half	.L881-.L880
+	.byte	3,2,1,5,43,9
+	.half	.L882-.L881
+	.byte	1,5,100,9
+	.half	.L883-.L882
+	.byte	1,5,63,9
+	.half	.L884-.L883
+	.byte	1,5,40,9
+	.half	.L885-.L884
+	.byte	3,2,1,5,70,9
+	.half	.L886-.L885
+	.byte	1,5,63,9
+	.half	.L887-.L886
+	.byte	1,5,40,9
+	.half	.L61-.L887
+	.byte	3,94,1,5,37,9
+	.half	.L888-.L61
+	.byte	1,5,40,7,9
+	.half	.L889-.L888
+	.byte	3,127,1,5,21,1,5,34,9
+	.half	.L890-.L889
+	.byte	1,5,37,9
+	.half	.L891-.L890
+	.byte	1,5,12,7,9
+	.half	.L55-.L891
+	.byte	3,41,1,5,21,3,87,1,5,34,9
+	.half	.L476-.L55
+	.byte	1,5,42,3,41,1,5,37,9
+	.half	.L892-.L476
+	.byte	1,5,20,9
+	.half	.L65-.L892
+	.byte	3,1,1,5,23,9
+	.half	.L893-.L65
+	.byte	1,5,46,9
+	.half	.L894-.L893
+	.byte	1,5,6,9
+	.half	.L895-.L894
+	.byte	1,5,56,7,9
+	.half	.L896-.L895
+	.byte	3,2,1,5,40,9
+	.half	.L897-.L896
+	.byte	1,5,20,9
+	.half	.L898-.L897
+	.byte	3,2,1,5,56,9
+	.half	.L899-.L898
+	.byte	1,5,40,9
+	.half	.L900-.L899
+	.byte	1,5,54,9
+	.half	.L901-.L900
+	.byte	3,2,1,5,39,9
+	.half	.L902-.L901
+	.byte	1,5,40,9
+	.half	.L66-.L902
+	.byte	3,121,1,5,37,9
+	.half	.L64-.L66
+	.byte	1,5,29,7,9
+	.half	.L427-.L64
+	.byte	3,12,1,5,28,9
+	.half	.L478-.L427
+	.byte	3,1,1,5,12,9
+	.half	.L479-.L478
+	.byte	3,1,1,5,42,1,5,37,9
+	.half	.L903-.L479
+	.byte	1,5,23,9
+	.half	.L68-.L903
+	.byte	3,1,1,5,26,9
+	.half	.L904-.L68
+	.byte	1,5,9,9
+	.half	.L905-.L904
+	.byte	1,5,30,7,9
+	.half	.L906-.L905
+	.byte	3,1,1,5,13,9
+	.half	.L907-.L906
+	.byte	1,5,35,7,9
+	.half	.L908-.L907
+	.byte	3,1,1,5,32,3,1,1,5,40,9
+	.half	.L69-.L908
+	.byte	3,124,1,5,37,9
+	.half	.L67-.L69
+	.byte	1,5,23,7,9
+	.half	.L909-.L67
+	.byte	3,8,1,5,84,9
+	.half	.L910-.L909
+	.byte	3,3,1,5,66,9
+	.half	.L911-.L910
+	.byte	1,5,59,9
+	.half	.L912-.L911
+	.byte	1,5,55,9
+	.half	.L913-.L912
+	.byte	1,5,18,9
+	.half	.L914-.L913
+	.byte	1,5,12,9
+	.half	.L915-.L914
+	.byte	3,4,1,5,30,9
+	.half	.L916-.L915
+	.byte	3,1,1,5,11,9
+	.half	.L917-.L916
+	.byte	1,5,5,9
+	.half	.L918-.L917
+	.byte	3,1,1,5,1,9
+	.half	.L919-.L918
+	.byte	3,1,1,7,9
+	.half	.L268-.L919
+	.byte	0,1,1
+.L830:
+	.sdecl	'.debug_ranges',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_ranges'
+.L267:
+	.word	-1,.L128,0,.L268-.L128,0,0
+	.sdecl	'.debug_info',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_info'
+.L269:
+	.word	269
+	.half	3
+	.word	.L270
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L272,.L271
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'cancom_timer_interrupt_handler',0,1,183,4,6,1,1,1
+	.word	.L130,.L430,.L129
+	.byte	4
+	.word	.L130,.L430
+	.byte	5
+	.byte	'msgid',0,1,185,4,11
+	.word	.L386,.L431
+	.byte	4
+	.word	.L432,.L433
+	.byte	5
+	.byte	'k',0,1,190,4,16
+	.word	.L386,.L434
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_abbrev'
+.L270:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_line'
+.L271:
+	.word	.L921-.L920
+.L920:
+	.half	3
+	.word	.L923-.L922
+.L922:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L923:
+	.byte	5,5,7,0,5,2
+	.word	.L130
+	.byte	3,186,4,1,5,31,9
+	.half	.L924-.L130
+	.byte	1,5,23,9
+	.half	.L925-.L924
+	.byte	1,5,18,9
+	.half	.L432-.L925
+	.byte	3,3,1,5,10,3,1,1,5,29,9
+	.half	.L926-.L432
+	.byte	3,127,1,5,32,9
+	.half	.L71-.L926
+	.byte	3,1,1,5,39,9
+	.half	.L927-.L71
+	.byte	1,5,6,9
+	.half	.L928-.L927
+	.byte	1,5,21,7,9
+	.half	.L929-.L928
+	.byte	3,1,1,5,35,9
+	.half	.L482-.L929
+	.byte	3,1,1,5,33,1,5,32,9
+	.half	.L72-.L482
+	.byte	3,125,1,5,29,9
+	.half	.L930-.L72
+	.byte	1,5,10,7,9
+	.half	.L433-.L930
+	.byte	3,8,1,5,7,9
+	.half	.L483-.L433
+	.byte	3,1,1,5,21,9
+	.half	.L931-.L483
+	.byte	1,5,2,9
+	.half	.L932-.L931
+	.byte	1,5,17,7,9
+	.half	.L933-.L932
+	.byte	3,1,1,5,27,9
+	.half	.L484-.L933
+	.byte	3,1,1,5,25,1,5,10,9
+	.half	.L73-.L484
+	.byte	3,125,1,5,7,9
+	.half	.L934-.L73
+	.byte	3,5,1,5,2,9
+	.half	.L935-.L934
+	.byte	1,5,17,9
+	.half	.L936-.L935
+	.byte	3,1,1,5,11,3,3,1,5,9,9
+	.half	.L937-.L936
+	.byte	1,5,15,9
+	.half	.L938-.L937
+	.byte	3,1,1,5,27,9
+	.half	.L939-.L938
+	.byte	1,5,8,9
+	.half	.L940-.L939
+	.byte	1,5,2,9
+	.half	.L941-.L940
+	.byte	3,1,1,5,1,9
+	.half	.L942-.L941
+	.byte	3,1,1,7,9
+	.half	.L273-.L942
+	.byte	0,1,1
+.L921:
+	.sdecl	'.debug_ranges',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_ranges'
+.L272:
+	.word	-1,.L130,0,.L273-.L130,0,0
+	.sdecl	'.debug_info',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_info'
+.L274:
+	.word	218
+	.half	3
+	.word	.L275
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L277,.L276
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'schedule_timer_interrupt',0,1,213,4,38,1,1,1
+	.word	.L132,.L435,.L131
+	.byte	4
+	.word	.L132,.L435
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_abbrev'
+.L275:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_line'
+.L276:
+	.word	.L944-.L943
+.L943:
+	.half	3
+	.word	.L946-.L945
+.L945:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L946:
+	.byte	5,2,7,0,5,2
+	.word	.L132
+	.byte	3,213,4,1,5,1,9
+	.half	.L947-.L132
+	.byte	3,4,1,7,9
+	.half	.L278-.L947
+	.byte	0,1,1
+.L944:
+	.sdecl	'.debug_ranges',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_ranges'
+.L277:
+	.word	-1,.L132,0,.L278-.L132,0,0
+	.sdecl	'.debug_info',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_info'
+.L279:
+	.word	216
+	.half	3
+	.word	.L280
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L282,.L281
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'cancom_timer_interrupt',0,1,220,4,35,1,1,1
+	.word	.L134,.L436,.L133
+	.byte	4
+	.word	.L134,.L436
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_abbrev'
+.L280:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_line'
+.L281:
+	.word	.L949-.L948
+.L948:
+	.half	3
+	.word	.L951-.L950
+.L950:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L951:
+	.byte	5,2,7,0,5,2
+	.word	.L134
+	.byte	3,220,4,1,5,1,9
+	.half	.L952-.L134
+	.byte	3,4,1,7,9
+	.half	.L283-.L952
+	.byte	0,1,1
+.L949:
+	.sdecl	'.debug_ranges',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_ranges'
+.L282:
+	.word	-1,.L134,0,.L283-.L134,0,0
+	.sdecl	'.debug_info',debug,cluster('.cocofun_6')
+	.sect	'.debug_info'
+.L284:
+	.word	192
+	.half	3
+	.word	.L285
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L287,.L286
+	.byte	2
+	.word	.L135
+	.byte	3
+	.byte	'.cocofun_6',0,2,1,1,1,1
+	.word	.L110,.L288,.L109
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('.cocofun_6')
+	.sect	'.debug_abbrev'
+.L285:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,32,13,58,15,59,15,57,15
+	.byte	54,15,17,1,18,1,64,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('.cocofun_6')
+	.sect	'.debug_line'
+.L286:
+	.word	.L954-.L953
+.L953:
+	.half	3
+	.word	.L956-.L955
+.L955:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\kernel.c',0,0,0,0,0
+.L956:
+	.byte	5,5,7,0,5,2
+	.word	.L110
+	.byte	3,208,2,1,5,2,9
+	.half	.L957-.L110
+	.byte	1,5,10,7,9
+	.half	.L958-.L957
+	.byte	3,1,1,5,17,9
+	.half	.L959-.L958
+	.byte	1,5,7,9
+	.half	.L960-.L959
+	.byte	1,5,64,7,9
+	.half	.L961-.L960
+	.byte	1,5,78,9
+	.half	.L962-.L961
+	.byte	1,5,10,9
+	.half	.L35-.L962
+	.byte	1,5,40,9
+	.half	.L963-.L35
+	.byte	3,1,1,5,14,9
+	.half	.L37-.L963
+	.byte	3,2,1,9
+	.half	.L288-.L37
+	.byte	0,1,1,5,5,0,5,2
+	.word	.L110
+	.byte	3,208,2,1,5,2,9
+	.half	.L957-.L110
+	.byte	1,5,10,7,9
+	.half	.L958-.L957
+	.byte	3,1,1,5,17,9
+	.half	.L959-.L958
+	.byte	1,5,7,9
+	.half	.L960-.L959
+	.byte	1,5,64,7,9
+	.half	.L961-.L960
+	.byte	1,5,78,9
+	.half	.L962-.L961
+	.byte	1,5,10,9
+	.half	.L35-.L962
+	.byte	1,5,40,9
+	.half	.L963-.L35
+	.byte	3,1,1,5,14,9
+	.half	.L37-.L963
+	.byte	3,2,1,9
+	.half	.L288-.L37
+	.byte	0,1,1
+.L954:
+	.sdecl	'.debug_ranges',debug,cluster('.cocofun_6')
+	.sect	'.debug_ranges'
+.L287:
+	.word	-1,.L110,0,.L288-.L110,0,0
+	.sdecl	'.debug_info',debug,cluster('delayed_output_pending')
+	.sect	'.debug_info'
+.L289:
+	.word	193
+	.half	3
+	.word	.L290
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'delayed_output_pending',0,3,16,10
+	.word	.L437
+	.byte	1,5,3
+	.word	delayed_output_pending
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('delayed_output_pending')
+	.sect	'.debug_abbrev'
+.L290:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('components')
+	.sect	'.debug_info'
+.L291:
+	.word	181
+	.half	3
+	.word	.L292
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'components',0,3,18,7
+	.word	.L438
+	.byte	1,5,3
+	.word	components
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('components')
+	.sect	'.debug_abbrev'
+.L292:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('n_components')
+	.sect	'.debug_info'
+.L293:
+	.word	183
+	.half	3
+	.word	.L294
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'n_components',0,3,19,5
+	.word	.L321
+	.byte	1,5,3
+	.word	n_components
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('n_components')
+	.sect	'.debug_abbrev'
+.L294:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('jiffies')
+	.sect	'.debug_info'
+.L295:
+	.word	178
+	.half	3
+	.word	.L296
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'jiffies',0,3,21,19
+	.word	.L439
+	.byte	1,5,3
+	.word	jiffies
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('jiffies')
+	.sect	'.debug_abbrev'
+.L296:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('running_component')
+	.sect	'.debug_info'
+.L297:
+	.word	188
+	.half	3
+	.word	.L298
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'running_component',0,3,23,7
+	.word	.L332
+	.byte	1,5,3
+	.word	running_component
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('running_component')
+	.sect	'.debug_abbrev'
+.L298:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('running_task')
+	.sect	'.debug_info'
+.L299:
+	.word	183
+	.half	3
+	.word	.L300
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'running_task',0,3,24,7
+	.word	.L334
+	.byte	1,5,3
+	.word	running_task
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('running_task')
+	.sect	'.debug_abbrev'
+.L300:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('canMsgValidbit')
+	.sect	'.debug_info'
+.L301:
+	.word	185
+	.half	3
+	.word	.L302
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'canMsgValidbit',0,3,27,7
+	.word	.L440
+	.byte	1,5,3
+	.word	canMsgValidbit
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('canMsgValidbit')
+	.sect	'.debug_abbrev'
+.L302:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('canTdmMap')
+	.sect	'.debug_info'
+.L303:
+	.word	180
+	.half	3
+	.word	.L304
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'canTdmMap',0,3,28,7
+	.word	.L441
+	.byte	1,5,3
+	.word	canTdmMap
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('canTdmMap')
+	.sect	'.debug_abbrev'
+.L304:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('canSlotWalker')
+	.sect	'.debug_info'
+.L305:
+	.word	184
+	.half	3
+	.word	.L306
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'canSlotWalker',0,3,29,7
+	.word	.L338
+	.byte	1,5,3
+	.word	canSlotWalker
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('canSlotWalker')
+	.sect	'.debug_abbrev'
+.L306:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sIsFirstCycle')
+	.sect	'.debug_info'
+.L307:
+	.word	184
+	.half	3
+	.word	.L308
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sIsFirstCycle',0,3,32,7
+	.word	.L386
+	.byte	1,5,3
+	.word	sIsFirstCycle
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sIsFirstCycle')
+	.sect	'.debug_abbrev'
+.L308:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sHyperPeriod')
+	.sect	'.debug_info'
+.L309:
+	.word	183
+	.half	3
+	.word	.L310
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sHyperPeriod',0,3,33,7
+	.word	.L338
+	.byte	1,5,3
+	.word	sHyperPeriod
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sHyperPeriod')
+	.sect	'.debug_abbrev'
+.L310:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sHead')
+	.sect	'.debug_info'
+.L311:
+	.word	176
+	.half	3
+	.word	.L312
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sHead',0,3,36,8
+	.word	.L388
+	.byte	1,5,3
+	.word	sHead
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sHead')
+	.sect	'.debug_abbrev'
+.L312:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sTail')
+	.sect	'.debug_info'
+.L313:
+	.word	176
+	.half	3
+	.word	.L314
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sTail',0,3,36,16
+	.word	.L388
+	.byte	1,5,3
+	.word	sTail
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sTail')
+	.sect	'.debug_abbrev'
+.L314:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sWalker')
+	.sect	'.debug_info'
+.L315:
+	.word	178
+	.half	3
+	.word	.L316
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sWalker',0,3,45,8
+	.word	.L388
+	.byte	1,5,3
+	.word	sWalker
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sWalker')
+	.sect	'.debug_abbrev'
+.L316:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sInfoPool')
+	.sect	'.debug_info'
+.L317:
+	.word	180
+	.half	3
+	.word	.L318
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sInfoPool',0,3,46,7
+	.word	.L442
+	.byte	1,5,3
+	.word	sInfoPool
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sInfoPool')
+	.sect	'.debug_abbrev'
+.L318:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('sInfoDirtybit')
+	.sect	'.debug_info'
+.L319:
+	.word	184
+	.half	3
+	.word	.L320
+	.byte	4,1
+	.byte	'..\\kernel.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L135
+	.byte	3
+	.byte	'sInfoDirtybit',0,3,47,7
+	.word	.L443
+	.byte	1,5,3
+	.word	sInfoDirtybit
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('sInfoDirtybit')
+	.sect	'.debug_abbrev'
+.L320:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_loc',debug,cluster('.cocofun_6')
+	.sect	'.debug_loc'
+.L109:
+	.word	-1,.L110,0,.L288-.L110
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('addScheduleInfo')
+	.sect	'.debug_loc'
+.L81:
+	.word	-1,.L82,0,.L381-.L82
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L383:
+	.word	-1,.L82,0,.L444-.L82
+	.half	5
+	.byte	144,34,157,32,32
+	.word	.L446-.L82,.L447-.L82
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L387:
+	.word	-1,.L82,.L448-.L82,.L381-.L82
+	.half	5
+	.byte	144,36,157,32,32
+	.word	0,0
+.L385:
+	.word	-1,.L82,0,.L444-.L82
+	.half	1
+	.byte	101
+	.word	.L446-.L82,.L381-.L82
+	.half	1
+	.byte	109
+	.word	0,0
+.L391:
+	.word	-1,.L82,.L444-.L82,.L381-.L82
+	.half	1
+	.byte	98
+	.word	0,0
+.L389:
+	.word	-1,.L82,.L451-.L82,.L12-.L82
+	.half	1
+	.byte	111
+	.word	0,0
+.L382:
+	.word	-1,.L82,0,.L444-.L82
+	.half	5
+	.byte	144,34,157,32,0
+	.word	.L445-.L82,.L381-.L82
+	.half	5
+	.byte	144,36,157,32,0
+	.word	0,0
+.L384:
+	.word	-1,.L82,0,.L444-.L82
+	.half	1
+	.byte	100
+	.word	.L445-.L82,.L381-.L82
+	.half	1
+	.byte	108
+	.word	0,0
+.L390:
+	.word	-1,.L82,.L449-.L82,.L450-.L82
+	.half	1
+	.byte	102
+	.word	.L15-.L82,.L12-.L82
+	.half	1
+	.byte	102
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('can_init')
+	.sect	'.debug_loc'
+.L87:
+	.word	-1,.L88,0,.L322-.L88
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_loc'
+.L133:
+	.word	-1,.L134,0,.L436-.L134
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_loc'
+.L129:
+	.word	-1,.L130,0,.L430-.L130
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L434:
+	.word	-1,.L130,.L480-.L130,.L430-.L130
+	.half	5
+	.byte	144,36,157,32,0
+	.word	.L481-.L130,.L482-.L130
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L431:
+	.word	-1,.L130,.L483-.L130,.L484-.L130
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('check_high_finished')
+	.sect	'.debug_loc'
+.L123:
+	.word	-1,.L124,0,.L380-.L124
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('config_timer')
+	.sect	'.debug_loc'
+.L404:
+	.word	-1,.L84,.L453-.L84,.L400-.L84
+	.half	5
+	.byte	144,33,157,32,0
+	.word	0,0
+.L83:
+	.word	-1,.L84,0,.L400-.L84
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L403:
+	.word	-1,.L84,0,.L452-.L84
+	.half	5
+	.byte	144,34,157,32,32
+	.word	.L454-.L84,.L455-.L84
+	.half	5
+	.byte	144,39,157,32,32
+	.word	.L21-.L84,.L456-.L84
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L401:
+	.word	-1,.L84,0,.L453-.L84
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('create_component')
+	.sect	'.debug_loc'
+.L341:
+	.word	-1,.L96,0,.L458-.L96
+	.half	1
+	.byte	100
+	.word	.L459-.L96,.L340-.L96
+	.half	1
+	.byte	111
+	.word	0,0
+.L95:
+	.word	-1,.L96,0,.L340-.L96
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('create_task')
+	.sect	'.debug_loc'
+.L346:
+	.word	-1,.L98,0,.L342-.L98
+	.half	1
+	.byte	102
+	.word	.L461-.L98,.L29-.L98
+	.half	1
+	.byte	106
+	.word	0,0
+.L343:
+	.word	-1,.L98,0,.L342-.L98
+	.half	1
+	.byte	100
+	.word	0,0
+.L97:
+	.word	-1,.L98,0,.L460-.L98
+	.half	2
+	.byte	138,0
+	.word	.L460-.L98,.L342-.L98
+	.half	2
+	.byte	138,16
+	.word	.L342-.L98,.L342-.L98
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L354:
+	.word	0,0
+.L359:
+	.word	0,0
+.L351:
+	.word	-1,.L98,0,.L342-.L98
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L352:
+	.word	-1,.L98,.L462-.L98,.L463-.L98
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L348:
+	.word	-1,.L98,0,.L342-.L98
+	.half	1
+	.byte	103
+	.word	0,0
+.L362:
+	.word	-1,.L98,.L463-.L98,.L464-.L98
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L349:
+	.word	-1,.L98,0,.L342-.L98
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L344:
+	.word	-1,.L98,0,.L342-.L98
+	.half	1
+	.byte	101
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('freeSInfo')
+	.sect	'.debug_loc'
+.L79:
+	.word	-1,.L80,0,.L397-.L80
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L399:
+	.word	0,0
+.L398:
+	.word	-1,.L80,0,.L397-.L80
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_loc'
+.L77:
+	.word	-1,.L78,0,.L395-.L78
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L396:
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('get_jiffies')
+	.sect	'.debug_loc'
+.L101:
+	.word	-1,.L102,0,.L339-.L102
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('get_running_component')
+	.sect	'.debug_loc'
+.L91:
+	.word	-1,.L92,0,.L333-.L92
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('get_running_task')
+	.sect	'.debug_loc'
+.L99:
+	.word	-1,.L100,0,.L335-.L100
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('initSInfoPool')
+	.sect	'.debug_loc'
+.L393:
+	.word	-1,.L76,0,.L2-.L76
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L394:
+	.word	0,0
+.L75:
+	.word	-1,.L76,0,.L392-.L76
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('init_hardware')
+	.sect	'.debug_loc'
+.L85:
+	.word	-1,.L86,0,.L323-.L86
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_loc'
+.L103:
+	.word	-1,.L104,0,.L363-.L104
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('link')
+	.sect	'.debug_loc'
+.L376:
+	.word	-1,.L118,0,.L375-.L118
+	.half	1
+	.byte	100
+	.word	0,0
+.L117:
+	.word	-1,.L118,0,.L375-.L118
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L377:
+	.word	-1,.L118,0,.L375-.L118
+	.half	1
+	.byte	101
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('request')
+	.sect	'.debug_loc'
+.L374:
+	.word	-1,.L90,0,.L371-.L90
+	.half	1
+	.byte	100
+	.word	0,0
+.L372:
+	.word	-1,.L90,0,.L457-.L90
+	.half	5
+	.byte	144,34,157,32,0
+	.word	.L25-.L90,.L371-.L90
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L89:
+	.word	-1,.L90,0,.L371-.L90
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('schedule')
+	.sect	'.debug_loc'
+.L107:
+	.word	-1,.L108,0,.L366-.L108
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_loc'
+.L428:
+	.word	-1,.L128,.L478-.L128,.L424-.L128
+	.half	5
+	.byte	144,32,157,32,32
+	.word	0,0
+.L425:
+	.word	-1,.L128,.L475-.L128,.L476-.L128
+	.half	5
+	.byte	144,36,157,32,0
+	.word	.L476-.L128,.L424-.L128
+	.half	5
+	.byte	144,33,157,32,0
+	.word	0,0
+.L426:
+	.word	-1,.L128,.L477-.L128,.L55-.L128
+	.half	5
+	.byte	144,36,157,32,32
+	.word	0,0
+.L429:
+	.word	-1,.L128,.L479-.L128,.L424-.L128
+	.half	1
+	.byte	98
+	.word	0,0
+.L127:
+	.word	-1,.L128,0,.L474-.L128
+	.half	2
+	.byte	138,0
+	.word	.L474-.L128,.L424-.L128
+	.half	2
+	.byte	138,8
+	.word	.L424-.L128,.L424-.L128
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_loc'
+.L423:
+	.word	-1,.L126,.L472-.L126,.L49-.L126
+	.half	5
+	.byte	144,34,157,32,0
+	.word	.L50-.L126,.L473-.L126
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L125:
+	.word	-1,.L126,0,.L422-.L126
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_loc'
+.L131:
+	.word	-1,.L132,0,.L435-.L132
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('set_delayed_output')
+	.sect	'.debug_loc'
+.L369:
+	.word	-1,.L116,0,.L368-.L116
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L115:
+	.word	-1,.L116,0,.L368-.L116
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L370:
+	.word	-1,.L116,0,.L368-.L116
+	.half	5
+	.byte	144,34,157,32,32
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('set_running_component')
+	.sect	'.debug_loc'
+.L337:
+	.word	-1,.L94,0,.L336-.L94
+	.half	1
+	.byte	100
+	.word	0,0
+.L93:
+	.word	-1,.L94,0,.L336-.L94
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('start_kernel')
+	.sect	'.debug_loc'
+.L105:
+	.word	-1,.L106,0,.L364-.L106
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('syscall_trap')
+	.sect	'.debug_loc'
+.L113:
+	.word	-1,.L114,0,.L421-.L114
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_loc'
+.L412:
+	.word	-1,.L112,.L469-.L112,.L470-.L112
+	.half	1
+	.byte	100
+	.word	0,0
+.L407:
+	.word	-1,.L112,.L467-.L112,.L416-.L112
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L417:
+	.word	-1,.L112,.L410-.L112,.L471-.L112
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L111:
+	.word	-1,.L112,0,.L405-.L112
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L406:
+	.word	-1,.L112,.L465-.L112,.L466-.L112
+	.half	5
+	.byte	144,39,157,32,32
+	.word	.L39-.L112,.L468-.L112
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('work_area_end')
+	.sect	'.debug_loc'
+.L121:
+	.word	-1,.L122,0,.L379-.L122
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('work_area_start')
+	.sect	'.debug_loc'
+.L119:
+	.word	-1,.L120,0,.L378-.L120
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L964:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('initSInfoPool')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L76,.L392-.L76
+	.sdecl	'.debug_frame',debug,cluster('getSInfoFromPool')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L964,.L78,.L395-.L78
+	.byte	8,19,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('freeSInfo')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L964,.L80,.L397-.L80
+	.byte	8,19,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('addScheduleInfo')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L82,.L381-.L82
+	.sdecl	'.debug_frame',debug,cluster('config_timer')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L84,.L400-.L84
+	.sdecl	'.debug_frame',debug,cluster('init_hardware')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L86,.L323-.L86
+	.sdecl	'.debug_frame',debug,cluster('can_init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L88,.L322-.L88
+	.sdecl	'.debug_frame',debug,cluster('request')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L90,.L371-.L90
+	.sdecl	'.debug_frame',debug,cluster('get_running_component')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L92,.L333-.L92
+	.byte	8,19,8,20,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('set_running_component')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L94,.L336-.L94
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('create_component')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L96,.L340-.L96
+	.sdecl	'.debug_frame',debug,cluster('create_task')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L964,.L98,.L342-.L98
+	.byte	8,19,4
+	.word	(.L460-.L98)/2
+	.byte	19,16,22,26,3,19,138,16,4
+	.word	(.L342-.L460)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('get_running_task')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L100,.L335-.L100
+	.byte	8,19,8,20,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('get_jiffies')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L102,.L339-.L102
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('init_timer_interrupt')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L104,.L363-.L104
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('start_kernel')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L106,.L364-.L106
+	.sdecl	'.debug_frame',debug,cluster('schedule')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L108,.L366-.L108
+	.sdecl	'.debug_frame',debug,cluster('syscall_trap_handler')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L112,.L405-.L112
+	.sdecl	'.debug_frame',debug,cluster('syscall_trap')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L114,.L421-.L114
+	.sdecl	'.debug_frame',debug,cluster('set_delayed_output')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L116,.L368-.L116
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('link')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L964,.L118,.L375-.L118
+	.byte	8,18,8,19,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('work_area_start')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L120,.L378-.L120
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('work_area_end')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L122,.L379-.L122
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('check_high_finished')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L964,.L124,.L380-.L124
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('schedule_event_driven_ISR')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L126,.L422-.L126
+	.sdecl	'.debug_frame',debug,cluster('schedule_EDF_ISR')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L964,.L128,.L424-.L128
+	.byte	4
+	.word	(.L474-.L128)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L424-.L474)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('cancom_timer_interrupt_handler')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L130,.L430-.L130
+	.sdecl	'.debug_frame',debug,cluster('schedule_timer_interrupt')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L132,.L435-.L132
+	.sdecl	'.debug_frame',debug,cluster('cancom_timer_interrupt')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L964,.L134,.L436-.L134
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L965:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,30,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('.cocofun_6')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L965,.L110,.L288-.L110
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+
+
+	; Module end

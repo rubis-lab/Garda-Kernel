@@ -1,0 +1,5298 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc1480a -H sfr/regtc1797.sfr -c99 --dep-file=.user_main.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=user_main.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o user_main.src ..\\user_main.c"
+	.compiler_name		"ctc"
+	.name	"user_main"
+
+	
+$TC131
+	
+	.sdecl	'.text.user_main.callback',code,cluster('callback')
+	.sect	'.text.user_main.callback'
+	.align	2
+	
+	.global	callback
+
+; ..\user_main.c	     1  #include "user_main.h"
+; ..\user_main.c	     2  #if 1
+; ..\user_main.c	     3  
+; ..\user_main.c	     4  enum user_input_name{ACCELERATION, BRAKE, STEER, LEAD_DISTANCE};
+; ..\user_main.c	     5  enum car_output_name{SPEED, RPM, YAW_RATE, LATERAL_DISTANCE};
+; ..\user_main.c	     6  
+; ..\user_main.c	     7  static void func_high(void *arg);
+; ..\user_main.c	     8  static void func_high2(void *arg);
+; ..\user_main.c	     9  static void func_trust(void *arg);
+; ..\user_main.c	    10  static void func_idle(void* arg);
+; ..\user_main.c	    11  static void func_idle2(void* arg);
+; ..\user_main.c	    12  
+; ..\user_main.c	    13  #pragma align 8
+; ..\user_main.c	    14  
+; ..\user_main.c	    15  #define LED_VISIBLE
+; ..\user_main.c	    16  #ifdef LED_VISIBLE
+; ..\user_main.c	    17  DECLARE_HWC(hwc_high_1, 50, 10, 20, 0)
+; ..\user_main.c	    18  DECLARE_HWC(hwc_high_2, 50, 10, 20, 20)
+; ..\user_main.c	    19  DECLARE_HWC(hwc_trust_1, 50, 20, 30, 20)
+; ..\user_main.c	    20  DECLARE_HWC(ground_component, 0, 0, 0, 0)    // ground component, or idle component
+; ..\user_main.c	    21  
+; ..\user_main.c	    22  /*
+; ..\user_main.c	    23  DECLARE_HWC(dummy1_component, 100, 5, 10, 0)
+; ..\user_main.c	    24  DECLARE_HWC(dummy2_component, 100, 5, 10, 10)
+; ..\user_main.c	    25  DECLARE_HWC(dummy3_component, 100, 5, 10, 20)
+; ..\user_main.c	    26  DECLARE_HWC(dummy4_component, 100, 5, 10, 30)
+; ..\user_main.c	    27  DECLARE_HWC(dummy5_component, 100, 5, 10, 40)
+; ..\user_main.c	    28  DECLARE_HWC(dummy6_component, 100, 5, 10, 50)
+; ..\user_main.c	    29  */
+; ..\user_main.c	    30  
+; ..\user_main.c	    31  DECLARE_SWC(swc_high_1, 1, 50, 10, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    32  DECLARE_SWC(swc_high_idle_1, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    33  DECLARE_SWC(swc_high_2, 1, 50, 10, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    34  DECLARE_SWC(swc_high_idle_2, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    35  DECLARE_SWC(swc_trust_1, 1, 50, 20, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    36  DECLARE_SWC(swc_trust_idle_1, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    37  #else
+; ..\user_main.c	    38  DECLARE_HWC(hwc_high_1, 50, 2, 10, 0);
+; ..\user_main.c	    39  DECLARE_HWC(hwc_trust_1, 50, 1, 5, 10);
+; ..\user_main.c	    40  DECLARE_HWC(ground_component, 0, 0, 0, 0);    // ground component, or idle component
+; ..\user_main.c	    41  
+; ..\user_main.c	    42  DECLARE_SWC(swc_high_1, 1, 50, 10, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    43  DECLARE_SWC(swc_high_idle_1, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    44  DECLARE_SWC(swc_trust_1, 1, 50, 5, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    45  DECLARE_SWC(swc_trust_idle_1, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    46  #endif
+; ..\user_main.c	    47  
+; ..\user_main.c	    48  DECLARE_SWC(gnd_task, 0, 0, 0, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    49  
+; ..\user_main.c	    50  /*
+; ..\user_main.c	    51  DECLARE_SWC(dummy1_task, 1, 100, 10, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    52  DECLARE_SWC(dummy2_task, 2, 100, 20, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    53  DECLARE_SWC(dummy3_task, 3, 100, 30, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    54  DECLARE_SWC(dummy4_task, 4, 100, 40, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    55  DECLARE_SWC(dummy5_task, 5, 100, 50, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    56  DECLARE_SWC(dummy6_task, 6, 100, 60, DEFAULT_STACK_SIZE, TASK_ACTIVE)
+; ..\user_main.c	    57  */
+; ..\user_main.c	    58  
+; ..\user_main.c	    59  #pragma align restore
+; ..\user_main.c	    60  
+; ..\user_main.c	    61  void callback(uint32_t swc_id, uint32_t flag)
+; Function callback
+.L15:
+callback:	.type	func
+
+; ..\user_main.c	    62  {
+; ..\user_main.c	    63      switch (swc_id) {
+; ..\user_main.c	    64          case 1:
+	jeq	d4,#1,.L2				; prediction unknown
+.L374:
+
+; ..\user_main.c	    65              swc_high_1->task_state = flag;
+; ..\user_main.c	    66              break;
+; ..\user_main.c	    67          case 2:
+	jeq	d4,#2,.L3				; prediction unknown
+.L375:
+
+; ..\user_main.c	    68              swc_trust_1->task_state = flag;
+; ..\user_main.c	    69              break;
+; ..\user_main.c	    70          default:
+; ..\user_main.c	    71          	break;
+; ..\user_main.c	    72      }
+; ..\user_main.c	    73  }
+	ret
+.L2:
+	ld.a	a15,swc_high_1
+.L376:
+	j	.L5
+.L3:
+	ld.a	a15,swc_trust_1
+.L5:
+	st.w	[a15],d5
+.L377:
+	ret
+.L199:
+	
+__callback_function_end:
+	.size	callback,__callback_function_end-callback
+.L72:
+	; End of function
+	
+	.sdecl	'.text.user_main.user_main',code,cluster('user_main')
+	.sect	'.text.user_main.user_main'
+	.align	2
+	
+	.global	user_main
+
+; ..\user_main.c	    74  
+; ..\user_main.c	    75  
+; ..\user_main.c	    76  void user_main(void)
+; Function user_main
+.L17:
+user_main:	.type	func
+
+; ..\user_main.c	    77  {
+; ..\user_main.c	    78      printf("Starting HW/SW Components...\n");
+	movh.a	a4,#@his(.1.str)
+	lea	a4,[a4]@los(.1.str)
+	call	printf
+.L231:
+
+; ..\user_main.c	    79      printf("Starting User Tasks...\n");
+	movh.a	a4,#@his(.2.str)
+	lea	a4,[a4]@los(.2.str)
+	call	printf
+.L232:
+
+; ..\user_main.c	    80  
+; ..\user_main.c	    81      create_component(hwc_high_1);
+	ld.a	a4,hwc_high_1
+	call	create_component
+.L233:
+
+; ..\user_main.c	    82      create_task(hwc_high_1, swc_high_1, NULL, func_high, FALSE);
+	movh.a	a7,#@his(func_high)
+.L234:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_high)
+.L235:
+	ld.a	a4,hwc_high_1
+.L236:
+	ld.a	a5,swc_high_1
+.L237:
+	mov.a	a6,#0
+.L238:
+	call	create_task
+.L239:
+
+; ..\user_main.c	    83      create_task(hwc_high_1, swc_high_idle_1, NULL, func_idle, FALSE);
+	movh.a	a7,#@his(func_idle)
+.L240:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_idle)
+.L241:
+	ld.a	a4,hwc_high_1
+.L242:
+	ld.a	a5,swc_high_idle_1
+.L243:
+	mov.a	a6,#0
+.L244:
+	call	create_task
+.L245:
+
+; ..\user_main.c	    84  
+; ..\user_main.c	    85      create_component(hwc_trust_1);
+	ld.a	a4,hwc_trust_1
+	call	create_component
+.L246:
+
+; ..\user_main.c	    86      create_task(hwc_trust_1, swc_trust_1, NULL, func_trust, TRUE);
+	movh.a	a7,#@his(func_trust)
+.L247:
+	mov	d4,#1
+	lea	a7,[a7]@los(func_trust)
+.L248:
+	ld.a	a4,hwc_trust_1
+.L249:
+	ld.a	a5,swc_trust_1
+.L250:
+	mov.a	a6,#0
+.L251:
+	call	create_task
+.L252:
+
+; ..\user_main.c	    87      create_task(hwc_trust_1, swc_trust_idle_1, NULL, func_idle, FALSE);
+	movh.a	a7,#@his(func_idle)
+.L253:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_idle)
+.L254:
+	ld.a	a4,hwc_trust_1
+.L255:
+	ld.a	a5,swc_trust_idle_1
+.L256:
+	mov.a	a6,#0
+.L257:
+	call	create_task
+.L258:
+
+; ..\user_main.c	    88  
+; ..\user_main.c	    89      link(hwc_high_1, hwc_trust_1);
+	ld.a	a4,hwc_high_1
+.L259:
+	ld.a	a5,hwc_trust_1
+	call	link
+.L260:
+
+; ..\user_main.c	    90  
+; ..\user_main.c	    91      create_component(hwc_high_2);
+	ld.a	a4,hwc_high_2
+	call	create_component
+.L261:
+
+; ..\user_main.c	    92      create_task(hwc_high_2, swc_high_2, NULL, func_high2, FALSE);
+	movh.a	a7,#@his(func_high2)
+.L262:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_high2)
+.L263:
+	ld.a	a4,hwc_high_2
+.L264:
+	ld.a	a5,swc_high_2
+.L265:
+	mov.a	a6,#0
+.L266:
+	call	create_task
+.L267:
+
+; ..\user_main.c	    93      create_task(hwc_high_2, swc_high_idle_2, NULL, func_idle2, FALSE);
+	movh.a	a7,#@his(func_idle2)
+.L268:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_idle2)
+.L269:
+	ld.a	a4,hwc_high_2
+.L270:
+	ld.a	a5,swc_high_idle_2
+.L271:
+	mov.a	a6,#0
+.L272:
+	call	create_task
+.L273:
+
+; ..\user_main.c	    94  
+; ..\user_main.c	    95      /*
+; ..\user_main.c	    96      create_component(dummy1_component);
+; ..\user_main.c	    97      create_task(dummy1_component, dummy1_task, NULL, func_idle, FALSE);
+; ..\user_main.c	    98      create_component(dummy2_component);
+; ..\user_main.c	    99      create_task(dummy2_component, dummy2_task, NULL, func_idle, FALSE);
+; ..\user_main.c	   100      create_component(dummy3_component);
+; ..\user_main.c	   101      create_task(dummy3_component, dummy3_task, NULL, func_idle, FALSE);
+; ..\user_main.c	   102      create_component(dummy4_component);
+; ..\user_main.c	   103      create_task(dummy4_component, dummy4_task, NULL, func_idle, FALSE);
+; ..\user_main.c	   104      create_component(dummy5_component);
+; ..\user_main.c	   105      create_task(dummy5_component, dummy5_task, NULL, func_idle, FALSE);
+; ..\user_main.c	   106      create_component(dummy6_component);
+; ..\user_main.c	   107      create_task(dummy6_component, dummy6_task, NULL, func_idle, FALSE);
+; ..\user_main.c	   108      */
+; ..\user_main.c	   109  
+; ..\user_main.c	   110      create_component(ground_component);
+	ld.a	a4,ground_component
+	call	create_component
+.L274:
+
+; ..\user_main.c	   111      create_task(ground_component, gnd_task, NULL, func_idle, FALSE);
+	movh.a	a7,#@his(func_idle)
+.L275:
+	mov	d4,#0
+	lea	a7,[a7]@los(func_idle)
+.L276:
+	ld.a	a4,ground_component
+.L277:
+	ld.a	a5,gnd_task
+.L278:
+	mov.a	a6,#0
+.L279:
+	call	create_task
+.L280:
+
+; ..\user_main.c	   112  
+; ..\user_main.c	   113      /* Event-driven scheduler test unit */
+; ..\user_main.c	   114      addScheduleInfo(1000, 2000, swc_high_1, swc_high_idle_1);	// 0 ~ 1 ms in hyper period
+	mov	d4,#1000
+	ld.a	a4,swc_high_1
+.L281:
+	mov	d5,#2000
+	ld.a	a5,swc_high_idle_1
+	call	addScheduleInfo
+.L282:
+
+; ..\user_main.c	   115      addScheduleInfo(20000, 25000, swc_high_2, swc_high_idle_2);	// 1 ~ 2 ms in hyper period
+	mov	d4,#20000
+	ld.a	a4,swc_high_2
+.L283:
+	mov	d5,#25000
+	ld.a	a5,swc_high_idle_2
+	call	addScheduleInfo
+.L284:
+
+; ..\user_main.c	   116      /* test unit end */
+; ..\user_main.c	   117  
+; ..\user_main.c	   118      /* Enable timer interrupt */
+; ..\user_main.c	   119      printf("Starting The Timer Interrupt...\n");
+	movh.a	a4,#@his(.3.str)
+	lea	a4,[a4]@los(.3.str)
+	call	printf
+.L285:
+
+; ..\user_main.c	   120      init_timer_interrupt();
+	call	init_timer_interrupt
+.L286:
+
+; ..\user_main.c	   121  
+; ..\user_main.c	   122      set_running_component(hwc_high_1);
+	ld.a	a4,hwc_high_1
+	call	set_running_component
+.L287:
+
+; ..\user_main.c	   123  
+; ..\user_main.c	   124      /* only the idle swc is running after calling schedule() and before the 1st timer interrupt */
+; ..\user_main.c	   125      printf("Starting The Scheduler...\n");
+	movh.a	a4,#@his(.4.str)
+	lea	a4,[a4]@los(.4.str)
+	call	printf
+.L288:
+
+; ..\user_main.c	   126  
+; ..\user_main.c	   127      schedule();
+	j	schedule
+.L137:
+	
+__user_main_function_end:
+	.size	user_main,__user_main_function_end-user_main
+.L42:
+	; End of function
+	
+	.sdecl	'.text.user_main.func_high',code,cluster('func_high')
+	.sect	'.text.user_main.func_high'
+	.align	2
+	
+
+; ..\user_main.c	   128  }
+; ..\user_main.c	   129  
+; ..\user_main.c	   130  static uint32_t enable_loop(void)
+; ..\user_main.c	   131  {
+; ..\user_main.c	   132  	if (get_running_task()->task_state == TASK_INF_LOOP)
+; ..\user_main.c	   133  		return TRUE;
+; ..\user_main.c	   134  
+; ..\user_main.c	   135  	return FALSE;
+; ..\user_main.c	   136  }
+; ..\user_main.c	   137  static uint32_t check_the_result(void)
+; ..\user_main.c	   138  {
+; ..\user_main.c	   139  	if (get_running_task()->task_state != TASK_INVALID_RESULT)
+; ..\user_main.c	   140  		return TRUE;
+; ..\user_main.c	   141  
+; ..\user_main.c	   142  	return FALSE;
+; ..\user_main.c	   143  }
+; ..\user_main.c	   144  
+; ..\user_main.c	   145  static void func_high(void *arg)
+; Function func_high
+.L19:
+func_high:	.type	func
+	sub.a	a10,#232
+.L216:
+
+; ..\user_main.c	   146  {
+; ..\user_main.c	   147      float car_output[14 + 10];
+; ..\user_main.c	   148  	float user_input[5 + 10];
+; ..\user_main.c	   149  	CAN_SWObj CC_sensing_1, CC_sensing_2;
+; ..\user_main.c	   150      CAN_SWObj LKAS_sensing;
+; ..\user_main.c	   151  	ubyte send_buf[16]={0,};
+	movh.a	a15,#@his(.5.ini)
+	lea	a15,[a15]@los(.5.ini)
+.L293:
+	lea	a2,[a10]216
+	mov.a	a4,#15
+.L6:
+	ld.bu	d15,[a15+]
+	st.b	[a2+],d15
+	loop	a4,.L6				; predicted taken
+.L153:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+	lea	a12,0xf0000f00
+.L154:
+
+; ..\user_main.c	   152  fdef LED_VISIBLE
+; ..\user_main.c	   153  		led_on(0);
+; ..\user_main.c	   154  		delay_ms_f(3);
+; ..\user_main.c	   155  #endif
+; ..\user_main.c	   156  
+; ..\user_main.c	   157  		CAN_vGetMsgObj(0x7FF-0x7FD, &CC_sensing_1);		// speed 2
+; ..\user_main.c	   158  		CAN_vReleaseObj(0x7FF-0x7FD);
+; ..\user_main.c	   159  		CAN_vGetMsgObj(0x7FF-0x7FB, &CC_sensing_2);		// rpm, yaw rate 4
+; ..\user_main.c	   160  		CAN_vReleaseObj(0x7FF-0x7FB);
+; ..\user_main.c	   161  		CAN_vGetMsgObj(0x7FF-0x7F5, &LKAS_sensing);		// lateral distance 10
+; ..\user_main.c	   162  		CAN_vReleaseObj(0x7FF-0x7F5);
+; ..\user_main.c	   163  
+; ..\user_main.c	   164  		car_output[SPEED] = *((float *)&CC_sensing_1.ubData[0]);
+; ..\user_main.c	   165  		car_output[RPM] = *((float *)&CC_sensing_2.ubData[0]);
+; ..\user_main.c	   166  		car_output[YAW_RATE] = *((float *)&CC_sensing_2.ubData[4]);
+; ..\user_main.c	   167  		car_output[LATERAL_DISTANCE] = *((float *)&LKAS_sensing.ubData[0]);
+; ..\user_main.c	   168  
+; ..\user_main.c	   169  		user_input[LEAD_DISTANCE] = 15.0;
+; ..\user_main.c	   170  		user_input[STEER] = (-4.0 - car_output[LATERAL_DISTANCE]) * 18;
+; ..\user_main.c	   171  		user_input[ACCELERATION] = ((60.0 - car_output[SPEED]) / 60.0);
+; ..\user_main.c	   172  		user_input[BRAKE] = 0.0;
+; ..\user_main.c	   173  
+; ..\user_main.c	   174  		if ( swc_high_1->task_state == TASK_ACTIVE ) {
+; ..\user_main.c	   175  			memcpy(&send_buf[0], &user_input[ACCELERATION], 4);
+	movh	d8,#17008
+.L7:
+	call	work_area_start
+.L159:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+	ld.w	d0,[a12]
+.L294:
+	insert	d0,d0,#0,#0,#1
+	st.w	[a12],d0
+.L160:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+; ..\intrinsic.h	   176  }
+; ..\intrinsic.h	   177  
+; ..\intrinsic.h	   178  //! Insert NEZ.A instruction
+; ..\intrinsic.h	   179  inline uint32_t neza(void *p) {
+; ..\intrinsic.h	   180      int ret;
+; ..\intrinsic.h	   181      __asm("nez.a %0,%1":"=d"(ret):"a"(p));
+; ..\intrinsic.h	   182      return ret;
+; ..\intrinsic.h	   183  }
+; ..\intrinsic.h	   184  
+; ..\intrinsic.h	   185  //! Find the maximum value in an uint16_t array
+; ..\intrinsic.h	   186  inline uint16_t ixmaxu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   187          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   188          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   189  {
+; ..\intrinsic.h	   190      uint16_t value;
+; ..\intrinsic.h	   191      uint64_t e;
+; ..\intrinsic.h	   192  
+; ..\intrinsic.h	   193      __asm(""
+; ..\intrinsic.h	   194              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   195              " mov16  %1.0,#1    ; maximum index 0, working index 1  \n"
+; ..\intrinsic.h	   196              " ld.hu  %1.1,[%2+] ; maximum value is 1st element      \n"
+; ..\intrinsic.h	   197              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   198              " mov16  %1.0,#0    ; maximum index 0, working index 0  \n"
+; ..\intrinsic.h	   199              " mov16  %1.1,#0    ; maximum value is UINT_MIN         \n"
+; ..\intrinsic.h	   200              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   201              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   202              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   203              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   204              " ixmax.u  %1,%1,d15  ; Find max (IP pipeline)          \n"
+; ..\intrinsic.h	   205              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   206              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   207              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   208              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   209              " st16.h [%4],%1.0  ; *indexp = maximum index           \n"
+; ..\intrinsic.h	   210              " mov    %0,%1.1    ; value = maximum value             \n"
+; ..\intrinsic.h	   211              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   212      return value;
+; ..\intrinsic.h	   213  }
+; ..\intrinsic.h	   214  
+; ..\intrinsic.h	   215  //! Find the minimum value in an uint16_t array
+; ..\intrinsic.h	   216  inline uint16_t ixminu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   217          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   218          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   219  {
+; ..\intrinsic.h	   220      uint16_t value;
+; ..\intrinsic.h	   221      uint64_t e;
+; ..\intrinsic.h	   222  
+; ..\intrinsic.h	   223      __asm(""
+; ..\intrinsic.h	   224              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   225              " mov16  %1.0,#1    ; minimum index 0, working index 1  \n"
+; ..\intrinsic.h	   226              " ld.hu  %1.1,[%2+] ; minimum value is 1st element      \n"
+; ..\intrinsic.h	   227              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   228              " mov16  %1.0,#0    ; minimum index 0, working index 0  \n"
+; ..\intrinsic.h	   229              " mov16  %1.1,#-1   ; minimum value is UINT_MAX         \n"
+; ..\intrinsic.h	   230              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   231              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   232              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   233              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   234              " ixmin.u %1,%1,d15  ; Find min (IP pipeline)           \n"
+; ..\intrinsic.h	   235              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   236              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   237              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   238              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   239              " st16.h [%4],%1.0  ; *indexp = miniumum index          \n"
+; ..\intrinsic.h	   240              " mov    %0,%1.1    ; value = minimum value             \n"
+; ..\intrinsic.h	   241              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   242      return value;
+; ..\intrinsic.h	   243  }
+; ..\intrinsic.h	   244  
+; ..\intrinsic.h	   245  //! Find the maximum value in an uint32_t array
+; ..\intrinsic.h	   246  inline uint32_t ixmax32(uint32_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   247          const unsigned *n, //!< [in] number of elements
+; ..\intrinsic.h	   248          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   249  {
+; ..\intrinsic.h	   250      uint32_t value;
+; ..\intrinsic.h	   251      __asm(""
+; ..\intrinsic.h	   252              " mov.d    d0,%1 \n"
+; ..\intrinsic.h	   253              " mov      d14,#0      ;initialize the data reference           \n"
+; ..\intrinsic.h	   254              " ld16.w   d15,[%1]    ;load first value                        \n"
+; ..\intrinsic.h	   255              " max      d14,d14,d15 ;take the max of two values              \n"
+; ..\intrinsic.h	   256              " jlt      d15,d14,*+8 ;check if we need the address of the max \n"
+; ..\intrinsic.h	   257              " mov16.aa a15,%1      ;take the address of the new max         \n"
+; ..\intrinsic.h	   258              " mov16    %0,d15      ; take the value of the new max          \n"
+; ..\intrinsic.h	   259              " ld.w     d15,[+%1]4  ;load next value                         \n"
+; ..\intrinsic.h	   260              " loop     %2,*-14                                              \n"
+; ..\intrinsic.h	   261              " jz16.a   %3,*+10     ; if indexp==NULL jump +8                \n"
+; ..\intrinsic.h	   262              " mov16.d  d15,a15                                              \n"
+; ..\intrinsic.h	   263              " sub16    d15,d0,d15                                           \n"
+; ..\intrinsic.h	   264              " sh16     d15,#2                                               \n"
+; ..\intrinsic.h	   265              " st16.w   [%3],d15  ; *indexp = maxiumum index                 \n"
+; ..\intrinsic.h	   266              :"=d"(value):"a"(array),"a"(n-1),"a"(indexp):"d0","a15","d14","d15");
+; ..\intrinsic.h	   267      return value;
+; ..\intrinsic.h	   268  }
+; ..\intrinsic.h	   269  
+; ..\intrinsic.h	   270  //! Insert loop executing NOP instruction cnt times
+; ..\intrinsic.h	   271  inline void nops(void *cnt) {
+; ..\intrinsic.h	   272  #if defined(__TASKING__)
+; ..\intrinsic.h	   273      __asm(" nop16\n"
+; ..\intrinsic.h	   274              " nop16\n"
+; ..\intrinsic.h	   275              " loop %0,*-4"
+; ..\intrinsic.h	   276              ::"a"(cnt));
+; ..\intrinsic.h	   277  #elif defined(__GNU__)
+; ..\intrinsic.h	   278      __asm("0: nop16\n"
+; ..\intrinsic.h	   279              " nop16\n"
+; ..\intrinsic.h	   280              " loop %%0,0b"
+; ..\intrinsic.h	   281              ::"a"(cnt));
+; ..\intrinsic.h	   282  #endif
+; ..\intrinsic.h	   283  }
+; ..\intrinsic.h	   284  
+; ..\intrinsic.h	   285  //! Insert n NOPs instruction
+; ..\intrinsic.h	   286  #define NOPS(n)   __asm(".DUP " #n "\n\tnop16\n\t.ENDM\n")
+; ..\intrinsic.h	   287  
+; ..\intrinsic.h	   288  //! Reset instruction cache
+; ..\intrinsic.h	   289  inline void reset_icache(void) {
+; ..\intrinsic.h	   290  #if defined(__TC1796__) ||  defined(__TC1766__)
+; ..\intrinsic.h	   291      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   292      PMI_CON0.U = 2; // Cache bypassed
+; ..\intrinsic.h	   293      PMI_CON1.U = 1; // All cache lines are invalidated
+; ..\intrinsic.h	   294      nops((void*)64);       //  wait while busy
+; ..\intrinsic.h	   295      PMI_CON1.U = 0; // Normal code cache (ICACHE) operation
+; ..\intrinsic.h	   296      PMI_CON0.U = 0; // Cache enabled
+; ..\intrinsic.h	   297      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   298  #elif defined(__TC1797__) || defined(__TC1767__)
+; ..\intrinsic.h	   299      PMI_CON1.U = 1;
+; ..\intrinsic.h	   300      while (PMI_CON1.U)
+; ..\intrinsic.h	   301          ;
+; ..\intrinsic.h	   302  #else
+; ..\intrinsic.h	   303  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   304  #endif
+; ..\intrinsic.h	   305  }
+; ..\intrinsic.h	   306  //! Enable instruction cache
+; ..\intrinsic.h	   307  inline void enable_icache(void) {
+; ..\intrinsic.h	   308  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   309      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   310      PMI_CON0.U = 0; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   311      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   312  #else
+; ..\intrinsic.h	   313  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   314  #endif
+; ..\intrinsic.h	   315  }
+; ..\intrinsic.h	   316  
+; ..\intrinsic.h	   317  //! Disable instruction cache
+; ..\intrinsic.h	   318  inline void disable_icache(void) {
+; ..\intrinsic.h	   319  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   320      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   321      PMI_CON0.U = 2; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   322      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   323  #else
+; ..\intrinsic.h	   324  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   325  #endif
+; ..\intrinsic.h	   326  }
+; ..\intrinsic.h	   327  
+; ..\intrinsic.h	   328  //! Convert function pointer to function running uncached (Segment A)
+; ..\intrinsic.h	   329  inline void *uncached(void(*f)(void)) {
+; ..\intrinsic.h	   330      return (void*) __insert(10L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   331  }
+; ..\intrinsic.h	   332  //! Convert function pointer to function running cached (Segment 8)
+; ..\intrinsic.h	   333  inline void *cached(void(*f)(void)) {
+; ..\intrinsic.h	   334      return (void*) __insert(8L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   335  }
+; ..\intrinsic.h	   336  /*! Busy delay
+; ..\intrinsic.h	   337   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   338   */
+; ..\intrinsic.h	   339  inline void delay_us(uint32_t _microseconds) {
+; ..\intrinsic.h	   340      nops((void *) (_microseconds * FREQ_CPU_MHZ / 2 / 2));
+; ..\intrinsic.h	   341  }
+; ..\intrinsic.h	   342  
+; ..\intrinsic.h	   343  /*! Busy delay
+; ..\intrinsic.h	   344   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   345   */
+; ..\intrinsic.h	   346  
+; ..\intrinsic.h	   347  inline void delay_ms_f(float _milliseconds) {
+; ..\intrinsic.h	   348  
+; ..\intrinsic.h	   349  uint32_t x;
+; ..\intrinsic.h	   350  x = (_milliseconds*FREQ_CPU_MHZ)/2;
+	mov	d0,#270
+	mov.a	a2,d0
+.L295:
+
+; ..\intrinsic.h	   353      __asm( "  mov.u d15,#1000 \n"      (inlined)
+	
+	  mov.u d15,#1000 
+  mov.a a15,d15  
+  nop16          
+  nop16          
+  loop a15,*-4    
+  loop a2,*-8   
+
+	
+.L162:
+	movh.a	a14,#@his(.L427)
+	lea	a14,[a14]@los(.L427)
+	j	.cocofun_7
+.L427:
+.L296:
+	ld.w	d1,[a10]186
+.L297:
+	st.w	[a10]4,d1
+.L298:
+	ld.w	d1,[a10]190
+.L299:
+	st.w	[a10]8,d1
+.L300:
+	movh	d2,#16752
+	ld.w	d1,[a10]206
+.L301:
+	st.w	[a10]12,d1
+.L302:
+	st.w	[a10]108,d2
+.L303:
+
+; ..\user_main.c	   176  &user_input[BRAKE], 4);
+; ..\user_main.c	   177  			CAN_vLoadData(0x7FF-0x7FF, (ubyte *)send_buf);
+; ..\user_main.c	   178  			memcpy(&send_buf[0], &user_input[STEER], 4);
+	movh	d2,#49280
+	ld.a	a2,swc_high_1
+.L304:
+	sub.f	d1,d2,d1
+.L305:
+	movh	d2,#16784
+.L306:
+	mul.f	d1,d1,d2
+	st.w	[a10]104,d1
+.L307:
+	sub.f	d0,d8,d0
+.L308:
+	div.f	d0,d0,d8
+	st.w	[a10]96,d0
+.L309:
+	mov	d0,#0
+	st.w	[a10]100,d0
+.L310:
+	ld.w	d0,[a2]
+.L311:
+	jne	d0,#1,.L8				; prediction unknown
+.L312:
+
+; ..\user_main.c	   179  			memcpy(&send_buf[4], &user_input[LEAD_DISTANCE], 4);
+	movh.a	a14,#@his(.L428)
+	lea	a14,[a14]@los(.L428)
+	j	.cocofun_6
+.L428:
+.L167:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+; ..\led.h	    31  }
+; ..\led.h	    32  
+; ..\led.h	    33  inline void led_off(int led_no)
+; ..\led.h	    34  {
+; ..\led.h	    35      P3_OUT.U |= (1 << led_no);
+	ld.w	d0,[a12]
+.L313:
+	or	d0,d0,#1
+	st.w	[a12],d0
+.L168:
+
+; ..\user_main.c	   180  KE], 4);
+; ..\user_main.c	   181  			CAN_vLoadData(0x7FF-0x7FF, (ubyte *)send_buf);
+; ..\user_main.c	   182  			memcpy(&send_buf[0], &user_input[STEER], 4);
+; ..\user_main.c	   183  			memcpy(&send_buf[4], &user_input[LEAD_DISTANCE], 4);
+; ..\user_main.c	   184  			CAN_vLoadData(0x7FF-0x7FE, (ubyte *)send_buf);
+; ..\user_main.c	   185  
+; ..\user_main.c	   186  /*
+; ..\user_main.c	   187  		int cursor = 0;
+; ..\user_main.c	   188  		int isNormal = 0;
+; ..\user_main.c	   189  		CAN_vLoadData(12, (ubyte *)send_buf);
+; ..\user_main.c	   190  		while(1) {
+; ..\user_main.c	   191  			if ( ++cursor % 5000000 == 0 ) {
+; ..\user_main.c	   192  				if ( isNormal == 0 ) isNormal = 1;
+; ..\user_main.c	   193  				else isNormal = 0;
+; ..\user_main.c	   194  			}
+; ..\user_main.c	   195  			if ( isNormal == 0 )
+; ..\user_main.c	   196  				CAN_vTransmit(12);
+; ..\user_main.c	   197  		}
+; ..\user_main.c	   198  */
+; ..\user_main.c	   199  		/*
+; ..\user_main.c	   200  		while(1) {
+; ..\user_main.c	   201  			request(12, (ubyte *)send_buf);
+; ..\user_main.c	   202  		}
+; ..\user_main.c	   203  		*/
+; ..\user_main.c	   204  
+; ..\user_main.c	   205  #ifdef LED_VISIBLE
+; ..\user_main.c	   206  		led_off(0);
+; ..\user_main.c	   207  #endif
+; ..\user_main.c	   208  
+; ..\user_main.c	   209  		// Dummy loop for the test
+; ..\user_main.c	   210  		/*
+; ..\user_main.c	   211  		while (enable_loop())
+; ..\user_main.c	   212  		{
+; ..\user_main.c	   213  		*/
+; ..\user_main.c	   214  #ifdef LED_VISIBLE
+; ..\user_main.c	   215  		/*
+; ..\user_main.c	   216  			led_on(3);
+; ..\user_main.c	   217  			delay_ms_f(3);
+; ..\user_main.c	   218  			led_off(3);
+; ..\user_main.c	   219  			delay_ms_f(3);
+; ..\user_main.c	   220  			*/
+; ..\user_main.c	   221  #endif
+; ..\user_main.c	   222  		//}
+; ..\user_main.c	   223  
+; ..\user_main.c	   224  
+; ..\user_main.c	   225  			set_delayed_output(0x7FF-0x7FF, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+	movh.a	a14,#@his(.L429)
+	lea	a14,[a14]@los(.L429)
+	j	.cocofun_8
+.L429:
+.L218:
+	mov	d4,#0
+.L314:
+	call	set_delayed_output
+.L315:
+
+; ..\user_main.c	   226  			set_delayed_output(0x7FF-0x7FE, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+	movh.a	a14,#@his(.L430)
+	lea	a14,[a14]@los(.L430)
+	j	.cocofun_8
+.L430:
+.L316:
+	mov	d4,#1
+.L317:
+	call	set_delayed_output
+.L318:
+
+; ..\user_main.c	   227  			work_area_end();
+	call	work_area_end
+.L8:
+
+; ..\user_main.c	   228  		}
+; ..\user_main.c	   229  
+; ..\user_main.c	   230  
+; ..\user_main.c	   231  		// Check the result is valid
+; ..\user_main.c	   232  		/*
+; ..\user_main.c	   233  		if (check_the_result())
+; ..\user_main.c	   234  		{
+; ..\user_main.c	   235  			set_delayed_output(0x7FF-0x7FF, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+; ..\user_main.c	   236  			set_delayed_output(0x7FF-0x7FE, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+; ..\user_main.c	   237  			work_area_end();
+; ..\user_main.c	   238  		}
+; ..\user_main.c	   239  		*/
+; ..\user_main.c	   240  
+; ..\user_main.c	   241  		syscall_suspend();
+	syscall	#2
+.L319:
+	j	.L7
+.L138:
+	
+__func_high_function_end:
+	.size	func_high,__func_high_function_end-func_high
+.L47:
+	; End of function
+	
+	.sdecl	'.text.user_main..cocofun_8',code,cluster('.cocofun_8')
+	.sect	'.text.user_main..cocofun_8'
+	.align	2
+; Function .cocofun_8
+.L21:
+.cocofun_8:	.type	func
+; Function body .cocofun_8, coco_iter:0
+	movh.a	a13,#@his(.L431)
+	lea	a13,[a13]@los(.L431)
+	j	.cocofun_9
+.L431:
+.L217:
+	ld.w	d5,[a2]28
+.L412:
+	sub	d5,d9
+.L413:
+	add	d5,d10
+.L414:
+	ji	a14
+.L87:
+	; End of function
+	.sdecl	'.text.user_main..cocofun_7',code,cluster('.cocofun_7')
+	.sect	'.text.user_main..cocofun_7'
+	.align	2
+; Function .cocofun_7
+.L23:
+.cocofun_7:	.type	func
+; Function body .cocofun_7, coco_iter:0
+	mov	d4,#2
+	lea	a4,[a10]156
+	call	CAN_vGetMsgObj
+.L400:
+	mov	d4,#2
+	call	CAN_vReleaseObj
+.L401:
+	mov	d4,#4
+	lea	a4,[a10]176
+	call	CAN_vGetMsgObj
+.L402:
+	mov	d4,#4
+	call	CAN_vReleaseObj
+.L403:
+	mov	d4,#10
+	lea	a4,[a10]196
+	call	CAN_vGetMsgObj
+.L404:
+	mov	d4,#10
+	call	CAN_vReleaseObj
+.L405:
+	ld.w	d0,[a10]166
+.L406:
+	st.w	[a10],d0
+.L407:
+	ji	a14
+.L82:
+	; End of function
+	.sdecl	'.text.user_main..cocofun_6',code,cluster('.cocofun_6')
+	.sect	'.text.user_main..cocofun_6'
+	.align	2
+; Function .cocofun_6
+.L25:
+.cocofun_6:	.type	func
+; Function body .cocofun_6, coco_iter:0
+	mov	d4,#4
+	lea	a4,[a10]216
+.L382:
+	lea	a5,[a10]96
+.L383:
+	call	memcpy
+.L384:
+	mov	d4,#4
+	lea	a4,[a10]220
+.L385:
+	lea	a5,[a10]100
+.L386:
+	call	memcpy
+.L387:
+	mov	d4,#0
+	lea	a4,[a10]216
+	call	CAN_vLoadData
+.L388:
+	mov	d4,#4
+	lea	a4,[a10]216
+.L389:
+	lea	a5,[a10]104
+.L390:
+	call	memcpy
+.L391:
+	mov	d4,#4
+	lea	a4,[a10]220
+.L392:
+	lea	a5,[a10]108
+.L393:
+	call	memcpy
+.L394:
+	mov	d4,#1
+	lea	a4,[a10]216
+	call	CAN_vLoadData
+.L395:
+	ji	a14
+.L77:
+	; End of function
+	.sdecl	'.text.user_main.func_trust',code,cluster('func_trust')
+	.sect	'.text.user_main.func_trust'
+	.align	2
+	
+
+; ..\user_main.c	   242     }
+; ..\user_main.c	   243  }
+; ..\user_main.c	   244  
+; ..\user_main.c	   245  static void func_trust(void *arg)
+; Function func_trust
+.L27:
+func_trust:	.type	func
+
+; ..\user_main.c	   246  {
+; ..\user_main.c	   247      float car_output[14 + 10];
+; ..\user_main.c	   248  	float user_input[5 + 10];
+; ..\user_main.c	   249  	CAN_SWObj CC_sensing_1, CC_sensing_2;
+; ..\user_main.c	   250      CAN_SWObj LKAS_sensing;
+; ..\user_main.c	   251  	ubyte send_buf[16];
+; ..\user_main.c	   252  
+; ..\user_main.c	   253      while (1) {
+; ..\user_main.c	   254      	if (check_high_finished() == FALSE)
+; ..\user_main.c	   255      	{
+; ..\user_main.c	   256  
+; ..\user_main.c	   257  #ifdef LED_VISIBLE
+; ..\user_main.c	   258      		led_off(1);
+; ..\user_main.c	   259      		/*
+; ..\user_main.c	   260  			led_on(1);
+; ..\user_main.c	   261  			delay_ms_f(3);
+; ..\user_main.c	   262  			*/
+; ..\user_main.c	   263  #endif
+; ..\user_main.c	   264  
+; ..\user_main.c	   265  			CAN_vGetMsgObj(0x7FF-0x7FD, &CC_sensing_1);		// speed
+; ..\user_main.c	   266  			CAN_vReleaseObj(0x7FF-0x7FD);
+; ..\user_main.c	   267  			CAN_vGetMsgObj(0x7FF-0x7FB, &CC_sensing_2);		// rpm, yaw rate
+; ..\user_main.c	   268  			CAN_vReleaseObj(0x7FF-0x7FB);
+; ..\user_main.c	   269  			CAN_vGetMsgObj(0x7FF-0x7F5, &LKAS_sensing);		// lateral distance
+; ..\user_main.c	   270  			CAN_vReleaseObj(0x7FF-0x7F5);
+; ..\user_main.c	   271  
+; ..\user_main.c	   272  			car_output[SPEED] = *((float *)&CC_sensing_1.ubData[0]);
+; ..\user_main.c	   273  			car_output[RPM] = *((float *)&CC_sensing_2.ubData[0]);
+; ..\user_main.c	   274  			car_output[YAW_RATE] = *((float *)&CC_sensing_2.ubData[4]);
+; ..\user_main.c	   275  			car_output[LATERAL_DISTANCE] = *((float *)&LKAS_sensing.ubData[0]);
+; ..\user_main.c	   276  
+; ..\user_main.c	   277  			user_input[LEAD_DISTANCE] = 15.0;
+; ..\user_main.c	   278  			user_input[STEER] = (-4.0 - car_output[LATERAL_DISTANCE]) * 18;
+; ..\user_main.c	   279  			user_input[ACCELERATION] = ((60.0 - car_output[SPEED]) / 60.0);
+	movh	d8,#17008
+	sub.a	a10,#232
+.L189:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+; ..\led.h	    31  }
+; ..\led.h	    32  
+; ..\led.h	    33  inline void led_off(int led_no)
+; ..\led.h	    34  {
+; ..\led.h	    35      P3_OUT.U |= (1 << led_no);
+	lea	a15,0xf0000f00
+.L9:
+	call	check_high_finished
+.L332:
+	jne	d2,#0,.L10				; prediction unknown
+.L192:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+; ..\led.h	    31  }
+; ..\led.h	    32  
+; ..\led.h	    33  inline void led_off(int led_no)
+; ..\led.h	    34  {
+; ..\led.h	    35      P3_OUT.U |= (1 << led_no);
+	ld.w	d15,[a15]
+.L333:
+	or	d15,#2
+	st.w	[a15],d15
+.L193:
+	movh.a	a14,#@his(.L432)
+	lea	a14,[a14]@los(.L432)
+	j	.cocofun_7
+.L432:
+.L219:
+	ld.w	d15,[a10]186
+.L334:
+	st.w	[a10]4,d15
+.L335:
+	ld.w	d15,[a10]190
+.L336:
+	st.w	[a10]8,d15
+.L337:
+	ld.w	d1,[a10]206
+.L338:
+	st.w	[a10]12,d1
+.L339:
+	movh	d15,#16752
+	st.w	[a10]108,d15
+.L340:
+	movh	d15,#49280
+.L341:
+	sub.f	d15,d15,d1
+.L342:
+	movh	d1,#16784
+.L343:
+	mul.f	d15,d15,d1
+	st.w	[a10]104,d15
+.L344:
+	sub.f	d15,d8,d0
+.L345:
+	div.f	d15,d15,d8
+	st.w	[a10]96,d15
+.L346:
+
+; ..\user_main.c	   280  			user_input[ACCELERATION] = ((60.0 - car_output[SPEED]) / 60.0);
+	mov	d15,#0
+	st.w	[a10]100,d15
+.L220:
+
+; ..\user_main.c	   281  			user_input[BRAKE] = 0.0;
+; ..\user_main.c	   282  			/*
+; ..\user_main.c	   283  			if(user_input[ACCELERATION] < 0.0)
+; ..\user_main.c	   284  			{
+; ..\user_main.c	   285  				user_input[ACCELERATION] = 0.0;
+; ..\user_main.c	   286  				user_input[BRAKE] = 60;
+; ..\user_main.c	   287  			}
+; ..\user_main.c	   288  			*/
+; ..\user_main.c	   289  
+	movh.a	a14,#@his(.L433)
+	lea	a14,[a14]@los(.L433)
+	j	.cocofun_6
+.L433:
+.L347:
+
+; ..\user_main.c	   290  			memcpy(&send_buf[0], &user_input[ACCELERATION], 4);
+; ..\user_main.c	   291  			memcpy(&send_buf[4], &user_input[BRAKE], 4);
+; ..\user_main.c	   292  			CAN_vLoadData(0x7FF-0x7FF, (ubyte *)send_buf);
+; ..\user_main.c	   293  			memcpy(&send_buf[0], &user_input[STEER], 4);
+; ..\user_main.c	   294  			memcpy(&send_buf[4], &user_input[LEAD_DISTANCE], 4);
+; ..\user_main.c	   295  			CAN_vLoadData(0x7FF-0x7FE, (ubyte *)send_buf);
+; ..\user_main.c	   296  
+	movh.a	a13,#@his(.L434)
+	lea	a13,[a13]@los(.L434)
+	j	.cocofun_9
+.L434:
+.L221:
+	ld.w	d15,[a2]28
+.L348:
+	sub	d5,d15,d9
+.L349:
+	add	d5,d10
+.L350:
+	mov	d4,#0
+.L351:
+	call	set_delayed_output
+.L352:
+
+; ..\user_main.c	   297  			set_delayed_output(0x7FF-0x7FF, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+	movh.a	a13,#@his(.L435)
+	lea	a13,[a13]@los(.L435)
+	j	.cocofun_9
+.L435:
+.L353:
+	ld.w	d15,[a2]28
+.L354:
+	sub	d5,d15,d9
+.L355:
+	add	d5,d10
+.L356:
+	mov	d4,#1
+.L357:
+	call	set_delayed_output
+.L194:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+; ..\led.h	    31  }
+; ..\led.h	    32  
+; ..\led.h	    33  inline void led_off(int led_no)
+; ..\led.h	    34  {
+; ..\led.h	    35      P3_OUT.U |= (1 << led_no);
+	ld.w	d15,[a15]
+.L358:
+	or	d15,#2
+	st.w	[a15],d15
+.L10:
+
+; ..\user_main.c	   298  od + get_running_component()->relative_deadline);
+; ..\user_main.c	   299  			set_delayed_output(0x7FF-0x7FE, get_running_component()->next_release_time - get_running_component()->period + get_running_component()->relative_deadline);
+; ..\user_main.c	   300  
+; ..\user_main.c	   301  #ifdef LED_VISIBLE
+; ..\user_main.c	   302  			led_off(1);
+; ..\user_main.c	   303  #endif
+	syscall	#2
+.L359:
+	j	.L9
+.L180:
+	
+__func_trust_function_end:
+	.size	func_trust,__func_trust_function_end-func_trust
+.L57:
+	; End of function
+	
+	.sdecl	'.text.user_main..cocofun_9',code,cluster('.cocofun_9')
+	.sect	'.text.user_main..cocofun_9'
+	.align	2
+; Function .cocofun_9
+.L29:
+.cocofun_9:	.type	func
+; Function body .cocofun_9, coco_iter:1
+	call	get_running_component
+.L419:
+	ld.w	d9,[a2]12
+.L420:
+	call	get_running_component
+.L421:
+	ld.w	d10,[a2]20
+.L422:
+	call	get_running_component
+.L423:
+	ji	a13
+.L92:
+	; End of function
+	.sdecl	'.text.user_main.func_high2',code,cluster('func_high2')
+	.sect	'.text.user_main.func_high2'
+	.align	2
+	
+
+; ..\user_main.c	   304      	}
+; ..\user_main.c	   305          syscall_suspend();
+; ..\user_main.c	   306      }
+; ..\user_main.c	   307  }
+; Function func_high2
+.L31:
+func_high2:	.type	func
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+	lea	a12,0xf0000f00
+
+; ..\user_main.c	   308     	}
+; ..\user_main.c	   309          syscall_suspend();
+.L11:
+
+; ..\led.h	     1  #ifndef __LED_H__
+; ..\led.h	     2  #define __LED_H__
+; ..\led.h	     3  #include <sfr/regtc1797.sfr>
+; ..\led.h	     4  #if 0
+; ..\led.h	     5  void led_init(void);
+; ..\led.h	     6  void led_on_all(void);
+; ..\led.h	     7  void led_off_all(void);
+; ..\led.h	     8  void led_on(int led_no);
+; ..\led.h	     9  void led_off(int led_no);
+; ..\led.h	    10  void led_toggle(int led_no);
+; ..\led.h	    11  #endif
+; ..\led.h	    12  inline void led_init(void)
+; ..\led.h	    13  {
+; ..\led.h	    14      P3_IOCR0.U = 0x80808080;
+; ..\led.h	    15      P3_IOCR4.U = 0x80808080;
+; ..\led.h	    16  }
+; ..\led.h	    17  
+; ..\led.h	    18  inline void led_on_all(void)
+; ..\led.h	    19  {
+; ..\led.h	    20      P3_OUT.U &= ~(0xFF);
+; ..\led.h	    21  }
+; ..\led.h	    22  
+; ..\led.h	    23  inline void led_off_all(void)
+; ..\led.h	    24  {
+; ..\led.h	    25      P3_OUT.U |= (0xFF);
+; ..\led.h	    26  }
+; ..\led.h	    27  
+; ..\led.h	    28  inline void led_on(int led_no)
+; ..\led.h	    29  {
+; ..\led.h	    30      P3_OUT.U &= ~(1 << led_no);
+	ld.w	d0,[a12]
+.L324:
+	insert	d0,d0,#0,#2,#1
+	st.w	[a12],d0
+.L174:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+; ..\intrinsic.h	   176  }
+; ..\intrinsic.h	   177  
+; ..\intrinsic.h	   178  //! Insert NEZ.A instruction
+; ..\intrinsic.h	   179  inline uint32_t neza(void *p) {
+; ..\intrinsic.h	   180      int ret;
+; ..\intrinsic.h	   181      __asm("nez.a %0,%1":"=d"(ret):"a"(p));
+; ..\intrinsic.h	   182      return ret;
+; ..\intrinsic.h	   183  }
+; ..\intrinsic.h	   184  
+; ..\intrinsic.h	   185  //! Find the maximum value in an uint16_t array
+; ..\intrinsic.h	   186  inline uint16_t ixmaxu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   187          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   188          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   189  {
+; ..\intrinsic.h	   190      uint16_t value;
+; ..\intrinsic.h	   191      uint64_t e;
+; ..\intrinsic.h	   192  
+; ..\intrinsic.h	   193      __asm(""
+; ..\intrinsic.h	   194              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   195              " mov16  %1.0,#1    ; maximum index 0, working index 1  \n"
+; ..\intrinsic.h	   196              " ld.hu  %1.1,[%2+] ; maximum value is 1st element      \n"
+; ..\intrinsic.h	   197              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   198              " mov16  %1.0,#0    ; maximum index 0, working index 0  \n"
+; ..\intrinsic.h	   199              " mov16  %1.1,#0    ; maximum value is UINT_MIN         \n"
+; ..\intrinsic.h	   200              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   201              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   202              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   203              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   204              " ixmax.u  %1,%1,d15  ; Find max (IP pipeline)          \n"
+; ..\intrinsic.h	   205              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   206              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   207              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   208              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   209              " st16.h [%4],%1.0  ; *indexp = maximum index           \n"
+; ..\intrinsic.h	   210              " mov    %0,%1.1    ; value = maximum value             \n"
+; ..\intrinsic.h	   211              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   212      return value;
+; ..\intrinsic.h	   213  }
+; ..\intrinsic.h	   214  
+; ..\intrinsic.h	   215  //! Find the minimum value in an uint16_t array
+; ..\intrinsic.h	   216  inline uint16_t ixminu16(uint16_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   217          unsigned n, //!< [in] number of elements
+; ..\intrinsic.h	   218          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   219  {
+; ..\intrinsic.h	   220      uint16_t value;
+; ..\intrinsic.h	   221      uint64_t e;
+; ..\intrinsic.h	   222  
+; ..\intrinsic.h	   223      __asm(""
+; ..\intrinsic.h	   224              " jz.t   %3:0,*+12  ; if n is odd jump +12              \n"
+; ..\intrinsic.h	   225              " mov16  %1.0,#1    ; minimum index 0, working index 1  \n"
+; ..\intrinsic.h	   226              " ld.hu  %1.1,[%2+] ; minimum value is 1st element      \n"
+; ..\intrinsic.h	   227              " j16    *+6        ; jump +6                           \n"
+; ..\intrinsic.h	   228              " mov16  %1.0,#0    ; minimum index 0, working index 0  \n"
+; ..\intrinsic.h	   229              " mov16  %1.1,#-1   ; minimum value is UINT_MAX         \n"
+; ..\intrinsic.h	   230              " sh     %3,#-1     ; n = n/2                           \n"
+; ..\intrinsic.h	   231              " mov.a  a15,%3     ;                                   \n"
+; ..\intrinsic.h	   232              " add.a  a15,#-1    ; n -=1                             \n"
+; ..\intrinsic.h	   233              " ld.w   d15,[%2+]  ; Load two next array elements      \n"
+; ..\intrinsic.h	   234              " ixmin.u %1,%1,d15  ; Find min (IP pipeline)           \n"
+; ..\intrinsic.h	   235              " ld16.w d15,[%2+]  ; Load two next array elements (LS) \n"
+; ..\intrinsic.h	   236              " loop   a15,*-6    ; loop (LP)                         \n"
+; ..\intrinsic.h	   237              " jz16.a %4,*+8     ; if indexp==NULL jump +8           \n"
+; ..\intrinsic.h	   238              " extr.u %1.0,%1.0,#16,#16  ; extract index             \n"
+; ..\intrinsic.h	   239              " st16.h [%4],%1.0  ; *indexp = miniumum index          \n"
+; ..\intrinsic.h	   240              " mov    %0,%1.1    ; value = minimum value             \n"
+; ..\intrinsic.h	   241              :"=d"(value),"=&e"(e):"a"(array),"d"(n),"a"(indexp):"a15","d15");
+; ..\intrinsic.h	   242      return value;
+; ..\intrinsic.h	   243  }
+; ..\intrinsic.h	   244  
+; ..\intrinsic.h	   245  //! Find the maximum value in an uint32_t array
+; ..\intrinsic.h	   246  inline uint32_t ixmax32(uint32_t *array, //!< [in] array pointer
+; ..\intrinsic.h	   247          const unsigned *n, //!< [in] number of elements
+; ..\intrinsic.h	   248          uint32_t *indexp) //!< [out] index to maximum value
+; ..\intrinsic.h	   249  {
+; ..\intrinsic.h	   250      uint32_t value;
+; ..\intrinsic.h	   251      __asm(""
+; ..\intrinsic.h	   252              " mov.d    d0,%1 \n"
+; ..\intrinsic.h	   253              " mov      d14,#0      ;initialize the data reference           \n"
+; ..\intrinsic.h	   254              " ld16.w   d15,[%1]    ;load first value                        \n"
+; ..\intrinsic.h	   255              " max      d14,d14,d15 ;take the max of two values              \n"
+; ..\intrinsic.h	   256              " jlt      d15,d14,*+8 ;check if we need the address of the max \n"
+; ..\intrinsic.h	   257              " mov16.aa a15,%1      ;take the address of the new max         \n"
+; ..\intrinsic.h	   258              " mov16    %0,d15      ; take the value of the new max          \n"
+; ..\intrinsic.h	   259              " ld.w     d15,[+%1]4  ;load next value                         \n"
+; ..\intrinsic.h	   260              " loop     %2,*-14                                              \n"
+; ..\intrinsic.h	   261              " jz16.a   %3,*+10     ; if indexp==NULL jump +8                \n"
+; ..\intrinsic.h	   262              " mov16.d  d15,a15                                              \n"
+; ..\intrinsic.h	   263              " sub16    d15,d0,d15                                           \n"
+; ..\intrinsic.h	   264              " sh16     d15,#2                                               \n"
+; ..\intrinsic.h	   265              " st16.w   [%3],d15  ; *indexp = maxiumum index                 \n"
+; ..\intrinsic.h	   266              :"=d"(value):"a"(array),"a"(n-1),"a"(indexp):"d0","a15","d14","d15");
+; ..\intrinsic.h	   267      return value;
+; ..\intrinsic.h	   268  }
+; ..\intrinsic.h	   269  
+; ..\intrinsic.h	   270  //! Insert loop executing NOP instruction cnt times
+; ..\intrinsic.h	   271  inline void nops(void *cnt) {
+; ..\intrinsic.h	   272  #if defined(__TASKING__)
+; ..\intrinsic.h	   273      __asm(" nop16\n"
+; ..\intrinsic.h	   274              " nop16\n"
+; ..\intrinsic.h	   275              " loop %0,*-4"
+; ..\intrinsic.h	   276              ::"a"(cnt));
+; ..\intrinsic.h	   277  #elif defined(__GNU__)
+; ..\intrinsic.h	   278      __asm("0: nop16\n"
+; ..\intrinsic.h	   279              " nop16\n"
+; ..\intrinsic.h	   280              " loop %%0,0b"
+; ..\intrinsic.h	   281              ::"a"(cnt));
+; ..\intrinsic.h	   282  #endif
+; ..\intrinsic.h	   283  }
+; ..\intrinsic.h	   284  
+; ..\intrinsic.h	   285  //! Insert n NOPs instruction
+; ..\intrinsic.h	   286  #define NOPS(n)   __asm(".DUP " #n "\n\tnop16\n\t.ENDM\n")
+; ..\intrinsic.h	   287  
+; ..\intrinsic.h	   288  //! Reset instruction cache
+; ..\intrinsic.h	   289  inline void reset_icache(void) {
+; ..\intrinsic.h	   290  #if defined(__TC1796__) ||  defined(__TC1766__)
+; ..\intrinsic.h	   291      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   292      PMI_CON0.U = 2; // Cache bypassed
+; ..\intrinsic.h	   293      PMI_CON1.U = 1; // All cache lines are invalidated
+; ..\intrinsic.h	   294      nops((void*)64);       //  wait while busy
+; ..\intrinsic.h	   295      PMI_CON1.U = 0; // Normal code cache (ICACHE) operation
+; ..\intrinsic.h	   296      PMI_CON0.U = 0; // Cache enabled
+; ..\intrinsic.h	   297      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   298  #elif defined(__TC1797__) || defined(__TC1767__)
+; ..\intrinsic.h	   299      PMI_CON1.U = 1;
+; ..\intrinsic.h	   300      while (PMI_CON1.U)
+; ..\intrinsic.h	   301          ;
+; ..\intrinsic.h	   302  #else
+; ..\intrinsic.h	   303  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   304  #endif
+; ..\intrinsic.h	   305  }
+; ..\intrinsic.h	   306  //! Enable instruction cache
+; ..\intrinsic.h	   307  inline void enable_icache(void) {
+; ..\intrinsic.h	   308  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   309      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   310      PMI_CON0.U = 0; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   311      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   312  #else
+; ..\intrinsic.h	   313  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   314  #endif
+; ..\intrinsic.h	   315  }
+; ..\intrinsic.h	   316  
+; ..\intrinsic.h	   317  //! Disable instruction cache
+; ..\intrinsic.h	   318  inline void disable_icache(void) {
+; ..\intrinsic.h	   319  #if defined(__TC1797__) || defined(__TC1767__)  ||  defined(__TC1796__)||  defined(__TC1766__)
+; ..\intrinsic.h	   320      endinit_clear(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   321      PMI_CON0.U = 2; // PMI_CON0_CCBYP;
+; ..\intrinsic.h	   322      endinit_set(ENDINIT_DEFAULT);
+; ..\intrinsic.h	   323  #else
+; ..\intrinsic.h	   324  #error "__<derivative>__ not defined"
+; ..\intrinsic.h	   325  #endif
+; ..\intrinsic.h	   326  }
+; ..\intrinsic.h	   327  
+; ..\intrinsic.h	   328  //! Convert function pointer to function running uncached (Segment A)
+; ..\intrinsic.h	   329  inline void *uncached(void(*f)(void)) {
+; ..\intrinsic.h	   330      return (void*) __insert(10L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   331  }
+; ..\intrinsic.h	   332  //! Convert function pointer to function running cached (Segment 8)
+; ..\intrinsic.h	   333  inline void *cached(void(*f)(void)) {
+; ..\intrinsic.h	   334      return (void*) __insert(8L << 28, (int) f, 0, 28);
+; ..\intrinsic.h	   335  }
+; ..\intrinsic.h	   336  /*! Busy delay
+; ..\intrinsic.h	   337   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   338   */
+; ..\intrinsic.h	   339  inline void delay_us(uint32_t _microseconds) {
+; ..\intrinsic.h	   340      nops((void *) (_microseconds * FREQ_CPU_MHZ / 2 / 2));
+; ..\intrinsic.h	   341  }
+; ..\intrinsic.h	   342  
+; ..\intrinsic.h	   343  /*! Busy delay
+; ..\intrinsic.h	   344   \pre FREQ_CPU_MHZ must be defined
+; ..\intrinsic.h	   345   */
+; ..\intrinsic.h	   346  
+; ..\intrinsic.h	   347  inline void delay_ms_f(float _milliseconds) {
+; ..\intrinsic.h	   348  
+; ..\intrinsic.h	   349  uint32_t x;
+; ..\intrinsic.h	   350  x = (_milliseconds*FREQ_CPU_MHZ)/2;
+	mov	d0,#270
+	mov.a	a2,d0
+.L325:
+
+; ..\intrinsic.h	   353      __asm( "  mov.u d15,#1000 \n"      (inlined)
+	
+	  mov.u d15,#1000 
+  mov.a a15,d15  
+  nop16          
+  nop16          
+  loop a15,*-4    
+  loop a2,*-8   
+
+	
+.L176:
+
+; ..\led.h	    31   << led_no);
+; ..\led.h	    32  }
+; ..\led.h	    33  
+; ..\led.h	    34  inline void led_off(int led_no)
+; ..\led.h	    35  {
+	ld.w	d0,[a12]
+.L326:
+	or	d0,d0,#4
+	st.w	[a12],d0
+.L178:
+
+; ..\user_main.c	   310  ;
+; ..\user_main.c	   311  #endif
+; ..\user_main.c	   312      	}
+; ..\user_main.c	   313          syscall_suspend();
+; ..\user_main.c	   314      }
+; ..\user_main.c	   315  }
+	syscall	#2
+.L327:
+	j	.L11
+.L172:
+	
+__func_high2_function_end:
+	.size	func_high2,__func_high2_function_end-func_high2
+.L52:
+	; End of function
+	
+	.sdecl	'.text.user_main.func_idle',code,cluster('func_idle')
+	.sect	'.text.user_main.func_idle'
+	.align	2
+	
+
+; ..\user_main.c	   316  
+; ..\user_main.c	   317  static void func_high2(void *arg)
+; ..\user_main.c	   318  {
+; ..\user_main.c	   319  	while (1) {
+; ..\user_main.c	   320  #ifdef LED_VISIBLE
+; ..\user_main.c	   321  		led_on(2);
+; ..\user_main.c	   322  		delay_ms_f(3);
+; ..\user_main.c	   323  		led_off(2);
+; ..\user_main.c	   324  #endif
+; ..\user_main.c	   325  		syscall_suspend();
+; ..\user_main.c	   326  	}
+; ..\user_main.c	   327  }
+; ..\user_main.c	   328  
+; ..\user_main.c	   329  
+; ..\user_main.c	   330  static void func_dummy(void *arg)
+; ..\user_main.c	   331  {
+; ..\user_main.c	   332      for (;;) {
+; ..\user_main.c	   333      	if (get_running_task()->task_state) {
+; Function func_idle
+func_idle:	.type	func
+
+; ..\user_main.c	   334          	led_on(2);
+; ..\user_main.c	   335          	delay_ms_f(100);
+.L12:
+
+; ..\user_main.c	   336          	led_off(2);
+	nop
+.L364:
+	j	.L12
+.L195:
+	
+__func_idle_function_end:
+	.size	func_idle,__func_idle_function_end-func_idle
+.L62:
+	; End of function
+	
+	.sdecl	'.text.user_main.func_idle2',code,cluster('func_idle2')
+	.sect	'.text.user_main.func_idle2'
+	.align	2
+	
+
+; ..\user_main.c	   337          	delay_ms_f(100);
+; ..\user_main.c	   338      	}
+; ..\user_main.c	   339      	syscall_suspend();
+; ..\user_main.c	   340      }
+; Function func_idle2
+func_idle2:	.type	func
+
+; ..\user_main.c	   341  }
+; ..\user_main.c	   342  
+.L13:
+
+; ..\user_main.c	   343  static void func_idle(void* arg)
+	nop
+.L369:
+	j	.L13
+.L197:
+	
+__func_idle2_function_end:
+	.size	func_idle2,__func_idle2_function_end-func_idle2
+.L67:
+	; End of function
+	
+	.sdecl	'.data.user_main._hwc_high_1',data,cluster('_hwc_high_1')
+	.sect	'.data.user_main._hwc_high_1'
+	.align	8
+_hwc_high_1:	.type	object
+	.size	_hwc_high_1,124
+	.space	12
+	.word	50,10,20
+	.space	100
+	.sdecl	'.zdata.user_main.hwc_high_1',data,cluster('hwc_high_1')
+	.sect	'.zdata.user_main.hwc_high_1'
+	.global	hwc_high_1
+	.align	8
+hwc_high_1:	.type	object
+	.size	hwc_high_1,4
+	.word	_hwc_high_1
+	.sdecl	'.data.user_main._hwc_high_2',data,cluster('_hwc_high_2')
+	.sect	'.data.user_main._hwc_high_2'
+	.align	8
+_hwc_high_2:	.type	object
+	.size	_hwc_high_2,124
+	.space	12
+	.word	50,10,20,20
+	.space	96
+	.sdecl	'.zdata.user_main.hwc_high_2',data,cluster('hwc_high_2')
+	.sect	'.zdata.user_main.hwc_high_2'
+	.global	hwc_high_2
+	.align	8
+hwc_high_2:	.type	object
+	.size	hwc_high_2,4
+	.word	_hwc_high_2
+	.sdecl	'.data.user_main._hwc_trust_1',data,cluster('_hwc_trust_1')
+	.sect	'.data.user_main._hwc_trust_1'
+	.align	8
+_hwc_trust_1:	.type	object
+	.size	_hwc_trust_1,124
+	.space	12
+	.word	50,20,30,20
+	.space	96
+	.sdecl	'.zdata.user_main.hwc_trust_1',data,cluster('hwc_trust_1')
+	.sect	'.zdata.user_main.hwc_trust_1'
+	.global	hwc_trust_1
+	.align	8
+hwc_trust_1:	.type	object
+	.size	hwc_trust_1,4
+	.word	_hwc_trust_1
+	.sdecl	'.data.user_main._ground_component',data,cluster('_ground_component')
+	.sect	'.data.user_main._ground_component'
+	.align	8
+_ground_component:	.type	object
+	.size	_ground_component,124
+	.space	124
+	.sdecl	'.zdata.user_main.ground_component',data,cluster('ground_component')
+	.sect	'.zdata.user_main.ground_component'
+	.global	ground_component
+	.align	8
+ground_component:	.type	object
+	.size	ground_component,4
+	.word	_ground_component
+	.sdecl	'.data.user_main._swc_high_1',data,cluster('_swc_high_1')
+	.sect	'.data.user_main._swc_high_1'
+	.align	8
+_swc_high_1:	.type	object
+	.size	_swc_high_1,552
+	.word	1,10,10
+	.space	8
+	.word	1,50
+	.space	12
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_high_1',data,cluster('swc_high_1')
+	.sect	'.zdata.user_main.swc_high_1'
+	.global	swc_high_1
+	.align	8
+swc_high_1:	.type	object
+	.size	swc_high_1,4
+	.word	_swc_high_1
+	.sdecl	'.data.user_main._swc_high_idle_1',data,cluster('_swc_high_idle_1')
+	.sect	'.data.user_main._swc_high_idle_1'
+	.align	8
+_swc_high_idle_1:	.type	object
+	.size	_swc_high_idle_1,552
+	.word	1
+	.space	36
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_high_idle_1',data,cluster('swc_high_idle_1')
+	.sect	'.zdata.user_main.swc_high_idle_1'
+	.global	swc_high_idle_1
+	.align	8
+swc_high_idle_1:	.type	object
+	.size	swc_high_idle_1,4
+	.word	_swc_high_idle_1
+	.sdecl	'.data.user_main._swc_high_2',data,cluster('_swc_high_2')
+	.sect	'.data.user_main._swc_high_2'
+	.align	8
+_swc_high_2:	.type	object
+	.size	_swc_high_2,552
+	.word	1,10,10
+	.space	8
+	.word	1,50
+	.space	12
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_high_2',data,cluster('swc_high_2')
+	.sect	'.zdata.user_main.swc_high_2'
+	.global	swc_high_2
+	.align	8
+swc_high_2:	.type	object
+	.size	swc_high_2,4
+	.word	_swc_high_2
+	.sdecl	'.data.user_main._swc_high_idle_2',data,cluster('_swc_high_idle_2')
+	.sect	'.data.user_main._swc_high_idle_2'
+	.align	8
+_swc_high_idle_2:	.type	object
+	.size	_swc_high_idle_2,552
+	.word	1
+	.space	36
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_high_idle_2',data,cluster('swc_high_idle_2')
+	.sect	'.zdata.user_main.swc_high_idle_2'
+	.global	swc_high_idle_2
+	.align	8
+swc_high_idle_2:	.type	object
+	.size	swc_high_idle_2,4
+	.word	_swc_high_idle_2
+	.sdecl	'.data.user_main._swc_trust_1',data,cluster('_swc_trust_1')
+	.sect	'.data.user_main._swc_trust_1'
+	.align	8
+_swc_trust_1:	.type	object
+	.size	_swc_trust_1,552
+	.word	1,20,20
+	.space	8
+	.word	1,50
+	.space	12
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_trust_1',data,cluster('swc_trust_1')
+	.sect	'.zdata.user_main.swc_trust_1'
+	.global	swc_trust_1
+	.align	8
+swc_trust_1:	.type	object
+	.size	swc_trust_1,4
+	.word	_swc_trust_1
+	.sdecl	'.data.user_main._swc_trust_idle_1',data,cluster('_swc_trust_idle_1')
+	.sect	'.data.user_main._swc_trust_idle_1'
+	.align	8
+_swc_trust_idle_1:	.type	object
+	.size	_swc_trust_idle_1,552
+	.word	1
+	.space	36
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.swc_trust_idle_1',data,cluster('swc_trust_idle_1')
+	.sect	'.zdata.user_main.swc_trust_idle_1'
+	.global	swc_trust_idle_1
+	.align	8
+swc_trust_idle_1:	.type	object
+	.size	swc_trust_idle_1,4
+	.word	_swc_trust_idle_1
+	.sdecl	'.data.user_main._gnd_task',data,cluster('_gnd_task')
+	.sect	'.data.user_main._gnd_task'
+	.align	8
+_gnd_task:	.type	object
+	.size	_gnd_task,552
+	.word	1
+	.space	36
+	.word	129
+	.space	508
+	.sdecl	'.zdata.user_main.gnd_task',data,cluster('gnd_task')
+	.sect	'.zdata.user_main.gnd_task'
+	.global	gnd_task
+	.align	8
+gnd_task:	.type	object
+	.size	gnd_task,4
+	.word	_gnd_task
+	.sdecl	'.rodata.user_main..1.str',data,rom
+	.sect	'.rodata.user_main..1.str'
+.1.str:	.type	object
+	.size	.1.str,30
+	.byte	83,116,97,114,116,105,110,103
+	.byte	32,72,87,47,83,87,32,67
+	.byte	111,109,112,111,110,101,110,116
+	.byte	115,46,46,46
+	.byte	10
+	.space	1
+	.sdecl	'.rodata.user_main..2.str',data,rom
+	.sect	'.rodata.user_main..2.str'
+.2.str:	.type	object
+	.size	.2.str,24
+	.byte	83,116,97,114,116,105,110,103
+	.byte	32,85,115,101,114,32,84,97
+	.byte	115,107,115,46
+	.byte	46,46,10
+	.space	1
+	.sdecl	'.rodata.user_main..3.str',data,rom
+	.sect	'.rodata.user_main..3.str'
+.3.str:	.type	object
+	.size	.3.str,33
+	.byte	83,116,97,114,116,105,110,103
+	.byte	32,84,104,101,32,84,105,109
+	.byte	101,114,32,73,110,116,101,114
+	.byte	114,117,112,116,46,46,46,10
+	.space	1
+	.sdecl	'.rodata.user_main..4.str',data,rom
+	.sect	'.rodata.user_main..4.str'
+.4.str:	.type	object
+	.size	.4.str,27
+	.byte	83,116,97,114,116,105,110,103
+	.byte	32,84,104,101,32,83,99,104
+	.byte	101,100,117,108,101,114,46,46
+	.byte	46,10
+	.space	1
+	.sdecl	'.rodata.user_main..5.ini',data,rom
+	.sect	'.rodata.user_main..5.ini'
+.5.ini:	.type	object
+	.size	.5.ini,16
+	.space	16
+	.calls	'__INDIRECT__','func_high'
+	.calls	'__INDIRECT__','func_high2'
+	.calls	'__INDIRECT__','func_trust'
+	.calls	'__INDIRECT__','func_idle'
+	.calls	'__INDIRECT__','func_idle2'
+	.calls	'user_main','printf'
+	.calls	'user_main','create_component'
+	.calls	'user_main','create_task'
+	.calls	'user_main','link'
+	.calls	'user_main','addScheduleInfo'
+	.calls	'user_main','init_timer_interrupt'
+	.calls	'user_main','set_running_component'
+	.calls	'user_main','schedule'
+	.calls	'func_high','work_area_start'
+	.calls	'func_high','CAN_vGetMsgObj'
+	.calls	'func_high','CAN_vReleaseObj'
+	.calls	'func_high','memcpy'
+	.calls	'func_high','CAN_vLoadData'
+	.calls	'func_high','get_running_component'
+	.calls	'func_high','set_delayed_output'
+	.calls	'func_high','work_area_end'
+	.calls	'func_high','syscall_suspend'
+	.calls	'func_trust','check_high_finished'
+	.calls	'func_trust','CAN_vGetMsgObj'
+	.calls	'func_trust','CAN_vReleaseObj'
+	.calls	'func_trust','memcpy'
+	.calls	'func_trust','CAN_vLoadData'
+	.calls	'func_trust','get_running_component'
+	.calls	'func_trust','set_delayed_output'
+	.calls	'func_trust','syscall_suspend'
+	.calls	'func_high2','syscall_suspend'
+	.calls	'func_high','.cocofun_7'
+	.calls	'func_high','.cocofun_6'
+	.calls	'func_high','.cocofun_8'
+	.calls	'.cocofun_8','.cocofun_9'
+	.calls	'func_trust','.cocofun_7'
+	.calls	'func_trust','.cocofun_6'
+	.calls	'func_trust','.cocofun_9'
+	.calls	'callback','',0
+	.calls	'user_main','',0
+	.calls	'func_high','',232
+	.calls	'.cocofun_8','',0
+	.calls	'.cocofun_7','',0
+	.calls	'.cocofun_6','',0
+	.calls	'func_trust','',232
+	.calls	'.cocofun_9','',0
+	.calls	'func_high2','',0
+	.calls	'func_idle','',0
+	.extern	printf
+	.extern	memcpy
+	.extern	_Errno
+	.extern	CAN_vGetMsgObj
+	.extern	CAN_vLoadData
+	.extern	CAN_vReleaseObj
+	.extern	get_running_component
+	.extern	set_running_component
+	.extern	create_component
+	.extern	create_task
+	.extern	init_timer_interrupt
+	.extern	schedule
+	.extern	set_delayed_output
+	.extern	link
+	.extern	work_area_start
+	.extern	work_area_end
+	.extern	check_high_finished
+	.extern	addScheduleInfo
+	.extern	__printf_noarg
+	.extern	__INDIRECT__
+	.calls	'func_idle2','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L35:
+	.word	6001
+	.half	3
+	.word	.L36
+	.byte	4
+.L34:
+	.byte	1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L37
+	.byte	2
+	.byte	'endinit_clear',0,3,1,159,1,13,1,1,3
+	.byte	'int',0,4,5,4
+	.byte	'x',0,1,159,1,31
+	.word	182
+	.byte	5,0,2
+	.byte	'endinit_set',0,3,1,169,1,13,1,1,4
+	.byte	'x',0,1,169,1,29
+	.word	182
+	.byte	5,0,2
+	.byte	'nops',0,3,1,143,2,13,1,1,6
+	.byte	'void',0
+.L139:
+	.byte	7
+	.word	248
+	.byte	4
+	.byte	'cnt',0,1,143,2,24
+	.word	254
+	.byte	5,0
+.L161:
+	.byte	2
+	.byte	'delay_ms_f',0,3,1,219,2,13,1,1,3
+	.byte	'float',0,4,4
+.L163:
+	.byte	4
+	.byte	'_milliseconds',0,1,219,2,30
+	.word	293
+.L165:
+	.byte	5,0
+.L152:
+	.byte	2
+	.byte	'led_on',0,3,2,28,13,1,1
+.L155:
+	.byte	4
+	.byte	'led_no',0,2,28,24
+	.word	182
+.L157:
+	.byte	5,0
+.L166:
+	.byte	2
+	.byte	'led_off',0,3,2,33,13,1,1
+.L169:
+	.byte	4
+	.byte	'led_no',0,2,33,25
+	.word	182
+.L171:
+	.byte	5,0,8
+	.byte	'__nop',0,1,1,1,1,9
+	.byte	'printf',0,3,140,1,16
+	.word	182
+	.byte	1,1,1,1,3
+	.byte	'char',0,1,6,10
+	.word	421
+	.byte	7
+	.word	429
+	.byte	11
+	.word	434
+	.byte	12,3,140,1,38
+	.word	439
+	.byte	13,3,140,1,50,0,9
+	.byte	'memcpy',0,4,45,17
+	.word	254
+	.byte	1,1,1,1,11
+	.word	254
+	.byte	12,4,45,33
+	.word	478
+	.byte	10
+	.word	248
+	.byte	7
+	.word	491
+	.byte	11
+	.word	496
+	.byte	12,4,45,56
+	.word	501
+.L200:
+	.byte	3
+	.byte	'unsigned int',0,4,7,12,4,45,68
+	.word	514
+	.byte	0,14
+	.word	160
+	.byte	15
+	.word	189
+	.byte	5,0,14
+	.word	202
+	.byte	15
+	.word	222
+	.byte	5,0,14
+	.word	235
+	.byte	15
+	.word	259
+	.byte	5,0,14
+	.word	274
+	.byte	15
+	.word	302
+	.byte	5,0,14
+	.word	327
+	.byte	15
+	.word	341
+	.byte	5,0,14
+	.word	358
+	.byte	15
+	.word	373
+	.byte	5,0,16
+	.byte	'CAN_vGetMsgObj',0,5,130,1,6,1,1,1,1,3
+	.byte	'unsigned char',0,1,8,4
+	.byte	'ubObjNr',0,5,130,1,27
+	.word	635
+.L146:
+	.byte	17,5,93,9,20,3
+	.byte	'unsigned short int',0,2,7,18
+	.byte	'usMOCfg',0,2
+	.word	674
+	.byte	2,35,0,18
+	.byte	'uwID',0,4
+	.word	514
+	.byte	2,35,2,18
+	.byte	'uwMask',0,4
+	.word	514
+	.byte	2,35,6,19,8
+	.word	635
+	.byte	20,7,0,18
+	.byte	'ubData',0,8
+	.word	743
+	.byte	2,35,10,18
+	.byte	'usCounter',0,2
+	.word	674
+	.byte	2,35,18,0,7
+	.word	669
+	.byte	4
+	.byte	'pstObj',0,5,130,1,47
+	.word	788
+	.byte	0,16
+	.byte	'CAN_vLoadData',0,5,135,1,6,1,1,1,1,4
+	.byte	'ubObjNr',0,5,135,1,26
+	.word	635
+	.byte	7
+	.word	635
+	.byte	4
+	.byte	'pubData',0,5,135,1,42
+	.word	850
+	.byte	0,16
+	.byte	'CAN_vReleaseObj',0,5,138,1,6,1,1,1,1,4
+	.byte	'ubObjNr',0,5,138,1,28
+	.word	635
+	.byte	0,21
+	.byte	'hwc_s',0,6,36,16,124,18
+	.byte	'dual_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'is_finished',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'link_component',0,4
+	.word	.L222-.L35
+	.byte	2,35,8,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'budget',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'offset',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'remaining_budget',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,36,21
+	.byte	'swc_s',0,6,23,16,44,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,3
+	.byte	'unsigned long long int',0,8,7,18
+	.byte	'release_timestamp',0,8
+	.word	1306
+	.byte	2,35,28,7
+	.word	514
+	.byte	18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,19,4
+	.word	514
+	.byte	20,0,0,18
+	.byte	'stack',0,4
+	.word	1377
+	.byte	2,35,40,0,7
+	.word	1147
+.L209:
+	.byte	22
+	.byte	'swc_t',0,6,34,4
+	.word	1402
+	.byte	19,40
+	.word	1407
+	.byte	20,9,0,18
+	.byte	'runnable_tasks',0,40
+	.word	1421
+	.byte	2,35,40,18
+	.byte	'suspended_tasks',0,40
+	.word	1421
+	.byte	2,35,80,18
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	514
+	.byte	2,35,120,0
+.L222:
+	.byte	7
+	.word	916
+.L204:
+	.byte	22
+	.byte	'hwc_t',0,6,50,4
+	.word	1511
+	.byte	23
+	.byte	'get_running_component',0,6,95,7
+	.word	1516
+	.byte	1,1,1,1,7
+	.word	916
+	.byte	7
+	.word	1147
+	.byte	16
+	.byte	'set_running_component',0,6,98,6,1,1,1,1,4
+	.byte	'component',0,6,98,34
+	.word	1516
+	.byte	0,9
+	.byte	'create_component',0,6,102,5
+	.word	182
+	.byte	1,1,1,1,4
+	.byte	'component',0,6,102,28
+	.word	1516
+	.byte	0,9
+	.byte	'create_task',0,6,103,5
+	.word	182
+	.byte	1,1,1,1,4
+	.byte	'component',0,6,103,23
+	.word	1516
+	.byte	4
+	.byte	'task',0,6,103,40
+	.word	1407
+	.byte	21
+	.byte	'task_attr_s',0,6,52,16,12,24
+	.byte	'user_e',0,7,9,6,1,25
+	.byte	'USER0',0,0,25
+	.byte	'USER1',0,1,25
+	.byte	'SUPER',0,2,0,18
+	.byte	'mode',0,1
+	.word	1743
+	.byte	2,35,0,18
+	.byte	'call_depth_overflow',0,4
+	.word	514
+	.byte	2,35,2,18
+	.byte	'stacksize',0,4
+	.word	514
+	.byte	2,35,6,0,7
+	.word	1726
+	.byte	22
+	.byte	'task_attr_t',0,6,56,4
+	.word	1843
+	.byte	4
+	.byte	'attr',0,6,103,58
+	.word	1848
+	.byte	26,1,1,27
+	.word	254
+	.byte	0,7
+	.word	1881
+	.byte	4
+	.byte	'func',0,6,103,71
+	.word	1890
+	.byte	4
+	.byte	'arg',0,6,103,95
+	.word	514
+	.byte	0,7
+	.word	1726
+	.byte	28
+	.byte	'init_timer_interrupt',0,6,105,6,1,1,1,1,28
+	.byte	'schedule',0,6,108,6,1,1,1,1,16
+	.byte	'set_delayed_output',0,6,111,6,1,1,1,1,4
+	.byte	'mo_id',0,6,111,29
+	.word	182
+	.byte	4
+	.byte	'timer',0,6,111,45
+	.word	514
+	.byte	0,16
+	.byte	'link',0,6,115,6,1,1,1,1,4
+	.byte	'high',0,6,115,17
+	.word	1516
+	.byte	4
+	.byte	'trust',0,6,115,29
+	.word	1516
+	.byte	0,28
+	.byte	'work_area_start',0,6,118,6,1,1,1,1,28
+	.byte	'work_area_end',0,6,119,6,1,1,1,1,23
+	.byte	'check_high_finished',0,6,120,10
+	.word	514
+	.byte	1,1,1,1,16
+	.byte	'addScheduleInfo',0,6,123,6,1,1,1,1,4
+	.byte	'releaseTime',0,6,123,28
+	.word	514
+	.byte	4
+	.byte	'deadline',0,6,123,47
+	.word	514
+	.byte	4
+	.byte	'runnableTask',0,6,123,63
+	.word	1407
+	.byte	4
+	.byte	'idleTask',0,6,123,83
+	.word	1407
+	.byte	0,23
+	.byte	'syscall_suspend',0,6,126,36
+	.word	182
+	.byte	1,1,1,1
+.L142:
+	.byte	19,96
+	.word	293
+	.byte	20,23,0
+.L144:
+	.byte	19,60
+	.word	293
+	.byte	20,14,0
+.L150:
+	.byte	19,16
+	.word	635
+	.byte	20,15,0,29
+	.byte	'__INDIRECT__',0,8,1,1,1,1,1,22
+	.byte	'__prof_adm',0,8,1,1
+	.word	254
+	.byte	30,1,7
+	.word	2341
+	.byte	22
+	.byte	'__codeptr',0,8,1,1
+	.word	2343
+	.byte	31,9,145,19,18,4,17,9,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,32
+	.byte	'CNT1',0,4
+	.word	2378
+	.byte	12,20,2,35,0,33,4
+	.word	2378
+	.byte	2,18,2,35,0,32
+	.byte	'TOS',0,4
+	.word	2378
+	.byte	2,16,2,35,0,32
+	.byte	'SRPN',0,4
+	.word	2378
+	.byte	8,8,2,35,0,32
+	.byte	'CPPN',0,4
+	.word	2378
+	.byte	8,0,2,35,0,0,18
+	.byte	'B',0,4
+	.word	2372
+	.byte	2,35,0,18
+	.byte	'I',0,4
+	.word	182
+	.byte	2,35,0,18
+	.byte	'U',0,4
+	.word	514
+	.byte	2,35,0,0,34
+	.word	2366
+	.byte	22
+	.byte	'PCP_GPR6_type',0,9,158,19,3
+	.word	2503
+	.byte	31,9,160,19,18,4,17,9,162,19,2,4,32
+	.byte	'Z',0,4
+	.word	2378
+	.byte	1,31,2,35,0,32
+	.byte	'N',0,4
+	.word	2378
+	.byte	1,30,2,35,0,32
+	.byte	'C',0,4
+	.word	2378
+	.byte	1,29,2,35,0,32
+	.byte	'V',0,4
+	.word	2378
+	.byte	1,28,2,35,0,32
+	.byte	'CNZ',0,4
+	.word	2378
+	.byte	1,27,2,35,0,32
+	.byte	'IEN',0,4
+	.word	2378
+	.byte	1,26,2,35,0,32
+	.byte	'CEN',0,4
+	.word	2378
+	.byte	1,25,2,35,0,33,4
+	.word	2378
+	.byte	1,24,2,35,0,32
+	.byte	'DPTR',0,4
+	.word	2378
+	.byte	8,16,2,35,0,33,4
+	.word	2378
+	.byte	16,0,2,35,0,0,18
+	.byte	'B',0,4
+	.word	2537
+	.byte	2,35,0,18
+	.byte	'I',0,4
+	.word	182
+	.byte	2,35,0,18
+	.byte	'U',0,4
+	.word	514
+	.byte	2,35,0,0,34
+	.word	2531
+	.byte	22
+	.byte	'PCP_GPR7_type',0,9,178,19,3
+	.word	2713
+	.byte	22
+	.byte	'size_t',0,3,24,25
+	.word	514
+	.byte	22
+	.byte	'_iob_flag_t',0,3,75,25
+	.word	674
+	.byte	22
+	.byte	'uint16_t',0,10,24,33
+	.word	674
+	.byte	22
+	.byte	'uint32_t',0,10,26,33
+	.word	514
+	.byte	31,1,75,9,64,17,1,76,5,64,18
+	.byte	'pcxi',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'psw',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'a10',0,4
+	.word	254
+	.byte	2,35,8,18
+	.byte	'a11',0,4
+	.word	254
+	.byte	2,35,12,18
+	.byte	'd8',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'd9',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'd10',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'd11',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'a12',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'a13',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'a14',0,4
+	.word	514
+	.byte	2,35,40,18
+	.byte	'a15',0,4
+	.word	514
+	.byte	2,35,44,18
+	.byte	'd12',0,4
+	.word	514
+	.byte	2,35,48,18
+	.byte	'd13',0,4
+	.word	514
+	.byte	2,35,52,18
+	.byte	'd14',0,4
+	.word	514
+	.byte	2,35,56,18
+	.byte	'd15',0,4
+	.word	514
+	.byte	2,35,60,0,18
+	.byte	'u',0,64
+	.word	2815
+	.byte	2,35,0,17,1,94,5,64,18
+	.byte	'pcxi',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'pc',0,4
+	.word	1890
+	.byte	2,35,4,18
+	.byte	'a2',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'a3',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'd0',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'd1',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'd2',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'd3',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'a4',0,4
+	.word	254
+	.byte	2,35,32,18
+	.byte	'a5',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'a6',0,4
+	.word	514
+	.byte	2,35,40,18
+	.byte	'a7',0,4
+	.word	514
+	.byte	2,35,44,18
+	.byte	'd4',0,4
+	.word	514
+	.byte	2,35,48,18
+	.byte	'd5',0,4
+	.word	514
+	.byte	2,35,52,18
+	.byte	'd6',0,4
+	.word	514
+	.byte	2,35,56,18
+	.byte	'd7',0,4
+	.word	514
+	.byte	2,35,60,0,18
+	.byte	'l',0,64
+	.word	3039
+	.byte	2,35,0,0,22
+	.byte	'context_t',0,1,112,3
+	.word	2810
+	.byte	35
+	.byte	'_Errno',0,11,19,21
+	.word	182
+	.byte	1,1,22
+	.byte	'clock_t',0,12,32,33
+	.word	1306
+	.byte	22
+	.byte	'ubyte',0,13,69,24
+	.word	635
+	.byte	22
+	.byte	'ushort',0,13,71,24
+	.word	674
+	.byte	22
+	.byte	'uword',0,13,73,24
+	.word	514
+	.byte	22
+	.byte	'CAN_SWObj',0,5,100,4
+	.word	669
+.L203:
+	.byte	17,8,17,1,124,18
+	.byte	'dual_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'is_finished',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'link_component',0,4
+	.word	1516
+	.byte	2,35,8,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'budget',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'offset',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'remaining_budget',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'runnable_tasks',0,40
+	.word	1421
+	.byte	2,35,40,18
+	.byte	'suspended_tasks',0,40
+	.word	1421
+	.byte	2,35,80,18
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	514
+	.byte	2,35,120,0
+.L205:
+	.byte	17,8,18,1,124,18
+	.byte	'dual_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'is_finished',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'link_component',0,4
+	.word	1516
+	.byte	2,35,8,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'budget',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'offset',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'remaining_budget',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'runnable_tasks',0,40
+	.word	1421
+	.byte	2,35,40,18
+	.byte	'suspended_tasks',0,40
+	.word	1421
+	.byte	2,35,80,18
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	514
+	.byte	2,35,120,0
+.L206:
+	.byte	17,8,19,1,124,18
+	.byte	'dual_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'is_finished',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'link_component',0,4
+	.word	1516
+	.byte	2,35,8,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'budget',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'offset',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'remaining_budget',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'runnable_tasks',0,40
+	.word	1421
+	.byte	2,35,40,18
+	.byte	'suspended_tasks',0,40
+	.word	1421
+	.byte	2,35,80,18
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	514
+	.byte	2,35,120,0
+.L207:
+	.byte	17,8,20,1,124,18
+	.byte	'dual_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'is_finished',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'link_component',0,4
+	.word	1516
+	.byte	2,35,8,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'budget',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'offset',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,28,18
+	.byte	'remaining_budget',0,4
+	.word	514
+	.byte	2,35,32,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,36,18
+	.byte	'runnable_tasks',0,40
+	.word	1421
+	.byte	2,35,40,18
+	.byte	'suspended_tasks',0,40
+	.word	1421
+	.byte	2,35,80,18
+	.byte	'runnable_tasks_bitmap',0,4
+	.word	514
+	.byte	2,35,120,0
+.L208:
+	.byte	17,8,31,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,19,128,4
+	.word	514
+	.byte	20,127,0,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L210:
+	.byte	17,8,32,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L211:
+	.byte	17,8,33,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L212:
+	.byte	17,8,34,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L213:
+	.byte	17,8,35,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L214:
+	.byte	17,8,36,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0
+.L215:
+	.byte	17,8,48,1,168,4,18
+	.byte	'task_state',0,4
+	.word	514
+	.byte	2,35,0,18
+	.byte	'absolute_deadline',0,4
+	.word	514
+	.byte	2,35,4,18
+	.byte	'relative_deadline',0,4
+	.word	514
+	.byte	2,35,8,18
+	.byte	'next_release_time',0,4
+	.word	514
+	.byte	2,35,12,18
+	.byte	'lcx',0,4
+	.word	514
+	.byte	2,35,16,18
+	.byte	'priority',0,4
+	.word	514
+	.byte	2,35,20,18
+	.byte	'period',0,4
+	.word	514
+	.byte	2,35,24,18
+	.byte	'release',0,8
+	.word	1306
+	.byte	2,35,28,18
+	.byte	'arg',0,4
+	.word	1359
+	.byte	2,35,36,18
+	.byte	'stack',0,128,4
+	.word	4771
+	.byte	2,35,40,0,0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L36:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,36
+	.byte	0,3,8,11,15,62,15,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,11,0,0,0,6,59,0,3,8,0,0,7,15,0,73,19,0,0
+	.byte	8,46,0,3,8,54,15,39,12,63,12,60,12,0,0,9,46,1,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0
+	.byte	10,38,0,73,19,0,0,11,55,0,73,19,0,0,12,5,0,58,15,59,15,57,15,73,19,0,0,13,24,0,58,15,59,15,57,15,0,0,14
+	.byte	46,1,49,19,0,0,15,5,0,49,19,0,0,16,46,1,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,17,19,1,58,15
+	.byte	59,15,57,15,11,15,0,0,18,13,0,3,8,11,15,73,19,56,9,0,0,19,1,1,11,15,73,19,0,0,20,33,0,47,15,0,0,21,19
+	.byte	1,3,8,58,15,59,15,57,15,11,15,0,0,22,22,0,3,8,58,15,59,15,57,15,73,19,0,0,23,46,0,3,8,58,15,59,15,57,15
+	.byte	73,19,54,15,39,12,63,12,60,12,0,0,24,4,1,3,8,58,15,59,15,57,15,11,15,0,0,25,40,0,3,8,28,13,0,0,26,21,1
+	.byte	54,15,39,12,0,0,27,5,0,73,19,0,0,28,46,0,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,29,46,0,3,8
+	.byte	58,15,59,15,57,15,54,15,63,12,60,12,0,0,30,21,0,54,15,0,0,31,23,1,58,15,59,15,57,15,11,15,0,0,32,13,0
+	.byte	3,8,11,15,73,19,13,15,12,15,56,9,0,0,33,13,0,11,15,73,19,13,15,12,15,56,9,0,0,34,53,0,73,19,0,0,35,52
+	.byte	0,3,8,58,15,59,15,57,15,73,19,63,12,60,12,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L37:
+	.word	.L224-.L223
+.L223:
+	.half	3
+	.word	.L226-.L225
+.L225:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\intrinsic.h',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0
+	.byte	'stdio.h',0,1,0,0
+	.byte	'string.h',0,1,0,0
+	.byte	'..\\CAN.h',0,0,0,0
+	.byte	'..\\kernel.h',0,0,0,0
+	.byte	'..\\constants.h',0,0,0,0
+	.byte	'..\\user_main.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdint.h',0,1,0,0
+	.byte	'errno.h',0,1,0,0
+	.byte	'time.h',0,1,0,0
+	.byte	'..\\MAIN.h',0,0,0,0,0
+.L226:
+.L224:
+	.sdecl	'.debug_info',debug,cluster('user_main')
+	.sect	'.debug_info'
+.L38:
+	.word	205
+	.half	3
+	.word	.L39
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L41,.L40
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'user_main',0,1,76,6,1,1,1
+	.word	.L17,.L137,.L16
+	.byte	4
+	.word	.L17,.L137
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('user_main')
+	.sect	'.debug_abbrev'
+.L39:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('user_main')
+	.sect	'.debug_line'
+.L40:
+	.word	.L228-.L227
+.L227:
+	.half	3
+	.word	.L230-.L229
+.L229:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L230:
+	.byte	5,12,7,0,5,2
+	.word	.L17
+	.byte	3,205,0,1,9
+	.half	.L231-.L17
+	.byte	3,1,1,5,22,9
+	.half	.L232-.L231
+	.byte	3,2,1,5,47,9
+	.half	.L233-.L232
+	.byte	3,1,1,5,58,9
+	.half	.L234-.L233
+	.byte	1,5,47,1,5,17,9
+	.half	.L235-.L234
+	.byte	1,5,29,9
+	.half	.L236-.L235
+	.byte	1,5,41,9
+	.half	.L237-.L236
+	.byte	1,5,58,9
+	.half	.L238-.L237
+	.byte	1,5,52,9
+	.half	.L239-.L238
+	.byte	3,1,1,5,63,9
+	.half	.L240-.L239
+	.byte	1,5,52,1,5,17,9
+	.half	.L241-.L240
+	.byte	1,5,29,9
+	.half	.L242-.L241
+	.byte	1,5,46,9
+	.half	.L243-.L242
+	.byte	1,5,63,9
+	.half	.L244-.L243
+	.byte	1,5,22,9
+	.half	.L245-.L244
+	.byte	3,2,1,5,49,9
+	.half	.L246-.L245
+	.byte	3,1,1,5,61,9
+	.half	.L247-.L246
+	.byte	1,5,49,1,5,17,9
+	.half	.L248-.L247
+	.byte	1,5,30,9
+	.half	.L249-.L248
+	.byte	1,5,43,9
+	.half	.L250-.L249
+	.byte	1,5,61,9
+	.half	.L251-.L250
+	.byte	1,5,54,9
+	.half	.L252-.L251
+	.byte	3,1,1,5,65,9
+	.half	.L253-.L252
+	.byte	1,5,54,1,5,17,9
+	.half	.L254-.L253
+	.byte	1,5,30,9
+	.half	.L255-.L254
+	.byte	1,5,48,9
+	.half	.L256-.L255
+	.byte	1,5,65,9
+	.half	.L257-.L256
+	.byte	1,5,10,9
+	.half	.L258-.L257
+	.byte	3,2,1,5,22,9
+	.half	.L259-.L258
+	.byte	1,9
+	.half	.L260-.L259
+	.byte	3,2,1,5,47,9
+	.half	.L261-.L260
+	.byte	3,1,1,5,59,9
+	.half	.L262-.L261
+	.byte	1,5,47,1,5,17,9
+	.half	.L263-.L262
+	.byte	1,5,29,9
+	.half	.L264-.L263
+	.byte	1,5,41,9
+	.half	.L265-.L264
+	.byte	1,5,59,9
+	.half	.L266-.L265
+	.byte	1,5,52,9
+	.half	.L267-.L266
+	.byte	3,1,1,5,64,9
+	.half	.L268-.L267
+	.byte	1,5,52,1,5,17,9
+	.half	.L269-.L268
+	.byte	1,5,29,9
+	.half	.L270-.L269
+	.byte	1,5,46,9
+	.half	.L271-.L270
+	.byte	1,5,64,9
+	.half	.L272-.L271
+	.byte	1,5,22,9
+	.half	.L273-.L272
+	.byte	3,17,1,5,51,9
+	.half	.L274-.L273
+	.byte	3,1,1,5,62,9
+	.half	.L275-.L274
+	.byte	1,5,51,1,5,17,9
+	.half	.L276-.L275
+	.byte	1,5,35,9
+	.half	.L277-.L276
+	.byte	1,5,45,9
+	.half	.L278-.L277
+	.byte	1,5,62,9
+	.half	.L279-.L278
+	.byte	1,5,21,9
+	.half	.L280-.L279
+	.byte	3,3,1,5,33,1,5,27,9
+	.half	.L281-.L280
+	.byte	1,5,45,1,5,21,9
+	.half	.L282-.L281
+	.byte	3,1,1,5,35,1,5,28,9
+	.half	.L283-.L282
+	.byte	1,5,47,1,5,12,9
+	.half	.L284-.L283
+	.byte	3,4,1,5,25,9
+	.half	.L285-.L284
+	.byte	3,1,1,5,27,9
+	.half	.L286-.L285
+	.byte	3,2,1,5,12,9
+	.half	.L287-.L286
+	.byte	3,3,1,5,13,9
+	.half	.L288-.L287
+	.byte	3,2,1,5,1,7,9
+	.half	.L42-.L288
+	.byte	3,1,0,1,1
+.L228:
+	.sdecl	'.debug_ranges',debug,cluster('user_main')
+	.sect	'.debug_ranges'
+.L41:
+	.word	-1,.L17,0,.L42-.L17,0,0
+	.sdecl	'.debug_info',debug,cluster('func_high')
+	.sect	'.debug_info'
+.L43:
+	.word	494
+	.half	3
+	.word	.L44
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L46,.L45
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'func_high',0,1,145,1,13,1,1
+	.word	.L19,.L138,.L18
+	.byte	4
+	.byte	'arg',0,1,145,1,29
+	.word	.L139,.L140
+	.byte	5
+	.word	.L141
+	.byte	6
+	.byte	'car_output',0,1,147,1,11
+	.word	.L142,.L143
+	.byte	6
+	.byte	'user_input',0,1,148,1,8
+	.word	.L144,.L145
+	.byte	6
+	.byte	'CC_sensing_1',0,1,149,1,12
+	.word	.L146,.L147
+	.byte	6
+	.byte	'CC_sensing_2',0,1,149,1,26
+	.word	.L146,.L148
+	.byte	6
+	.byte	'LKAS_sensing',0,1,150,1,15
+	.word	.L146,.L149
+	.byte	6
+	.byte	'send_buf',0,1,151,1,8
+	.word	.L150,.L151
+	.byte	7
+	.word	.L152,.L153,.L154
+	.byte	8
+	.word	.L155,.L156
+	.byte	9
+	.word	.L157,.L158
+	.byte	0,7
+	.word	.L152,.L159,.L160
+	.byte	8
+	.word	.L155,.L156
+	.byte	0,7
+	.word	.L161,.L160,.L162
+	.byte	8
+	.word	.L163,.L164
+	.byte	10
+	.word	.L165,.L160,.L162
+	.byte	0,7
+	.word	.L166,.L167,.L168
+	.byte	8
+	.word	.L169,.L170
+	.byte	10
+	.word	.L171,.L167,.L168
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('func_high')
+	.sect	'.debug_abbrev'
+.L44:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,85,6,0,0,6,52,0,3,8,58,15,59
+	.byte	15,57,15,73,16,2,6,0,0,7,29,1,49,16,17,1,18,1,0,0,8,5,0,49,16,2,6,0,0,9,11,0,49,16,85,6,0,0,10,11,0,49
+	.byte	16,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('func_high')
+	.sect	'.debug_line'
+.L45:
+	.word	.L290-.L289
+.L289:
+	.half	3
+	.word	.L292-.L291
+.L291:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0
+	.byte	'..\\intrinsic.h',0,0,0,0,0
+.L292:
+	.byte	5,13,7,0,5,2
+	.word	.L19
+	.byte	3,144,1,1,5,21,9
+	.half	.L216-.L19
+	.byte	3,6,1,5,20,9
+	.half	.L293-.L216
+	.byte	1,4,2,5,11,9
+	.half	.L153-.L293
+	.byte	3,135,127,1,4,1,5,60,9
+	.half	.L154-.L153
+	.byte	3,145,1,1,5,18,9
+	.half	.L7-.L154
+	.byte	3,107,1,4,2,5,11,9
+	.half	.L159-.L7
+	.byte	3,132,127,1,5,14,9
+	.half	.L294-.L159
+	.byte	1,4,3,5,33,9
+	.half	.L160-.L294
+	.byte	3,192,2,1,5,5,9
+	.half	.L295-.L160
+	.byte	3,3,1,4,1,5,23,9
+	.half	.L162-.L295
+	.byte	3,192,126,1,5,21,9
+	.half	.L296-.L162
+	.byte	3,8,1,5,19,9
+	.half	.L297-.L296
+	.byte	1,5,26,9
+	.half	.L298-.L297
+	.byte	3,1,1,5,24,9
+	.half	.L299-.L298
+	.byte	1,5,31,9
+	.half	.L300-.L299
+	.byte	3,3,1,5,34,3,126,1,5,32,9
+	.half	.L301-.L300
+	.byte	1,5,29,9
+	.half	.L302-.L301
+	.byte	3,2,1,5,24,9
+	.half	.L303-.L302
+	.byte	3,1,1,5,8,3,4,1,5,29,9
+	.half	.L304-.L303
+	.byte	3,124,1,5,63,9
+	.half	.L305-.L304
+	.byte	1,5,61,9
+	.half	.L306-.L305
+	.byte	1,5,21,1,5,37,9
+	.half	.L307-.L306
+	.byte	3,1,1,5,58,9
+	.half	.L308-.L307
+	.byte	1,5,28,1,5,23,9
+	.half	.L309-.L308
+	.byte	3,1,1,5,21,1,5,18,9
+	.half	.L310-.L309
+	.byte	3,2,1,5,3,9
+	.half	.L311-.L310
+	.byte	1,5,12,7,9
+	.half	.L312-.L311
+	.byte	3,1,1,4,2,5,11,9
+	.half	.L167-.L312
+	.byte	3,240,126,1,5,14,9
+	.half	.L313-.L167
+	.byte	1,4,1,5,102,9
+	.half	.L168-.L313
+	.byte	3,190,1,1,5,28,9
+	.half	.L218-.L168
+	.byte	1,5,113,9
+	.half	.L314-.L218
+	.byte	1,5,102,9
+	.half	.L315-.L314
+	.byte	3,1,1,5,28,9
+	.half	.L316-.L315
+	.byte	1,5,113,9
+	.half	.L317-.L316
+	.byte	1,5,17,9
+	.half	.L318-.L317
+	.byte	3,1,1,5,18,9
+	.half	.L8-.L318
+	.byte	3,14,1,5,10,9
+	.half	.L319-.L8
+	.byte	3,168,127,1,5,1,9
+	.half	.L47-.L319
+	.byte	3,218,0,0,1,1
+.L290:
+	.sdecl	'.debug_ranges',debug,cluster('func_high')
+	.sect	'.debug_ranges'
+.L46:
+	.word	-1,.L19,0,.L47-.L19,0,0
+.L141:
+	.word	-1,.L19,0,.L138-.L19,-1,.L21,0,.L87-.L21,-1,.L23,0,.L82-.L23,-1,.L25,0,.L77-.L25,0,0
+.L158:
+	.word	-1,.L19,.L153-.L19,.L154-.L19,.L159-.L19,.L160-.L19,0,0
+	.sdecl	'.debug_info',debug,cluster('func_high2')
+	.sect	'.debug_info'
+.L48:
+	.word	332
+	.half	3
+	.word	.L49
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L51,.L50
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'func_high2',0,1,179,2,13,1,1
+	.word	.L31,.L172,.L30
+	.byte	4
+	.byte	'arg',0,1,179,2,30
+	.word	.L139,.L173
+	.byte	5
+	.word	.L31,.L172
+	.byte	6
+	.word	.L152,.L31,.L174
+	.byte	7
+	.word	.L155,.L175
+	.byte	8
+	.word	.L157,.L31,.L174
+	.byte	0,6
+	.word	.L161,.L174,.L176
+	.byte	7
+	.word	.L163,.L177
+	.byte	8
+	.word	.L165,.L174,.L176
+	.byte	0,6
+	.word	.L166,.L176,.L178
+	.byte	7
+	.word	.L169,.L179
+	.byte	8
+	.word	.L171,.L176,.L178
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('func_high2')
+	.sect	'.debug_abbrev'
+.L49:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,29,1,49,16,17
+	.byte	1,18,1,0,0,7,5,0,49,16,2,6,0,0,8,11,0,49,16,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('func_high2')
+	.sect	'.debug_line'
+.L50:
+	.word	.L321-.L320
+.L320:
+	.half	3
+	.word	.L323-.L322
+.L322:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0
+	.byte	'..\\intrinsic.h',0,0,0,0,0
+.L323:
+	.byte	4,2,5,11,7,0,5,2
+	.word	.L31
+	.byte	3,29,1,5,14,9
+	.half	.L324-.L31
+	.byte	1,4,3,5,33,9
+	.half	.L174-.L324
+	.byte	3,192,2,1,5,5,9
+	.half	.L325-.L174
+	.byte	3,3,1,4,2,5,11,9
+	.half	.L176-.L325
+	.byte	3,194,125,1,5,14,9
+	.half	.L326-.L176
+	.byte	1,4,1,5,18,9
+	.half	.L178-.L326
+	.byte	3,152,2,1,5,10,9
+	.half	.L327-.L178
+	.byte	3,122,1,5,1,9
+	.half	.L52-.L327
+	.byte	3,8,0,1,1
+.L321:
+	.sdecl	'.debug_ranges',debug,cluster('func_high2')
+	.sect	'.debug_ranges'
+.L51:
+	.word	-1,.L31,0,.L52-.L31,0,0
+	.sdecl	'.debug_info',debug,cluster('func_trust')
+	.sect	'.debug_info'
+.L53:
+	.word	459
+	.half	3
+	.word	.L54
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L56,.L55
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'func_trust',0,1,245,1,13,1,1
+	.word	.L27,.L180,.L26
+	.byte	4
+	.byte	'arg',0,1,245,1,30
+	.word	.L139,.L181
+	.byte	5
+	.word	.L182
+	.byte	6
+	.byte	'car_output',0,1,247,1,11
+	.word	.L142,.L183
+	.byte	6
+	.byte	'user_input',0,1,248,1,8
+	.word	.L144,.L184
+	.byte	6
+	.byte	'CC_sensing_1',0,1,249,1,12
+	.word	.L146,.L185
+	.byte	6
+	.byte	'CC_sensing_2',0,1,249,1,26
+	.word	.L146,.L186
+	.byte	6
+	.byte	'LKAS_sensing',0,1,250,1,15
+	.word	.L146,.L187
+	.byte	6
+	.byte	'send_buf',0,1,251,1,8
+	.word	.L150,.L188
+	.byte	7
+	.word	.L166,.L189,.L9
+	.byte	8
+	.word	.L169,.L190
+	.byte	9
+	.word	.L171,.L191
+	.byte	0,7
+	.word	.L166,.L192,.L193
+	.byte	8
+	.word	.L169,.L190
+	.byte	0,7
+	.word	.L166,.L194,.L10
+	.byte	8
+	.word	.L169,.L190
+	.byte	10
+	.word	.L171,.L194,.L10
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('func_trust')
+	.sect	'.debug_abbrev'
+.L54:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,85,6,0,0,6,52,0,3,8,58,15,59
+	.byte	15,57,15,73,16,2,6,0,0,7,29,1,49,16,17,1,18,1,0,0,8,5,0,49,16,2,6,0,0,9,11,0,49,16,85,6,0,0,10,11,0,49
+	.byte	16,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('func_trust')
+	.sect	'.debug_line'
+.L55:
+	.word	.L329-.L328
+.L328:
+	.half	3
+	.word	.L331-.L330
+.L330:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0
+	.byte	'..\\led.h',0,0,0,0,0
+.L331:
+	.byte	5,61,7,0,5,2
+	.word	.L27
+	.byte	3,150,2,1,5,13,3,94,1,4,2,5,11,9
+	.half	.L189-.L27
+	.byte	3,174,126,1,4,1,5,29,9
+	.half	.L9-.L189
+	.byte	3,219,1,1,5,6,9
+	.half	.L332-.L9
+	.byte	1,4,2,5,11,7,9
+	.half	.L192-.L332
+	.byte	3,165,126,1,5,14,9
+	.half	.L333-.L192
+	.byte	1,4,1,5,24,9
+	.half	.L193-.L333
+	.byte	3,230,1,1,5,22,9
+	.half	.L219-.L193
+	.byte	3,8,1,5,20,9
+	.half	.L334-.L219
+	.byte	1,5,27,9
+	.half	.L335-.L334
+	.byte	3,1,1,5,25,9
+	.half	.L336-.L335
+	.byte	1,5,35,9
+	.half	.L337-.L336
+	.byte	3,1,1,5,33,9
+	.half	.L338-.L337
+	.byte	1,5,32,9
+	.half	.L339-.L338
+	.byte	3,2,1,5,30,1,5,25,9
+	.half	.L340-.L339
+	.byte	3,1,1,5,30,9
+	.half	.L341-.L340
+	.byte	1,5,64,9
+	.half	.L342-.L341
+	.byte	1,5,62,9
+	.half	.L343-.L342
+	.byte	1,5,22,1,5,38,9
+	.half	.L344-.L343
+	.byte	3,1,1,5,59,9
+	.half	.L345-.L344
+	.byte	1,5,29,1,5,24,9
+	.half	.L346-.L345
+	.byte	3,1,1,5,22,1,5,12,9
+	.half	.L220-.L346
+	.byte	3,9,1,5,102,9
+	.half	.L347-.L220
+	.byte	3,7,1,5,59,9
+	.half	.L221-.L347
+	.byte	1,5,79,9
+	.half	.L348-.L221
+	.byte	1,5,113,9
+	.half	.L349-.L348
+	.byte	1,5,28,9
+	.half	.L350-.L349
+	.byte	1,5,113,9
+	.half	.L351-.L350
+	.byte	1,5,102,9
+	.half	.L352-.L351
+	.byte	3,1,1,5,59,9
+	.half	.L353-.L352
+	.byte	1,5,79,9
+	.half	.L354-.L353
+	.byte	1,5,113,9
+	.half	.L355-.L354
+	.byte	1,5,28,9
+	.half	.L356-.L355
+	.byte	1,5,113,9
+	.half	.L357-.L356
+	.byte	1,4,2,5,11,9
+	.half	.L194-.L357
+	.byte	3,250,125,1,5,14,9
+	.half	.L358-.L194
+	.byte	1,4,1,5,24,9
+	.half	.L10-.L358
+	.byte	3,140,2,1,5,13,9
+	.half	.L359-.L10
+	.byte	3,78,1,5,1,9
+	.half	.L57-.L359
+	.byte	3,52,0,1,1
+.L329:
+	.sdecl	'.debug_ranges',debug,cluster('func_trust')
+	.sect	'.debug_ranges'
+.L56:
+	.word	-1,.L27,0,.L57-.L27,0,0
+.L182:
+	.word	-1,.L27,0,.L180-.L27,-1,.L29,0,.L92-.L29,0,0
+.L191:
+	.word	-1,.L27,.L189-.L27,.L9-.L27,.L192-.L27,.L193-.L27,0,0
+	.sdecl	'.debug_info',debug,cluster('func_idle')
+	.sect	'.debug_info'
+.L58:
+	.word	222
+	.half	3
+	.word	.L59
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L61,.L60
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'func_idle',0,1,205,2,13,1,1
+	.word	.L12,.L195,.L32
+	.byte	4
+	.byte	'arg',0,1,205,2,29
+	.word	.L139,.L196
+	.byte	5
+	.word	.L12,.L195
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('func_idle')
+	.sect	'.debug_abbrev'
+.L59:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('func_idle')
+	.sect	'.debug_line'
+.L60:
+	.word	.L361-.L360
+.L360:
+	.half	3
+	.word	.L363-.L362
+.L362:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L363:
+	.byte	5,11,7,0,5,2
+	.word	.L12
+	.byte	3,207,2,1,9
+	.half	.L364-.L12
+	.byte	3,127,1,5,1,9
+	.half	.L62-.L364
+	.byte	3,3,0,1,1
+.L361:
+	.sdecl	'.debug_ranges',debug,cluster('func_idle')
+	.sect	'.debug_ranges'
+.L61:
+	.word	-1,.L12,0,.L62-.L12,0,0
+	.sdecl	'.debug_info',debug,cluster('func_idle2')
+	.sect	'.debug_info'
+.L63:
+	.word	223
+	.half	3
+	.word	.L64
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L66,.L65
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'func_idle2',0,1,212,2,13,1,1
+	.word	.L13,.L197,.L33
+	.byte	4
+	.byte	'arg',0,1,212,2,30
+	.word	.L139,.L198
+	.byte	5
+	.word	.L13,.L197
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('func_idle2')
+	.sect	'.debug_abbrev'
+.L64:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('func_idle2')
+	.sect	'.debug_line'
+.L65:
+	.word	.L366-.L365
+.L365:
+	.half	3
+	.word	.L368-.L367
+.L367:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L368:
+	.byte	5,11,7,0,5,2
+	.word	.L13
+	.byte	3,214,2,1,9
+	.half	.L369-.L13
+	.byte	3,127,1,5,1,9
+	.half	.L67-.L369
+	.byte	3,3,0,1,1
+.L366:
+	.sdecl	'.debug_ranges',debug,cluster('func_idle2')
+	.sect	'.debug_ranges'
+.L66:
+	.word	-1,.L13,0,.L67-.L13,0,0
+	.sdecl	'.debug_info',debug,cluster('callback')
+	.sect	'.debug_info'
+.L68:
+	.word	240
+	.half	3
+	.word	.L69
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L71,.L70
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'callback',0,1,61,6,1,1,1
+	.word	.L15,.L199,.L14
+	.byte	4
+	.byte	'swc_id',0,1,61,24
+	.word	.L200,.L201
+	.byte	4
+	.byte	'flag',0,1,61,41
+	.word	.L200,.L202
+	.byte	5
+	.word	.L15,.L199
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('callback')
+	.sect	'.debug_abbrev'
+.L69:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('callback')
+	.sect	'.debug_line'
+.L70:
+	.word	.L371-.L370
+.L370:
+	.half	3
+	.word	.L373-.L372
+.L372:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L373:
+	.byte	5,14,7,0,5,2
+	.word	.L15
+	.byte	3,63,1,7,9
+	.half	.L374-.L15
+	.byte	3,3,1,5,1,7,9
+	.half	.L375-.L374
+	.byte	3,6,1,5,13,7,9
+	.half	.L2-.L375
+	.byte	3,120,1,9
+	.half	.L376-.L2
+	.byte	3,1,1,9
+	.half	.L3-.L376
+	.byte	3,2,1,5,37,9
+	.half	.L5-.L3
+	.byte	1,5,1,9
+	.half	.L377-.L5
+	.byte	3,5,1,7,9
+	.half	.L72-.L377
+	.byte	0,1,1
+.L371:
+	.sdecl	'.debug_ranges',debug,cluster('callback')
+	.sect	'.debug_ranges'
+.L71:
+	.word	-1,.L15,0,.L72-.L15,0,0
+	.sdecl	'.debug_info',debug,cluster('.cocofun_6')
+	.sect	'.debug_info'
+.L73:
+	.word	194
+	.half	3
+	.word	.L74
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L76,.L75
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'.cocofun_6',0,1,1,1,1
+	.word	.L25,.L77,.L24
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('.cocofun_6')
+	.sect	'.debug_abbrev'
+.L74:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,54,15
+	.byte	17,1,18,1,64,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('.cocofun_6')
+	.sect	'.debug_line'
+.L75:
+	.word	.L379-.L378
+.L378:
+	.half	3
+	.word	.L381-.L380
+.L380:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L381:
+	.byte	5,52,7,0,5,2
+	.word	.L25
+	.byte	3,178,1,1,5,12,1,5,26,9
+	.half	.L382-.L25
+	.byte	1,5,52,9
+	.half	.L383-.L382
+	.byte	1,5,45,9
+	.half	.L384-.L383
+	.byte	3,1,1,5,20,1,5,36,9
+	.half	.L385-.L384
+	.byte	1,5,45,9
+	.half	.L386-.L385
+	.byte	1,5,23,9
+	.half	.L387-.L386
+	.byte	3,1,1,5,40,1,5,45,9
+	.half	.L388-.L387
+	.byte	3,1,1,5,12,1,5,36,9
+	.half	.L389-.L388
+	.byte	1,5,45,9
+	.half	.L390-.L389
+	.byte	1,5,53,9
+	.half	.L391-.L390
+	.byte	3,1,1,5,20,1,5,36,9
+	.half	.L392-.L391
+	.byte	1,5,53,9
+	.half	.L393-.L392
+	.byte	1,5,23,9
+	.half	.L394-.L393
+	.byte	3,1,1,5,40,1,9
+	.half	.L77-.L394
+	.byte	0,1,1,5,52,0,5,2
+	.word	.L25
+	.byte	3,160,2,1,5,12,1,5,26,9
+	.half	.L382-.L25
+	.byte	1,5,52,9
+	.half	.L383-.L382
+	.byte	1,5,45,9
+	.half	.L384-.L383
+	.byte	3,1,1,5,20,1,5,36,9
+	.half	.L385-.L384
+	.byte	1,5,45,9
+	.half	.L386-.L385
+	.byte	1,5,23,9
+	.half	.L387-.L386
+	.byte	3,1,1,5,40,1,5,45,9
+	.half	.L388-.L387
+	.byte	3,1,1,5,12,1,5,36,9
+	.half	.L389-.L388
+	.byte	1,5,45,9
+	.half	.L390-.L389
+	.byte	1,5,53,9
+	.half	.L391-.L390
+	.byte	3,1,1,5,20,1,5,36,9
+	.half	.L392-.L391
+	.byte	1,5,53,9
+	.half	.L393-.L392
+	.byte	1,5,23,9
+	.half	.L394-.L393
+	.byte	3,1,1,5,40,1,9
+	.half	.L395-.L394
+	.byte	3,146,127,1,7,9
+	.half	.L77-.L395
+	.byte	0,1,1
+.L379:
+	.sdecl	'.debug_ranges',debug,cluster('.cocofun_6')
+	.sect	'.debug_ranges'
+.L76:
+	.word	-1,.L25,0,.L77-.L25,0,0
+	.sdecl	'.debug_info',debug,cluster('.cocofun_7')
+	.sect	'.debug_info'
+.L78:
+	.word	194
+	.half	3
+	.word	.L79
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L81,.L80
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'.cocofun_7',0,1,1,1,1
+	.word	.L23,.L82,.L22
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('.cocofun_7')
+	.sect	'.debug_abbrev'
+.L79:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,54,15
+	.byte	17,1,18,1,64,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('.cocofun_7')
+	.sect	'.debug_line'
+.L80:
+	.word	.L397-.L396
+.L396:
+	.half	3
+	.word	.L399-.L398
+.L398:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L399:
+	.byte	5,23,7,0,5,2
+	.word	.L23
+	.byte	3,160,1,1,5,32,1,5,24,9
+	.half	.L400-.L23
+	.byte	3,1,1,5,23,9
+	.half	.L401-.L400
+	.byte	3,1,1,5,32,1,5,24,9
+	.half	.L402-.L401
+	.byte	3,1,1,5,23,9
+	.half	.L403-.L402
+	.byte	3,1,1,5,32,1,5,24,9
+	.half	.L404-.L403
+	.byte	3,1,1,5,23,9
+	.half	.L405-.L404
+	.byte	3,2,1,5,21,9
+	.half	.L406-.L405
+	.byte	1,9
+	.half	.L82-.L406
+	.byte	0,1,1,5,24,0,5,2
+	.word	.L23
+	.byte	3,136,2,1,5,33,1,5,25,9
+	.half	.L400-.L23
+	.byte	3,1,1,5,24,9
+	.half	.L401-.L400
+	.byte	3,1,1,5,33,1,5,25,9
+	.half	.L402-.L401
+	.byte	3,1,1,5,24,9
+	.half	.L403-.L402
+	.byte	3,1,1,5,33,1,5,25,9
+	.half	.L404-.L403
+	.byte	3,1,1,5,24,9
+	.half	.L405-.L404
+	.byte	3,2,1,5,22,9
+	.half	.L406-.L405
+	.byte	1,5,21,9
+	.half	.L407-.L406
+	.byte	3,152,127,1,7,9
+	.half	.L82-.L407
+	.byte	0,1,1
+.L397:
+	.sdecl	'.debug_ranges',debug,cluster('.cocofun_7')
+	.sect	'.debug_ranges'
+.L81:
+	.word	-1,.L23,0,.L82-.L23,0,0
+	.sdecl	'.debug_info',debug,cluster('.cocofun_8')
+	.sect	'.debug_info'
+.L83:
+	.word	194
+	.half	3
+	.word	.L84
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L86,.L85
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'.cocofun_8',0,1,1,1,1
+	.word	.L21,.L87,.L20
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('.cocofun_8')
+	.sect	'.debug_abbrev'
+.L84:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,54,15
+	.byte	17,1,18,1,64,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('.cocofun_8')
+	.sect	'.debug_line'
+.L85:
+	.word	.L409-.L408
+.L408:
+	.half	3
+	.word	.L411-.L410
+.L410:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L411:
+	.byte	5,102,7,0,5,2
+	.word	.L21
+	.byte	3,224,1,1,5,59,9
+	.half	.L217-.L21
+	.byte	1,5,79,9
+	.half	.L412-.L217
+	.byte	1,5,113,9
+	.half	.L413-.L412
+	.byte	1,9
+	.half	.L87-.L413
+	.byte	0,1,1,5,102,0,5,2
+	.word	.L21
+	.byte	3,224,1,1,5,59,9
+	.half	.L217-.L21
+	.byte	3,1,1,5,79,9
+	.half	.L412-.L217
+	.byte	1,5,113,9
+	.half	.L413-.L412
+	.byte	1,9
+	.half	.L414-.L413
+	.byte	3,127,1,7,9
+	.half	.L87-.L414
+	.byte	0,1,1
+.L409:
+	.sdecl	'.debug_ranges',debug,cluster('.cocofun_8')
+	.sect	'.debug_ranges'
+.L86:
+	.word	-1,.L21,0,.L87-.L21,0,0
+	.sdecl	'.debug_info',debug,cluster('.cocofun_9')
+	.sect	'.debug_info'
+.L88:
+	.word	194
+	.half	3
+	.word	.L89
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L91,.L90
+	.byte	2
+	.word	.L34
+	.byte	3
+	.byte	'.cocofun_9',0,1,1,1,1
+	.word	.L29,.L92,.L28
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('.cocofun_9')
+	.sect	'.debug_abbrev'
+.L89:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,54,15
+	.byte	17,1,18,1,64,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('.cocofun_9')
+	.sect	'.debug_line'
+.L90:
+	.word	.L416-.L415
+.L415:
+	.half	3
+	.word	.L418-.L417
+.L417:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\user_main.c',0,0,0,0,0
+.L418:
+	.byte	5,102,7,0,5,2
+	.word	.L29
+	.byte	3,167,2,1,5,104,9
+	.half	.L419-.L29
+	.byte	1,5,136,1,9
+	.half	.L420-.L419
+	.byte	1,5,138,1,9
+	.half	.L421-.L420
+	.byte	1,5,57,9
+	.half	.L422-.L421
+	.byte	1,9
+	.half	.L92-.L422
+	.byte	0,1,1,5,102,0,5,2
+	.word	.L29
+	.byte	3,224,1,1,5,104,9
+	.half	.L419-.L29
+	.byte	1,5,136,1,9
+	.half	.L420-.L419
+	.byte	1,5,138,1,9
+	.half	.L421-.L420
+	.byte	1,5,57,9
+	.half	.L422-.L421
+	.byte	1,9
+	.half	.L423-.L422
+	.byte	3,199,0,1,7,9
+	.half	.L92-.L423
+	.byte	0,1,1,5,102,0,5,2
+	.word	.L29
+	.byte	3,225,1,1,5,104,9
+	.half	.L419-.L29
+	.byte	1,5,136,1,9
+	.half	.L420-.L419
+	.byte	1,5,138,1,9
+	.half	.L421-.L420
+	.byte	1,5,57,9
+	.half	.L422-.L421
+	.byte	1,9
+	.half	.L423-.L422
+	.byte	3,198,0,1,7,9
+	.half	.L92-.L423
+	.byte	0,1,1,5,102,0,5,2
+	.word	.L29
+	.byte	3,168,2,1,5,104,9
+	.half	.L419-.L29
+	.byte	1,5,136,1,9
+	.half	.L420-.L419
+	.byte	1,5,138,1,9
+	.half	.L421-.L420
+	.byte	1,5,57,9
+	.half	.L422-.L421
+	.byte	1,9
+	.half	.L423-.L422
+	.byte	3,127,1,7,9
+	.half	.L92-.L423
+	.byte	0,1,1
+.L416:
+	.sdecl	'.debug_ranges',debug,cluster('.cocofun_9')
+	.sect	'.debug_ranges'
+.L91:
+	.word	-1,.L29,0,.L92-.L29,0,0
+	.sdecl	'.debug_info',debug,cluster('_hwc_high_1')
+	.sect	'.debug_info'
+.L93:
+	.word	184
+	.half	3
+	.word	.L94
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_hwc_high_1',0,8,17,1
+	.word	.L203
+	.byte	5,3
+	.word	_hwc_high_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_hwc_high_1')
+	.sect	'.debug_abbrev'
+.L94:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('hwc_high_1')
+	.sect	'.debug_info'
+.L95:
+	.word	184
+	.half	3
+	.word	.L96
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'hwc_high_1',0,8,17,1
+	.word	.L204
+	.byte	1,5,3
+	.word	hwc_high_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('hwc_high_1')
+	.sect	'.debug_abbrev'
+.L96:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_hwc_high_2')
+	.sect	'.debug_info'
+.L97:
+	.word	184
+	.half	3
+	.word	.L98
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_hwc_high_2',0,8,18,1
+	.word	.L205
+	.byte	5,3
+	.word	_hwc_high_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_hwc_high_2')
+	.sect	'.debug_abbrev'
+.L98:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('hwc_high_2')
+	.sect	'.debug_info'
+.L99:
+	.word	184
+	.half	3
+	.word	.L100
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'hwc_high_2',0,8,18,1
+	.word	.L204
+	.byte	1,5,3
+	.word	hwc_high_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('hwc_high_2')
+	.sect	'.debug_abbrev'
+.L100:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_hwc_trust_1')
+	.sect	'.debug_info'
+.L101:
+	.word	185
+	.half	3
+	.word	.L102
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_hwc_trust_1',0,8,19,1
+	.word	.L206
+	.byte	5,3
+	.word	_hwc_trust_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_hwc_trust_1')
+	.sect	'.debug_abbrev'
+.L102:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('hwc_trust_1')
+	.sect	'.debug_info'
+.L103:
+	.word	185
+	.half	3
+	.word	.L104
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'hwc_trust_1',0,8,19,1
+	.word	.L204
+	.byte	1,5,3
+	.word	hwc_trust_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('hwc_trust_1')
+	.sect	'.debug_abbrev'
+.L104:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_ground_component')
+	.sect	'.debug_info'
+.L105:
+	.word	190
+	.half	3
+	.word	.L106
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_ground_component',0,8,20,1
+	.word	.L207
+	.byte	5,3
+	.word	_ground_component
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_ground_component')
+	.sect	'.debug_abbrev'
+.L106:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('ground_component')
+	.sect	'.debug_info'
+.L107:
+	.word	190
+	.half	3
+	.word	.L108
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'ground_component',0,8,20,1
+	.word	.L204
+	.byte	1,5,3
+	.word	ground_component
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('ground_component')
+	.sect	'.debug_abbrev'
+.L108:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_high_1')
+	.sect	'.debug_info'
+.L109:
+	.word	184
+	.half	3
+	.word	.L110
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_high_1',0,8,31,1
+	.word	.L208
+	.byte	5,3
+	.word	_swc_high_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_high_1')
+	.sect	'.debug_abbrev'
+.L110:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_high_1')
+	.sect	'.debug_info'
+.L111:
+	.word	184
+	.half	3
+	.word	.L112
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_high_1',0,8,31,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_high_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_high_1')
+	.sect	'.debug_abbrev'
+.L112:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_high_idle_1')
+	.sect	'.debug_info'
+.L113:
+	.word	189
+	.half	3
+	.word	.L114
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_high_idle_1',0,8,32,1
+	.word	.L210
+	.byte	5,3
+	.word	_swc_high_idle_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_high_idle_1')
+	.sect	'.debug_abbrev'
+.L114:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_high_idle_1')
+	.sect	'.debug_info'
+.L115:
+	.word	189
+	.half	3
+	.word	.L116
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_high_idle_1',0,8,32,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_high_idle_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_high_idle_1')
+	.sect	'.debug_abbrev'
+.L116:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_high_2')
+	.sect	'.debug_info'
+.L117:
+	.word	184
+	.half	3
+	.word	.L118
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_high_2',0,8,33,1
+	.word	.L211
+	.byte	5,3
+	.word	_swc_high_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_high_2')
+	.sect	'.debug_abbrev'
+.L118:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_high_2')
+	.sect	'.debug_info'
+.L119:
+	.word	184
+	.half	3
+	.word	.L120
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_high_2',0,8,33,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_high_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_high_2')
+	.sect	'.debug_abbrev'
+.L120:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_high_idle_2')
+	.sect	'.debug_info'
+.L121:
+	.word	189
+	.half	3
+	.word	.L122
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_high_idle_2',0,8,34,1
+	.word	.L212
+	.byte	5,3
+	.word	_swc_high_idle_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_high_idle_2')
+	.sect	'.debug_abbrev'
+.L122:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_high_idle_2')
+	.sect	'.debug_info'
+.L123:
+	.word	189
+	.half	3
+	.word	.L124
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_high_idle_2',0,8,34,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_high_idle_2
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_high_idle_2')
+	.sect	'.debug_abbrev'
+.L124:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_trust_1')
+	.sect	'.debug_info'
+.L125:
+	.word	185
+	.half	3
+	.word	.L126
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_trust_1',0,8,35,1
+	.word	.L213
+	.byte	5,3
+	.word	_swc_trust_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_trust_1')
+	.sect	'.debug_abbrev'
+.L126:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_trust_1')
+	.sect	'.debug_info'
+.L127:
+	.word	185
+	.half	3
+	.word	.L128
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_trust_1',0,8,35,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_trust_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_trust_1')
+	.sect	'.debug_abbrev'
+.L128:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_swc_trust_idle_1')
+	.sect	'.debug_info'
+.L129:
+	.word	190
+	.half	3
+	.word	.L130
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_swc_trust_idle_1',0,8,36,1
+	.word	.L214
+	.byte	5,3
+	.word	_swc_trust_idle_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_swc_trust_idle_1')
+	.sect	'.debug_abbrev'
+.L130:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('swc_trust_idle_1')
+	.sect	'.debug_info'
+.L131:
+	.word	190
+	.half	3
+	.word	.L132
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'swc_trust_idle_1',0,8,36,1
+	.word	.L209
+	.byte	1,5,3
+	.word	swc_trust_idle_1
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('swc_trust_idle_1')
+	.sect	'.debug_abbrev'
+.L132:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('_gnd_task')
+	.sect	'.debug_info'
+.L133:
+	.word	182
+	.half	3
+	.word	.L134
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'_gnd_task',0,8,48,1
+	.word	.L215
+	.byte	5,3
+	.word	_gnd_task
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('_gnd_task')
+	.sect	'.debug_abbrev'
+.L134:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('gnd_task')
+	.sect	'.debug_info'
+.L135:
+	.word	182
+	.half	3
+	.word	.L136
+	.byte	4,1
+	.byte	'..\\user_main.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1,2
+	.word	.L34
+	.byte	3
+	.byte	'gnd_task',0,8,48,1
+	.word	.L209
+	.byte	1,5,3
+	.word	gnd_task
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('gnd_task')
+	.sect	'.debug_abbrev'
+.L136:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_loc',debug,cluster('.cocofun_6')
+	.sect	'.debug_loc'
+.L24:
+	.word	-1,.L25,0,.L77-.L25
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('.cocofun_7')
+	.sect	'.debug_loc'
+.L22:
+	.word	-1,.L23,0,.L82-.L23
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('.cocofun_8')
+	.sect	'.debug_loc'
+.L20:
+	.word	-1,.L21,0,.L87-.L21
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('.cocofun_9')
+	.sect	'.debug_loc'
+.L28:
+	.word	-1,.L29,0,.L92-.L29
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('callback')
+	.sect	'.debug_loc'
+.L14:
+	.word	-1,.L15,0,.L199-.L15
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L202:
+	.word	-1,.L15,0,.L199-.L15
+	.half	5
+	.byte	144,34,157,32,32
+	.word	0,0
+.L201:
+	.word	-1,.L15,0,.L199-.L15
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('func_high')
+	.sect	'.debug_loc'
+.L147:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	3
+	.byte	145,180,127
+	.word	.L25-.L19,.L77-.L19
+	.half	3
+	.byte	145,180,127
+	.word	0,.L168-.L19
+	.half	3
+	.byte	145,180,127
+	.word	.L29-.L19,.L92-.L19
+	.half	3
+	.byte	145,180,127
+	.word	.L217-.L19,.L87-.L19
+	.half	3
+	.byte	145,180,127
+	.word	.L218-.L19,.L138-.L19
+	.half	3
+	.byte	145,180,127
+	.word	0,0
+.L148:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	2
+	.byte	145,72
+	.word	.L25-.L19,.L77-.L19
+	.half	2
+	.byte	145,72
+	.word	0,.L168-.L19
+	.half	2
+	.byte	145,72
+	.word	.L29-.L19,.L92-.L19
+	.half	2
+	.byte	145,72
+	.word	.L217-.L19,.L87-.L19
+	.half	2
+	.byte	145,72
+	.word	.L218-.L19,.L138-.L19
+	.half	2
+	.byte	145,72
+	.word	0,0
+.L149:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	2
+	.byte	145,92
+	.word	.L25-.L19,.L77-.L19
+	.half	2
+	.byte	145,92
+	.word	0,.L168-.L19
+	.half	2
+	.byte	145,92
+	.word	.L29-.L19,.L92-.L19
+	.half	2
+	.byte	145,92
+	.word	.L217-.L19,.L87-.L19
+	.half	2
+	.byte	145,92
+	.word	.L218-.L19,.L138-.L19
+	.half	2
+	.byte	145,92
+	.word	0,0
+.L164:
+	.word	0,0
+.L140:
+	.word	-1,.L19,0,.L6-.L19
+	.half	1
+	.byte	100
+	.word	0,0
+.L143:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	3
+	.byte	145,152,126
+	.word	.L25-.L19,.L77-.L19
+	.half	3
+	.byte	145,152,126
+	.word	0,.L168-.L19
+	.half	3
+	.byte	145,152,126
+	.word	.L29-.L19,.L92-.L19
+	.half	3
+	.byte	145,152,126
+	.word	.L217-.L19,.L87-.L19
+	.half	3
+	.byte	145,152,126
+	.word	.L218-.L19,.L138-.L19
+	.half	3
+	.byte	145,152,126
+	.word	0,0
+.L18:
+	.word	-1,.L19,0,.L216-.L19
+	.half	2
+	.byte	138,0
+	.word	.L216-.L19,.L138-.L19
+	.half	3
+	.byte	138,232,1
+	.word	0,0
+.L170:
+	.word	0,0
+.L156:
+	.word	0,0
+.L151:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	2
+	.byte	145,112
+	.word	.L25-.L19,.L77-.L19
+	.half	2
+	.byte	145,112
+	.word	0,.L168-.L19
+	.half	2
+	.byte	145,112
+	.word	.L29-.L19,.L92-.L19
+	.half	2
+	.byte	145,112
+	.word	.L217-.L19,.L87-.L19
+	.half	2
+	.byte	145,112
+	.word	.L218-.L19,.L138-.L19
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L145:
+	.word	-1,.L19,.L23-.L19,.L82-.L19
+	.half	3
+	.byte	145,248,126
+	.word	.L25-.L19,.L77-.L19
+	.half	3
+	.byte	145,248,126
+	.word	0,.L168-.L19
+	.half	3
+	.byte	145,248,126
+	.word	.L29-.L19,.L92-.L19
+	.half	3
+	.byte	145,248,126
+	.word	.L217-.L19,.L87-.L19
+	.half	3
+	.byte	145,248,126
+	.word	.L218-.L19,.L138-.L19
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('func_high2')
+	.sect	'.debug_loc'
+.L177:
+	.word	0,0
+.L173:
+	.word	-1,.L31,0,.L11-.L31
+	.half	1
+	.byte	100
+	.word	0,0
+.L30:
+	.word	-1,.L31,0,.L172-.L31
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L175:
+	.word	0,0
+.L179:
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('func_idle')
+	.sect	'.debug_loc'
+.L196:
+	.word	-1,.L12,0,.L195-.L12
+	.half	1
+	.byte	100
+	.word	0,0
+.L32:
+	.word	-1,.L12,0,.L195-.L12
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('func_idle2')
+	.sect	'.debug_loc'
+.L198:
+	.word	-1,.L13,0,.L197-.L13
+	.half	1
+	.byte	100
+	.word	0,0
+.L33:
+	.word	-1,.L13,0,.L197-.L13
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('func_trust')
+	.sect	'.debug_loc'
+.L185:
+	.word	-1,.L27,0,.L193-.L27
+	.half	3
+	.byte	145,180,127
+	.word	.L23-.L27,.L82-.L27
+	.half	3
+	.byte	145,180,127
+	.word	.L219-.L27,.L220-.L27
+	.half	3
+	.byte	145,180,127
+	.word	.L25-.L27,.L77-.L27
+	.half	3
+	.byte	145,180,127
+	.word	.L29-.L27,.L92-.L27
+	.half	3
+	.byte	145,180,127
+	.word	.L221-.L27,.L180-.L27
+	.half	3
+	.byte	145,180,127
+	.word	0,0
+.L186:
+	.word	-1,.L27,0,.L193-.L27
+	.half	2
+	.byte	145,72
+	.word	.L23-.L27,.L82-.L27
+	.half	2
+	.byte	145,72
+	.word	.L219-.L27,.L220-.L27
+	.half	2
+	.byte	145,72
+	.word	.L25-.L27,.L77-.L27
+	.half	2
+	.byte	145,72
+	.word	.L29-.L27,.L92-.L27
+	.half	2
+	.byte	145,72
+	.word	.L221-.L27,.L180-.L27
+	.half	2
+	.byte	145,72
+	.word	0,0
+.L187:
+	.word	-1,.L27,0,.L193-.L27
+	.half	2
+	.byte	145,92
+	.word	.L23-.L27,.L82-.L27
+	.half	2
+	.byte	145,92
+	.word	.L219-.L27,.L220-.L27
+	.half	2
+	.byte	145,92
+	.word	.L25-.L27,.L77-.L27
+	.half	2
+	.byte	145,92
+	.word	.L29-.L27,.L92-.L27
+	.half	2
+	.byte	145,92
+	.word	.L221-.L27,.L180-.L27
+	.half	2
+	.byte	145,92
+	.word	0,0
+.L181:
+	.word	-1,.L27,0,.L9-.L27
+	.half	1
+	.byte	100
+	.word	0,0
+.L183:
+	.word	-1,.L27,0,.L193-.L27
+	.half	3
+	.byte	145,152,126
+	.word	.L23-.L27,.L82-.L27
+	.half	3
+	.byte	145,152,126
+	.word	.L219-.L27,.L220-.L27
+	.half	3
+	.byte	145,152,126
+	.word	.L25-.L27,.L77-.L27
+	.half	3
+	.byte	145,152,126
+	.word	.L29-.L27,.L92-.L27
+	.half	3
+	.byte	145,152,126
+	.word	.L221-.L27,.L180-.L27
+	.half	3
+	.byte	145,152,126
+	.word	0,0
+.L26:
+	.word	-1,.L27,0,.L189-.L27
+	.half	2
+	.byte	138,0
+	.word	.L189-.L27,.L180-.L27
+	.half	3
+	.byte	138,232,1
+	.word	0,0
+.L190:
+	.word	0,0
+.L188:
+	.word	-1,.L27,0,.L193-.L27
+	.half	2
+	.byte	145,112
+	.word	.L23-.L27,.L82-.L27
+	.half	2
+	.byte	145,112
+	.word	.L219-.L27,.L220-.L27
+	.half	2
+	.byte	145,112
+	.word	.L25-.L27,.L77-.L27
+	.half	2
+	.byte	145,112
+	.word	.L29-.L27,.L92-.L27
+	.half	2
+	.byte	145,112
+	.word	.L221-.L27,.L180-.L27
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L184:
+	.word	-1,.L27,0,.L193-.L27
+	.half	3
+	.byte	145,248,126
+	.word	.L23-.L27,.L82-.L27
+	.half	3
+	.byte	145,248,126
+	.word	.L219-.L27,.L220-.L27
+	.half	3
+	.byte	145,248,126
+	.word	.L25-.L27,.L77-.L27
+	.half	3
+	.byte	145,248,126
+	.word	.L29-.L27,.L92-.L27
+	.half	3
+	.byte	145,248,126
+	.word	.L221-.L27,.L180-.L27
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('user_main')
+	.sect	'.debug_loc'
+.L16:
+	.word	-1,.L17,0,.L137-.L17
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L424:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('callback')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L424,.L15,.L199-.L15
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('user_main')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L424,.L17,.L137-.L17
+	.sdecl	'.debug_frame',debug,cluster('func_high')
+	.sect	'.debug_frame'
+	.word	28
+	.word	.L424,.L19,.L138-.L19
+	.byte	4
+	.word	(.L216-.L19)/2
+	.byte	19,232,1,22,26,4,19,138,232,1,0
+	.sdecl	'.debug_frame',debug,cluster('func_trust')
+	.sect	'.debug_frame'
+	.word	28
+	.word	.L424,.L27,.L180-.L27
+	.byte	4
+	.word	(.L189-.L27)/2
+	.byte	19,232,1,22,26,4,19,138,232,1,0
+	.sdecl	'.debug_frame',debug,cluster('func_high2')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L424,.L31,.L172-.L31
+	.sdecl	'.debug_frame',debug,cluster('func_idle')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L424,.L12,.L195-.L12
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('func_idle2')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L424,.L13,.L197-.L13
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L425:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,30,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('.cocofun_8')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L425,.L21,.L87-.L21
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('.cocofun_7')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L425,.L23,.L82-.L23
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('.cocofun_6')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L425,.L25,.L77-.L25
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L426:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,29,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('.cocofun_9')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L426,.L29,.L92-.L29
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+
+; ..\user_main.c	   344  {
+; ..\user_main.c	   345      for (;;) {
+; ..\user_main.c	   346      	__nop();
+; ..\user_main.c	   347      }
+	; Module end

@@ -1,0 +1,1637 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapfile>
+
+<mapfile>
+	<part>
+		<name>Tool and Invocation</name>
+		<table>
+			<row>tool;TASKING VX-toolset for TriCore: object linker v4.1r1 Build 220 SN 00581034</row>
+			<row>path;C:\Program Files (x86)\TASKING\TriCore v4.1r1\ctc\bin\ltc</row>
+			<row>arguments;-f cc2724a </row>
+			<row>file:cc2724a;-o Garda.elf -d../Garda.lsl -D__CPU__=tc1797 -D__PROC_TC1797__ -OtxycL --map-file=Garda.mapxml:XML -mcrfiklSmNOduQ --error-limit=42 --dep-file=.Garda.elf.d --make-target=Garda.elf CAN.o cstart.o kernel.o led.o MAIN.o pll_init.o sync_on_halt.o user_main.o user_main_rtos.o -lcs_fpu -lfp_fpu -lrt -LC:\Program" "Files" "(x86)\TASKING\TriCore" "v4.1r1\ctc\lib/tc131 </row>
+			<row>task;task1</row>
+		</table>
+	</part>
+	<part>
+		<name>Used Resources</name>
+		<part>
+			<name>Memory usage in bytes</name>
+			<table>
+				<column>
+					<name>Memory</name>
+				</column>
+				<column>
+					<name>Code</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Data</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Reserved</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Free</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Total</name>
+					<alignment>right</alignment>
+				</column>
+				<row>flash0;0x0;0x0;0x0;0x400000;0x400000</row>
+				<row>spe:brom;0x0;0x0;0x004000;0x0;0x004000</row>
+				<row>spe:dflash0;0x0;0x0;0x008000;0x0;0x008000</row>
+				<row>spe:dflash1;0x0;0x0;0x008000;0x0;0x008000</row>
+				<row>spe:ldram;0x0;0x001701;0x005438;0x0184c7;0x01f000</row>
+				<row>spe:ovram;0x0;0x0;0x002000;0x0;0x002000</row>
+				<row>spe:pcode;0x0;0x0;0x0;0x008000;0x008000</row>
+				<row>spe:pflash0;0x001f6c;0x0015e3;0x0;0x1fcab1;0x200000</row>
+				<row>spe:pflash1;0x0;0x0;0x0;0x200000;0x200000</row>
+				<row>spe:pram;0x0;0x0;0x000004;0x003ffc;0x004000</row>
+				<row>spe:spram;0x0;0x0;0x006000;0x0;0x006000</row>
+				<row>xram_8_a;0x0;0x0;0x0;0x100000;0x100000</row>
+				<row>Total;0x001f6c;0x002ce4;0x02143c;0x920f74;0x947000</row>
+			</table>
+		</part>
+		<part>
+			<name>Space usage in bytes</name>
+			<table>
+				<column>
+					<name>Space</name>
+				</column>
+				<column>
+					<name>Native used Rom</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Native used Ram</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Native used NVRam</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Foreign used</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name> Reserved</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Free Rom</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name> Free Ram</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Free NVRam</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Total</name>
+					<alignment>right</alignment>
+				</column>
+				<row>spe:tc:abs18;0x000130;0x0000d5;0x0;0x004201;0x000438;0x0012fb;0x0024c7;0x0;0x008000</row>
+				<row>spe:tc:abs24;0x0;0x0;0x0;0x004c50;0x005438;0x1fcab1;0x0244c7;0x0;0x22b000</row>
+				<row>spe:tc:csa;0x0;0x0;0x0;0x001701;0x005438;0x0;0x0184c7;0x0;0x01f000</row>
+				<row>spe:tc:linear;0x00341f;0x00162c;0x0;0x000205;0x021438;0x7fcab1;0x1244c7;0x0;0x947000</row>
+				<row>spe:tc:pcp_code;0x0;0x0;0x0;0x0;0x0;0x0;0x008000;0x0;0x008000</row>
+				<row>spe:tc:pcp_data;0x0;0x0;0x0;0x0;0x000004;0x0;0x003ffc;0x0;0x004000</row>
+				<row>Total;0x00354f;0x001701;0x0;-;-;-;-;-;-</row>
+				<row>Largest gap;-;-;-;-;-;0x400000;0x100000;0x0;-</row>
+			</table>
+			<footNote>Multiple address spaces may be mapped at the same (physical) memory address ranges. Physical memory allocated (i.e. used) for sections in the given space are called "Native used Rom" and "Native used Ram" whereas memory allocated by other spaces is called "Foreign used" memory.</footNote>
+		</part>
+		<part>
+			<name>Estimated stack usage</name>
+			<table>
+				<column>
+					<name>Stack Name</name>
+				</column>
+				<column>
+					<name>Used</name>
+				</column>
+				<row>stack   0;0x00000128</row>
+				<row>recursive ;no</row>
+			</table>
+		</part>
+	</part>
+	<part>
+		<name>Processed Files</name>
+		<table>
+			<column>
+				<name>File</name>
+			</column>
+			<column>
+				<name>From archive</name>
+			</column>
+			<column>
+				<name>Symbol causing the extraction</name>
+			</column>
+			<row>CAN.o;;</row>
+			<row>MAIN.o;;</row>
+			<row>_Exit.o;libcs_fpu.a;_Exit</row>
+			<row>_doprint_noarg.o;libcs_fpu.a;__printf_noarg2</row>
+			<row>_filbuf.o;libcs_fpu.a;_filbuf</row>
+			<row>_flsbuf.o;libcs_fpu.a;_flsbuf</row>
+			<row>_io_putc.o;libcs_fpu.a;_io_putc</row>
+			<row>_iob.o;libcs_fpu.a;_iob</row>
+			<row>cinit.o;libcs_fpu.a;_c_init</row>
+			<row>clock.o;libcs_fpu.a;clock</row>
+			<row>clockspersec.o;libcs_fpu.a;__clocks_per_sec</row>
+			<row>cstart.o;;</row>
+			<row>dbg.o;libcs_fpu.a;_read</row>
+			<row>dbg__exit.o;libcs_fpu.a;_exit</row>
+			<row>dbg_trap.o;libcs_fpu.a;_dbg_trap_tc</row>
+			<row>divmod_u32.o;librt.a;__rt_udivmod</row>
+			<row>errno.o;libcs_fpu.a;_Errno</row>
+			<row>exit.o;libcs_fpu.a;exit</row>
+			<row>fclose.o;libcs_fpu.a;fclose</row>
+			<row>fflush.o;libcs_fpu.a;_fflush</row>
+			<row>fgetc.o;libcs_fpu.a;fgetc</row>
+			<row>fputc.o;libcs_fpu.a;fputc</row>
+			<row>kernel.o;;</row>
+			<row>led.o;;</row>
+			<row>memcpy.o;libcs_fpu.a;memcpy</row>
+			<row>memset.o;libcs_fpu.a;memset</row>
+			<row>pll_init.o;;</row>
+			<row>printf.o;libcs_fpu.a;printf</row>
+			<row>printf_noarg.o;libcs_fpu.a;__printf_noarg</row>
+			<row>sync_on_halt.o;;</row>
+			<row>trapass.o;libcs_fpu.a;_trapassertion</row>
+			<row>trapbus.o;libcs_fpu.a;_trapbus</row>
+			<row>trapcont.o;libcs_fpu.a;_trapcontext</row>
+			<row>trapinst.o;libcs_fpu.a;_trapinstruction</row>
+			<row>trapmmu.o;libcs_fpu.a;_trapmmu</row>
+			<row>trapnmi.o;libcs_fpu.a;_trapnmi</row>
+			<row>trapprot.o;libcs_fpu.a;_trapprotection</row>
+			<row>trapsys.o;libcs_fpu.a;_trapsystem</row>
+			<row>ui64_div.o;librt.a;__ll_udiv64</row>
+			<row>ui64_mul.o;librt.a;__ll_mul64</row>
+			<row>ungetc.o;libcs_fpu.a;ungetc</row>
+			<row>user_main.o;;</row>
+			<row>user_main_rtos.o;;</row>
+			<row>weakstub.o;libcs_fpu.a;_weakstub</row>
+		</table>
+	</part>
+	<part>
+		<name>Link Result</name>
+		<table>
+			<column>
+				<name>[in] File</name>
+			</column>
+			<column>
+				<name>[in] Section</name>
+			</column>
+			<column>
+				<name>[in] Size (MAU)</name>
+			</column>
+			<column>
+				<name>[out] Offset</name>
+			</column>
+			<column>
+				<name>[out] Section</name>
+			</column>
+			<column>
+				<name>[out] Size (MAU)</name>
+			</column>
+			<row>CAN.o;.bss.CAN.aubFIFOReadPtr (107);0x00000080;0x0;.bss.CAN.aubFIFOReadPtr (107);0x00000080</row>
+			<row>CAN.o;.bss.CAN.aubFIFOWritePtr (106);0x00000080;0x0;.bss.CAN.aubFIFOWritePtr (106);0x00000080</row>
+			<row>dbg.o;.bss._dbg_request.libcs_fpu (1145);0x00000014;0x0;.bss._dbg_request.libcs_fpu (1145);0x00000014</row>
+			<row>kernel.o;.bss.kernel.canMsgValidbit (342);0x0000001e;0x0;.bss.kernel.canMsgValidbit (342);0x0000001e</row>
+			<row>kernel.o;.bss.kernel.canTdmMap (343);0x00000032;0x0;.bss.kernel.canTdmMap (343);0x00000032</row>
+			<row>kernel.o;.bss.kernel.components (337);0x00000014;0x0;.bss.kernel.components (337);0x00000014</row>
+			<row>kernel.o;.bss.kernel.sInfoDirtybit (351);0x00000014;0x0;.bss.kernel.sInfoDirtybit (351);0x00000014</row>
+			<row>kernel.o;.bss.kernel.sInfoPool (350);0x000001e0;0x0;.bss.kernel.sInfoPool (350);0x000001e0</row>
+			<row>_iob.o;.bss.stdin_buf.libcs_fpu (1017);0x00000050;0x0;.bss.stdin_buf.libcs_fpu (1017);0x00000050</row>
+			<row>_iob.o;.bss.stdout_buf.libcs_fpu (1018);0x00000050;0x0;.bss.stdout_buf.libcs_fpu (1018);0x00000050</row>
+			<row>_iob.o;.data._iob.libcs_fpu (1019);0x000000c8;0x0;.data._iob.libcs_fpu (1019);0x000000c8</row>
+			<row>kernel.o;.data.kernel.delayed_output_pending (336);0x00000050;0x0;.data.kernel.delayed_output_pending (336);0x00000050</row>
+			<row>user_main.o;.data.user_main._gnd_task (680);0x00000228;0x0;.data.user_main._gnd_task (680);0x00000228</row>
+			<row>user_main.o;.data.user_main._ground_component (666);0x0000007c;0x0;.data.user_main._ground_component (666);0x0000007c</row>
+			<row>user_main.o;.data.user_main._hwc_high_1 (660);0x0000007c;0x0;.data.user_main._hwc_high_1 (660);0x0000007c</row>
+			<row>user_main.o;.data.user_main._hwc_high_2 (662);0x0000007c;0x0;.data.user_main._hwc_high_2 (662);0x0000007c</row>
+			<row>user_main.o;.data.user_main._hwc_trust_1 (664);0x0000007c;0x0;.data.user_main._hwc_trust_1 (664);0x0000007c</row>
+			<row>user_main.o;.data.user_main._swc_high_1 (668);0x00000228;0x0;.data.user_main._swc_high_1 (668);0x00000228</row>
+			<row>user_main.o;.data.user_main._swc_high_2 (672);0x00000228;0x0;.data.user_main._swc_high_2 (672);0x00000228</row>
+			<row>user_main.o;.data.user_main._swc_high_idle_1 (670);0x00000228;0x0;.data.user_main._swc_high_idle_1 (670);0x00000228</row>
+			<row>user_main.o;.data.user_main._swc_high_idle_2 (674);0x00000228;0x0;.data.user_main._swc_high_idle_2 (674);0x00000228</row>
+			<row>user_main.o;.data.user_main._swc_trust_1 (676);0x00000228;0x0;.data.user_main._swc_trust_1 (676);0x00000228</row>
+			<row>user_main.o;.data.user_main._swc_trust_idle_1 (678);0x00000228;0x0;.data.user_main._swc_trust_idle_1 (678);0x00000228</row>
+			<row>kernel.o;.rodata.kernel..1.str (352);0x0000001a;0x0;.rodata.kernel..1.str (352);0x0000001a</row>
+			<row>kernel.o;.rodata.kernel..2.str (353);0x00000015;0x0;.rodata.kernel..2.str (353);0x00000015</row>
+			<row>kernel.o;.rodata.kernel..3.str (354);0x00000015;0x0;.rodata.kernel..3.str (354);0x00000015</row>
+			<row>kernel.o;.rodata.kernel..4.str (355);0x00000015;0x0;.rodata.kernel..4.str (355);0x00000015</row>
+			<row>kernel.o;.rodata.kernel..5.ini (356);0x0000000c;0x0;.rodata.kernel..5.ini (356);0x0000000c</row>
+			<row>user_main.o;.rodata.user_main..1.str (682);0x0000001e;0x0;.rodata.user_main..1.str (682);0x0000001e</row>
+			<row>user_main.o;.rodata.user_main..2.str (683);0x00000018;0x0;.rodata.user_main..2.str (683);0x00000018</row>
+			<row>user_main.o;.rodata.user_main..3.str (684);0x00000021;0x0;.rodata.user_main..3.str (684);0x00000021</row>
+			<row>user_main.o;.rodata.user_main..4.str (685);0x0000001b;0x0;.rodata.user_main..4.str (685);0x0000001b</row>
+			<row>user_main.o;.rodata.user_main..5.ini (686);0x00000010;0x0;.rodata.user_main..5.ini (686);0x00000010</row>
+			<row>CAN.o;.text.CAN.CAN_vGetMsgObj (74);0x0000008c;0x0;.text.CAN.CAN_vGetMsgObj (74);0x0000008c</row>
+			<row>CAN.o;.text.CAN.CAN_vInit (73);0x000007c0;0x0;.text.CAN.CAN_vInit (73);0x000007c0</row>
+			<row>CAN.o;.text.CAN.CAN_vLoadData (79);0x00000040;0x0;.text.CAN.CAN_vLoadData (79);0x00000040</row>
+			<row>CAN.o;.text.CAN.CAN_vReleaseObj (82);0x00000010;0x0;.text.CAN.CAN_vReleaseObj (82);0x00000010</row>
+			<row>CAN.o;.text.CAN.CAN_vTransmit (77);0x00000012;0x0;.text.CAN.CAN_vTransmit (77);0x00000012</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN0 (87);0x00000002;0x0;.text.CAN.CAN_viSRN0 (1239);0x00000002</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN1 (89);0x00000002;0x0;.text.CAN.CAN_viSRN0 (1239);0x00000002</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN2 (91);0x0000005e;0x0;.text.CAN.CAN_viSRN2 (91);0x0000005e</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN3 (93);0x000000ea;0x0;.text.CAN.CAN_viSRN3 (93);0x000000ea</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN4 (95);0x00000060;0x0;.text.CAN.CAN_viSRN4 (95);0x00000060</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN5 (97);0x00000060;0x0;.text.CAN.CAN_viSRN5 (97);0x00000060</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN6 (99);0x00000060;0x0;.text.CAN.CAN_viSRN6 (99);0x00000060</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN7 (101);0x00000060;0x0;.text.CAN.CAN_viSRN7 (101);0x00000060</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN8 (103);0x00000064;0x0;.text.CAN.CAN_viSRN8 (103);0x00000064</row>
+			<row>CAN.o;.text.CAN.CAN_viSRN9 (105);0x00000064;0x0;.text.CAN.CAN_viSRN9 (105);0x00000064</row>
+			<row>MAIN.o;.text.MAIN.MAIN_vWriteWDTCON0 (583);0x0000003a;0x0;.text.MAIN.MAIN_vWriteWDTCON0 (583);0x0000003a</row>
+			<row>MAIN.o;.text.MAIN.main (584);0x00000008;0x0;.text.MAIN.main (584);0x00000008</row>
+			<row>_Exit.o;.text._Exit.libc (1211);0x00000004;0x0;.text._Exit.libc (1211);0x00000004</row>
+			<row>cinit.o;.text._c_init.libcs_fpu (811);0x0000000c;0x0;.text._c_init.libcs_fpu (811);0x0000000c</row>
+			<row>cinit.o;.text._c_init_entry.libcs_fpu (810);0x00000136;0x0;.text._c_init_entry.libcs_fpu (810);0x00000136</row>
+			<row>dbg_trap.o;.text._dbg_cacheawi.libcs_fpu (1215);0x0000001c;0x0;.text._dbg_cacheawi.libcs_fpu (1215);0x0000001c</row>
+			<row>dbg_trap.o;.text._dbg_trap.libcs_fpu (1213);0x00000002;0x0;.text._dbg_trap.libcs_fpu (1213);0x00000002</row>
+			<row>dbg_trap.o;.text._dbg_trap_tc.libcs_fpu (1214);0x00000088;0x0;.text._dbg_trap_tc.libcs_fpu (1214);0x00000088</row>
+			<row>_iob.o;.text._doclose.libcs_fpu (1016);0x0000001e;0x0;.text._doclose.libcs_fpu (1016);0x0000001e</row>
+			<row>_doprint_noarg.o;.text._doprint.libcs_fpu (996);0x0000002c;0x0;.text._doprint.libcs_fpu (996);0x0000002c</row>
+			<row>dbg__exit.o;.text._exit.libcs_fpu (1191);0x00000012;0x0;.text._exit.libcs_fpu (1191);0x00000012</row>
+			<row>fflush.o;.text._fflush.libcs_fpu (1095);0x0000006a;0x0;.text._fflush.libcs_fpu (1095);0x0000006a</row>
+			<row>_flsbuf.o;.text._flsbuf.libcs_fpu (1075);0x000000a8;0x0;.text._flsbuf.libcs_fpu (1075);0x000000a8</row>
+			<row>dbg.o;.text._host_close.libcs_fpu (1143);0x00000018;0x0;.text._host_close.libcs_fpu (1143);0x00000018</row>
+			<row>dbg.o;.text._host_lseek.libcs_fpu (1142);0x0000001c;0x0;.text._host_lseek.libcs_fpu (1142);0x0000001c</row>
+			<row>dbg.o;.text._host_write.libcs_fpu (1141);0x0000001a;0x0;.text._host_write.libcs_fpu (1141);0x0000001a</row>
+			<row>_io_putc.o;.text._io_putc.libcs_fpu (1110);0x0000001e;0x0;.text._io_putc.libcs_fpu (1110);0x0000001e</row>
+			<row>cinit.o;.text._ldmst_clear_byte.libcs_fpu (808);0x0000002e;0x0;.text._ldmst_clear_byte.libcs_fpu (808);0x0000002e</row>
+			<row>cinit.o;.text._ldmst_copy_byte.libcs_fpu (809);0x00000044;0x0;.text._ldmst_copy_byte.libcs_fpu (809);0x00000044</row>
+			<row>weakstub.o;.text._weakstub.libcs_fpu (1201);0x00000002;0x0;.text._weakstub.libcs_fpu (1201);0x00000002</row>
+			<row>exit.o;.text.exit.libcs_fpu (1120);0x00000016;0x0;.text.exit.libcs_fpu (1120);0x00000016</row>
+			<row>fclose.o;.text.fclose.libcs_fpu (1085);0x0000002a;0x0;.text.fclose.libcs_fpu (1085);0x0000002a</row>
+			<row>fputc.o;.text.fputc.libcs_fpu (1045);0x00000024;0x0;.text.fputc.libcs_fpu (1045);0x00000024</row>
+			<row>CAN.o;.text.intvec.001 (88);0x0000000a;0x0;.text.intvec.001 (88);0x0000000a</row>
+			<row>CAN.o;.text.intvec.003 (86);0x0000000a;0x0;.text.intvec.003 (86);0x0000000a</row>
+			<row>CAN.o;.text.intvec.004 (90);0x0000000a;0x0;.text.intvec.004 (90);0x0000000a</row>
+			<row>CAN.o;.text.intvec.005 (92);0x0000000a;0x0;.text.intvec.005 (92);0x0000000a</row>
+			<row>CAN.o;.text.intvec.006 (94);0x0000000a;0x0;.text.intvec.006 (94);0x0000000a</row>
+			<row>CAN.o;.text.intvec.007 (96);0x0000000a;0x0;.text.intvec.007 (96);0x0000000a</row>
+			<row>CAN.o;.text.intvec.008 (98);0x0000000a;0x0;.text.intvec.008 (98);0x0000000a</row>
+			<row>CAN.o;.text.intvec.009 (100);0x0000000a;0x0;.text.intvec.009 (100);0x0000000a</row>
+			<row>CAN.o;.text.intvec.00a (102);0x0000000a;0x0;.text.intvec.00a (102);0x0000000a</row>
+			<row>CAN.o;.text.intvec.00b (104);0x0000000a;0x0;.text.intvec.00b (104);0x0000000a</row>
+			<row>kernel.o;.text.intvec.00f (334);0x0000000a;0x0;.text.intvec.00f (334);0x0000000a</row>
+			<row>kernel.o;.text.intvec.010 (332);0x0000000a;0x0;.text.intvec.010 (332);0x0000000a</row>
+			<row>kernel.o;.text.kernel..cocofun_6 (321);0x0000001e;0x0;.text.kernel..cocofun_6 (321);0x0000001e</row>
+			<row>kernel.o;.text.kernel.addScheduleInfo (307);0x00000074;0x0;.text.kernel.addScheduleInfo (307);0x00000074</row>
+			<row>kernel.o;.text.kernel.can_init (310);0x00000046;0x0;.text.kernel.can_init (310);0x00000046</row>
+			<row>kernel.o;.text.kernel.cancom_timer_interrupt (335);0x00000012;0x0;.text.kernel.cancom_timer_interrupt (335);0x00000012</row>
+			<row>kernel.o;.text.kernel.cancom_timer_interrupt_handler (331);0x0000007e;0x0;.text.kernel.cancom_timer_interrupt_handler (331);0x0000007e</row>
+			<row>kernel.o;.text.kernel.check_high_finished (328);0x0000000a;0x0;.text.kernel.check_high_finished (328);0x0000000a</row>
+			<row>kernel.o;.text.kernel.config_timer (308);0x00000042;0x0;.text.kernel.config_timer (308);0x00000042</row>
+			<row>kernel.o;.text.kernel.create_component (314);0x0000004a;0x0;.text.kernel.create_component (314);0x0000004a</row>
+			<row>kernel.o;.text.kernel.create_task (315);0x000000a6;0x0;.text.kernel.create_task (315);0x000000a6</row>
+			<row>kernel.o;.text.kernel.getSInfoFromPool (305);0x0000002a;0x0;.text.kernel.getSInfoFromPool (305);0x0000002a</row>
+			<row>kernel.o;.text.kernel.get_jiffies (317);0x00000006;0x0;.text.kernel.get_jiffies (317);0x00000006</row>
+			<row>kernel.o;.text.kernel.get_running_component (312);0x00000006;0x0;.text.kernel.get_running_component (312);0x00000006</row>
+			<row>kernel.o;.text.kernel.initSInfoPool (304);0x00000040;0x0;.text.kernel.initSInfoPool (304);0x00000040</row>
+			<row>kernel.o;.text.kernel.init_hardware (309);0x00000056;0x0;.text.kernel.init_hardware (309);0x00000056</row>
+			<row>kernel.o;.text.kernel.init_timer_interrupt (318);0x00000076;0x0;.text.kernel.init_timer_interrupt (318);0x00000076</row>
+			<row>kernel.o;.text.kernel.link (325);0x00000012;0x0;.text.kernel.link (325);0x00000012</row>
+			<row>kernel.o;.text.kernel.schedule (320);0x00000022;0x0;.text.kernel.schedule (320);0x00000022</row>
+			<row>kernel.o;.text.kernel.schedule_event_driven_ISR (329);0x0000007c;0x0;.text.kernel.schedule_event_driven_ISR (329);0x0000007c</row>
+			<row>kernel.o;.text.kernel.schedule_timer_interrupt (333);0x00000012;0x0;.text.kernel.schedule_timer_interrupt (333);0x00000012</row>
+			<row>kernel.o;.text.kernel.set_delayed_output (324);0x00000010;0x0;.text.kernel.set_delayed_output (324);0x00000010</row>
+			<row>kernel.o;.text.kernel.set_running_component (313);0x00000006;0x0;.text.kernel.set_running_component (313);0x00000006</row>
+			<row>kernel.o;.text.kernel.syscall_trap_handler (322);0x0000007a;0x0;.text.kernel.syscall_trap_handler (322);0x0000007a</row>
+			<row>kernel.o;.text.kernel.work_area_end (327);0x0000000a;0x0;.text.kernel.work_area_end (327);0x0000000a</row>
+			<row>kernel.o;.text.kernel.work_area_start (326);0x0000000a;0x0;.text.kernel.work_area_start (326);0x0000000a</row>
+			<row>cstart.o;.text.libc (259);0x00000016;0x0;.text.libc (259);0x00000016</row>
+			<row>cstart.o;.text.libc (260);0x00000166;0x0;.text.libc (260);0x00000166</row>
+			<row>cstart.o;.text.libc.reset (258);0x0000000a;0x0;.text.libc.reset (258);0x0000000a</row>
+			<row>divmod_u32.o;.text.librt (1233);0x00000016;0x0;.text.librt (1233);0x00000016</row>
+			<row>memcpy.o;.text.memcpy.libcs_fpu (976);0x0000006c;0x0;.text.memcpy.libcs_fpu (976);0x0000006c</row>
+			<row>memset.o;.text.memset.libcs_fpu (966);0x00000060;0x0;.text.memset.libcs_fpu (966);0x00000060</row>
+			<row>pll_init.o;.text.pll_init.pll_init (611);0x00000112;0x0;.text.pll_init.pll_init (611);0x00000112</row>
+			<row>printf.o;.text.printf.libcs_fpu (1006);0x00000026;0x0;.text.printf.libcs_fpu (1006);0x00000026</row>
+			<row>sync_on_halt.o;.text.sync_on_halt._sync_on_halt (625);0x00000074;0x0;.text.sync_on_halt._sync_on_halt (625);0x00000074</row>
+			<row>sync_on_halt.o;.text.sync_on_halt._sync_on_halt_end (624);0x00000006;0x0;.text.sync_on_halt._sync_on_halt_end (624);0x00000006</row>
+			<row>trapmmu.o;.text.trapvec.000 (906);0x00000012;0x0;.text.trapvec.000 (906);0x00000012</row>
+			<row>trapprot.o;.text.trapvec.001 (916);0x00000016;0x0;.text.trapvec.001 (916);0x00000016</row>
+			<row>trapinst.o;.text.trapvec.002 (936);0x00000016;0x0;.text.trapvec.002 (936);0x00000016</row>
+			<row>trapcont.o;.text.trapvec.003 (896);0x00000016;0x0;.text.trapvec.003 (896);0x00000016</row>
+			<row>trapbus.o;.text.trapvec.004 (926);0x00000016;0x0;.text.trapvec.004 (926);0x00000016</row>
+			<row>trapass.o;.text.trapvec.005 (886);0x00000016;0x0;.text.trapvec.005 (886);0x00000016</row>
+			<row>kernel.o;.text.trapvec.006 (323);0x0000001a;0x0;.text.trapvec.006 (323);0x0000001a</row>
+			<row>trapnmi.o;.text.trapvec.007 (946);0x00000016;0x0;.text.trapvec.007 (946);0x00000016</row>
+			<row>user_main.o;.text.user_main..cocofun_6 (654);0x0000004e;0x0;.text.user_main..cocofun_6 (654);0x0000004e</row>
+			<row>user_main.o;.text.user_main..cocofun_7 (653);0x0000003c;0x0;.text.user_main..cocofun_7 (653);0x0000003c</row>
+			<row>user_main.o;.text.user_main..cocofun_8 (652);0x00000016;0x0;.text.user_main..cocofun_8 (652);0x00000016</row>
+			<row>user_main.o;.text.user_main..cocofun_9 (656);0x00000016;0x0;.text.user_main..cocofun_9 (656);0x00000016</row>
+			<row>user_main.o;.text.user_main.callback (649);0x00000018;0x0;.text.user_main.callback (649);0x00000018</row>
+			<row>user_main.o;.text.user_main.func_high (651);0x000000dc;0x0;.text.user_main.func_high (651);0x000000dc</row>
+			<row>user_main.o;.text.user_main.func_high2 (657);0x0000002e;0x0;.text.user_main.func_high2 (657);0x0000002e</row>
+			<row>user_main.o;.text.user_main.func_idle (658);0x00000004;0x0;.text.user_main.func_idle (1240);0x00000004</row>
+			<row>user_main.o;.text.user_main.func_idle2 (659);0x00000004;0x0;.text.user_main.func_idle (1240);0x00000004</row>
+			<row>user_main.o;.text.user_main.func_trust (655);0x000000a6;0x0;.text.user_main.func_trust (655);0x000000a6</row>
+			<row>user_main.o;.text.user_main.user_main (650);0x0000013c;0x0;.text.user_main.user_main (650);0x0000013c</row>
+			<row>kernel.o;.zbss.kernel.canSlotWalker (344);0x00000004;0x0;.zbss.kernel.canSlotWalker (344);0x00000004</row>
+			<row>kernel.o;.zbss.kernel.running_task (341);0x00000004;0x0;.zbss.kernel.running_task (341);0x00000004</row>
+			<row>kernel.o;.zbss.kernel.sHead (347);0x00000004;0x0;.zbss.kernel.sHead (347);0x00000004</row>
+			<row>kernel.o;.zbss.kernel.sHyperPeriod (346);0x00000004;0x0;.zbss.kernel.sHyperPeriod (346);0x00000004</row>
+			<row>kernel.o;.zbss.kernel.sIsFirstCycle (345);0x00000001;0x0;.zbss.kernel.sIsFirstCycle (345);0x00000001</row>
+			<row>kernel.o;.zbss.kernel.sTail (348);0x00000004;0x0;.zbss.kernel.sTail (348);0x00000004</row>
+			<row>kernel.o;.zbss.kernel.sWalker (349);0x00000004;0x0;.zbss.kernel.sWalker (349);0x00000004</row>
+			<row>sync_on_halt.o;.zbss.sync_on_halt._sync_on_halt_lcx (626);0x00000040;0x0;.zbss.sync_on_halt._sync_on_halt_lcx (626);0x00000040</row>
+			<row>sync_on_halt.o;.zbss.sync_on_halt._sync_on_halt_ucx (627);0x00000040;0x0;.zbss.sync_on_halt._sync_on_halt_ucx (627);0x00000040</row>
+			<row>cstart.o;.zdata.cstart.argcv (263);0x00000004;0x0;.zdata.cstart.argcv (263);0x00000004</row>
+			<row>kernel.o;.zdata.kernel.jiffies (339);0x00000004;0x0;.zdata.kernel.jiffies (339);0x00000004</row>
+			<row>kernel.o;.zdata.kernel.n_components (338);0x00000004;0x0;.zdata.kernel.n_components (338);0x00000004</row>
+			<row>kernel.o;.zdata.kernel.running_component (340);0x00000004;0x0;.zdata.kernel.running_component (340);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.gnd_task (681);0x00000004;0x0;.zdata.user_main.gnd_task (681);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.ground_component (667);0x00000004;0x0;.zdata.user_main.ground_component (667);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.hwc_high_1 (661);0x00000004;0x0;.zdata.user_main.hwc_high_1 (661);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.hwc_high_2 (663);0x00000004;0x0;.zdata.user_main.hwc_high_2 (663);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.hwc_trust_1 (665);0x00000004;0x0;.zdata.user_main.hwc_trust_1 (665);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_high_1 (669);0x00000004;0x0;.zdata.user_main.swc_high_1 (669);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_high_2 (673);0x00000004;0x0;.zdata.user_main.swc_high_2 (673);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_high_idle_1 (671);0x00000004;0x0;.zdata.user_main.swc_high_idle_1 (671);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_high_idle_2 (675);0x00000004;0x0;.zdata.user_main.swc_high_idle_2 (675);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_trust_1 (677);0x00000004;0x0;.zdata.user_main.swc_trust_1 (677);0x00000004</row>
+			<row>user_main.o;.zdata.user_main.swc_trust_idle_1 (679);0x00000004;0x0;.zdata.user_main.swc_trust_idle_1 (679);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_00200040 (69);0x00000004;0x0;.zrodata.CAN.__const_00200040 (69);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02000002 (5);0x00000004;0x0;.zrodata.CAN.__const_02000002 (5);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02010002 (6);0x00000004;0x0;.zrodata.CAN.__const_02010002 (6);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02020002 (7);0x00000004;0x0;.zrodata.CAN.__const_02020002 (7);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02030002 (8);0x00000004;0x0;.zrodata.CAN.__const_02030002 (8);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02040002 (9);0x00000004;0x0;.zrodata.CAN.__const_02040002 (9);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02050002 (10);0x00000004;0x0;.zrodata.CAN.__const_02050002 (10);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02060002 (11);0x00000004;0x0;.zrodata.CAN.__const_02060002 (11);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02070002 (12);0x00000004;0x0;.zrodata.CAN.__const_02070002 (12);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02080002 (13);0x00000004;0x0;.zrodata.CAN.__const_02080002 (13);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02090002 (14);0x00000004;0x0;.zrodata.CAN.__const_02090002 (14);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020a0002 (15);0x00000004;0x0;.zrodata.CAN.__const_020a0002 (15);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020b0002 (16);0x00000004;0x0;.zrodata.CAN.__const_020b0002 (16);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020c0002 (17);0x00000004;0x0;.zrodata.CAN.__const_020c0002 (17);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020d0002 (18);0x00000004;0x0;.zrodata.CAN.__const_020d0002 (18);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020e0002 (19);0x00000004;0x0;.zrodata.CAN.__const_020e0002 (19);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_020f0002 (20);0x00000004;0x0;.zrodata.CAN.__const_020f0002 (20);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02100002 (21);0x00000004;0x0;.zrodata.CAN.__const_02100002 (21);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02110002 (22);0x00000004;0x0;.zrodata.CAN.__const_02110002 (22);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02120002 (23);0x00000004;0x0;.zrodata.CAN.__const_02120002 (23);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02130002 (24);0x00000004;0x0;.zrodata.CAN.__const_02130002 (24);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02140002 (25);0x00000004;0x0;.zrodata.CAN.__const_02140002 (25);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02150002 (26);0x00000004;0x0;.zrodata.CAN.__const_02150002 (26);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02160002 (27);0x00000004;0x0;.zrodata.CAN.__const_02160002 (27);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02170002 (28);0x00000004;0x0;.zrodata.CAN.__const_02170002 (28);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02180002 (29);0x00000004;0x0;.zrodata.CAN.__const_02180002 (29);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_02190002 (30);0x00000004;0x0;.zrodata.CAN.__const_02190002 (30);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_021a0002 (31);0x00000004;0x0;.zrodata.CAN.__const_021a0002 (31);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_021b0002 (32);0x00000004;0x0;.zrodata.CAN.__const_021b0002 (32);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_021c0002 (33);0x00000004;0x0;.zrodata.CAN.__const_021c0002 (33);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_021d0002 (34);0x00000004;0x0;.zrodata.CAN.__const_021d0002 (34);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_20000008 (71);0x00000004;0x0;.zrodata.CAN.__const_20000008 (71);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_3fffffff (36);0x00000004;0x0;.zrodata.CAN.__const_3fffffff (36);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_dfffffff (72);0x00000004;0x0;.zrodata.CAN.__const_dfffffff (72);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f0004000 (1);0x00000004;0x0;.zrodata.CAN.__const_f0004000 (1);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f0004180 (70);0x00000004;0x0;.zrodata.CAN.__const_f0004180 (70);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00041c4 (4);0x00000004;0x0;.zrodata.CAN.__const_f00041c4 (4);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00041c5 (2);0x00000004;0x0;.zrodata.CAN.__const_f00041c5 (2);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f0004300 (3);0x00000004;0x0;.zrodata.CAN.__const_f0004300 (3);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f0005000 (66);0x00000004;0x0;.zrodata.CAN.__const_f0005000 (66);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000501c (35);0x00000004;0x0;.zrodata.CAN.__const_f000501c (35);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000503c (37);0x00000004;0x0;.zrodata.CAN.__const_f000503c (37);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000505c (38);0x00000004;0x0;.zrodata.CAN.__const_f000505c (38);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000507c (39);0x00000004;0x0;.zrodata.CAN.__const_f000507c (39);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000509c (40);0x00000004;0x0;.zrodata.CAN.__const_f000509c (40);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00050bc (41);0x00000004;0x0;.zrodata.CAN.__const_f00050bc (41);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00050dc (42);0x00000004;0x0;.zrodata.CAN.__const_f00050dc (42);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00050fc (43);0x00000004;0x0;.zrodata.CAN.__const_f00050fc (43);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000511c (44);0x00000004;0x0;.zrodata.CAN.__const_f000511c (44);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000513c (45);0x00000004;0x0;.zrodata.CAN.__const_f000513c (45);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000515c (46);0x00000004;0x0;.zrodata.CAN.__const_f000515c (46);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000517c (47);0x00000004;0x0;.zrodata.CAN.__const_f000517c (47);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000519c (48);0x00000004;0x0;.zrodata.CAN.__const_f000519c (48);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00051bc (49);0x00000004;0x0;.zrodata.CAN.__const_f00051bc (49);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00051dc (50);0x00000004;0x0;.zrodata.CAN.__const_f00051dc (50);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00051fc (51);0x00000004;0x0;.zrodata.CAN.__const_f00051fc (51);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000521c (52);0x00000004;0x0;.zrodata.CAN.__const_f000521c (52);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000523c (53);0x00000004;0x0;.zrodata.CAN.__const_f000523c (53);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000525c (54);0x00000004;0x0;.zrodata.CAN.__const_f000525c (54);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000527c (55);0x00000004;0x0;.zrodata.CAN.__const_f000527c (55);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000529c (56);0x00000004;0x0;.zrodata.CAN.__const_f000529c (56);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00052bc (57);0x00000004;0x0;.zrodata.CAN.__const_f00052bc (57);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00052dc (58);0x00000004;0x0;.zrodata.CAN.__const_f00052dc (58);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00052fc (59);0x00000004;0x0;.zrodata.CAN.__const_f00052fc (59);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000531c (60);0x00000004;0x0;.zrodata.CAN.__const_f000531c (60);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000533c (61);0x00000004;0x0;.zrodata.CAN.__const_f000533c (61);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000535c (62);0x00000004;0x0;.zrodata.CAN.__const_f000535c (62);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000537c (63);0x00000004;0x0;.zrodata.CAN.__const_f000537c (63);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f000539c (64);0x00000004;0x0;.zrodata.CAN.__const_f000539c (64);0x00000004</row>
+			<row>CAN.o;.zrodata.CAN.__const_f00053bc (65);0x00000004;0x0;.zrodata.CAN.__const_f00053bc (65);0x00000004</row>
+			<row>cstart.o;.zrodata.cstart.__const_02840284 (255);0x00000004;0x0;.zrodata.cstart.__const_02840284 (255);0x00000004</row>
+			<row>cstart.o;.zrodata.cstart.__const_82000a53 (257);0x00000004;0x0;.zrodata.cstart.__const_82000a53 (257);0x00000004</row>
+			<row>cstart.o;.zrodata.cstart.__const_a1000a51 (256);0x00000004;0x0;.zrodata.cstart.__const_a1000a51 (256);0x00000004</row>
+			<row>kernel.o;.zrodata.kernel.__const_000186a0 (302);0x00000004;0x0;.zrodata.kernel.__const_000186a0 (302);0x00000004</row>
+			<row>kernel.o;.zrodata.led.__const_80808080 (301);0x00000004;0x0;.zrodata.led.__const_80808080 (301);0x00000004</row>
+			<row>sync_on_halt.o;.zrodata.sync_on_halt.__const_f87ffd14 (623);0x00000004;0x0;.zrodata.sync_on_halt.__const_f87ffd14 (623);0x00000004</row>
+		</table>
+	</part>
+	<part>
+		<name>Cross References</name>
+		<table>
+			<column>
+				<name>Definition file</name>
+			</column>
+			<column>
+				<name>Definition section</name>
+			</column>
+			<column>
+				<name>Symbol</name>
+			</column>
+			<column>
+				<name>Referenced in</name>
+			</column>
+			<row>CAN.o;.text.CAN.CAN_vGetMsgObj (74);CAN_vGetMsgObj;user_main.o</row>
+			<row>CAN.o;.text.CAN.CAN_vInit (73);CAN_vInit;kernel.o, MAIN.o</row>
+			<row>CAN.o;.text.CAN.CAN_vLoadData (79);CAN_vLoadData;kernel.o, user_main.o</row>
+			<row>CAN.o;.text.CAN.CAN_vReleaseObj (82);CAN_vReleaseObj;user_main.o</row>
+			<row>CAN.o;.text.CAN.CAN_vTransmit (77);CAN_vTransmit;kernel.o</row>
+			<row>MAIN.o;.text.MAIN.MAIN_vWriteWDTCON0 (583);MAIN_vWriteWDTCON0;CAN.o</row>
+			<row>MAIN.o;.text.MAIN.main (584);main;cstart.o</row>
+			<row>_Exit.o;.text._Exit.libc (1211);_Exit;cstart.o, trapass.o, trapcont.o, trapmmu.o, trapprot.o, trapbus.o, trapinst.o, trapnmi.o, trapsys.o, exit.o</row>
+			<row>_doprint_noarg.o;.text._doprint.libcs_fpu (996);__printf_noarg2;printf_noarg.o</row>
+			<row>_doprint_noarg.o;.text._doprint.libcs_fpu (996);_doprint;printf.o</row>
+			<row>_flsbuf.o;.text._flsbuf.libcs_fpu (1075);_flsbuf;fputc.o</row>
+			<row>_io_putc.o;.text._io_putc.libcs_fpu (1110);_io_putc;_doprint_noarg.o</row>
+			<row>_iob.o;.data._iob.libcs_fpu (1019);_iob;printf.o, _filbuf.o, fflush.o</row>
+			<row>_iob.o;.text._doclose.libcs_fpu (1016);_doclose;exit.o</row>
+			<row>cinit.o;.text._c_init.libcs_fpu (811);_c_init;cstart.o</row>
+			<row>cstart.o;.text.libc.reset (258);_START;</row>
+			<row>dbg.o;.bss._dbg_request.libcs_fpu (1145);_dbg_request;dbg__exit.o, dbg_trap.o</row>
+			<row>dbg.o;.text._host_close.libcs_fpu (1143);_close;fclose.o</row>
+			<row>dbg.o;.text._host_lseek.libcs_fpu (1142);_lseek;fflush.o</row>
+			<row>dbg.o;.text._host_write.libcs_fpu (1141);_write;_flsbuf.o, fflush.o</row>
+			<row>dbg__exit.o;.text._exit.libcs_fpu (1191);_exit;exit.o</row>
+			<row>dbg_trap.o;.text._dbg_trap_tc.libcs_fpu (1214);_dbg_trap_tc;dbg.o, dbg__exit.o</row>
+			<row>divmod_u32.o;.text.librt (1233);__rt_udivmod;kernel.o</row>
+			<row>exit.o;.text.exit.libcs_fpu (1120);exit;cstart.o, trapass.o, trapcont.o, trapmmu.o, trapprot.o, trapbus.o, trapinst.o, trapnmi.o, trapsys.o, _iob.o</row>
+			<row>fclose.o;.text.fclose.libcs_fpu (1085);fclose;_iob.o</row>
+			<row>fflush.o;.text._fflush.libcs_fpu (1095);_fflush;ungetc.o, _filbuf.o, _flsbuf.o, fclose.o</row>
+			<row>fputc.o;.text.fputc.libcs_fpu (1045);fputc;_iob.o, _io_putc.o</row>
+			<row>kernel.o;.text.kernel.addScheduleInfo (307);addScheduleInfo;user_main.o</row>
+			<row>kernel.o;.text.kernel.check_high_finished (328);check_high_finished;user_main.o</row>
+			<row>kernel.o;.text.kernel.create_component (314);create_component;user_main.o</row>
+			<row>kernel.o;.text.kernel.create_task (315);create_task;user_main.o</row>
+			<row>kernel.o;.text.kernel.get_jiffies (317);get_jiffies;CAN.o</row>
+			<row>kernel.o;.text.kernel.get_running_component (312);get_running_component;user_main.o</row>
+			<row>kernel.o;.text.kernel.init_hardware (309);init_hardware;MAIN.o</row>
+			<row>kernel.o;.text.kernel.init_timer_interrupt (318);init_timer_interrupt;user_main.o</row>
+			<row>kernel.o;.text.kernel.link (325);link;user_main.o</row>
+			<row>kernel.o;.text.kernel.schedule (320);schedule;user_main.o</row>
+			<row>kernel.o;.text.kernel.set_delayed_output (324);set_delayed_output;user_main.o</row>
+			<row>kernel.o;.text.kernel.set_running_component (313);set_running_component;user_main.o</row>
+			<row>kernel.o;.text.kernel.work_area_end (327);work_area_end;user_main.o</row>
+			<row>kernel.o;.text.kernel.work_area_start (326);work_area_start;user_main.o</row>
+			<row>memcpy.o;.text.memcpy.libcs_fpu (976);memcpy;CAN.o, user_main.o</row>
+			<row>memset.o;.text.memset.libcs_fpu (966);memset;kernel.o</row>
+			<row>pll_init.o;.text.pll_init.pll_init (611);pll_init;kernel.o</row>
+			<row>printf.o;.text.printf.libcs_fpu (1006);printf;kernel.o, user_main.o</row>
+			<row>trapass.o;.text.trapvec.005 (886);_trapassertion;cstart.o</row>
+			<row>trapbus.o;.text.trapvec.004 (926);_trapbus;cstart.o</row>
+			<row>trapcont.o;.text.trapvec.003 (896);_trapcontext;cstart.o</row>
+			<row>trapinst.o;.text.trapvec.002 (936);_trapinstruction;cstart.o</row>
+			<row>trapmmu.o;.text.trapvec.000 (906);_trapmmu;cstart.o</row>
+			<row>trapnmi.o;.text.trapvec.007 (946);_trapnmi;cstart.o</row>
+			<row>trapprot.o;.text.trapvec.001 (916);_trapprotection;cstart.o</row>
+			<row>user_main.o;.text.user_main.callback (649);callback;CAN.o</row>
+			<row>user_main.o;.text.user_main.user_main (650);user_main;MAIN.o</row>
+			<row>user_main.o;.zdata.user_main.ground_component (667);ground_component;kernel.o</row>
+			<row>weakstub.o;.text._weakstub.libcs_fpu (1201);_doexit;exit.o</row>
+			<row>weakstub.o;.text._weakstub.libcs_fpu (1201);_dofree;fclose.o</row>
+			<row>weakstub.o;.text._weakstub.libcs_fpu (1201);_weakstub;fclose.o, exit.o</row>
+		</table>
+	</part>
+	<part>
+		<name>Call Graph</name>
+		<tree>
+			<name>_START [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>_weakstub [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>_host_close [s0:(0,0)]</name>
+			<child>
+				<name>_dbg_trap_tc *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* _dbg_trap_tc [s0:(0,0)]</name>
+			<child>
+				<name>dbg_trap.src:_dbg_cacheawi [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>_dbg_trap [s0:(0,0)]</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_host_lseek [s0:(0,0)]</name>
+			<child>
+				<name>_dbg_trap_tc *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_host_write [s0:(0,0)]</name>
+			<child>
+				<name>_dbg_trap_tc *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapnmi [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* exit [s0:(0,0)]</name>
+			<child>
+				<name>_doclose [s0:(0,0)]</name>
+				<child>
+					<name>fclose [s0:(0,0)]</name>
+					<child>
+						<name>_fflush *</name>
+					</child>
+					<child>
+						<name>_close [s0:(0,0)]</name>
+					</child>
+					<child>
+						<name>_dofree [s0:(0,0)]</name>
+					</child>
+				</child>
+			</child>
+			<child>
+				<name>_exit [s0:(0,0)]</name>
+				<child>
+					<name>_dbg_trap_tc *</name>
+				</child>
+			</child>
+			<child>
+				<name>_doexit [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>_Exit [s0:(0,0)]</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* _fflush [s0:(0,0)]</name>
+			<child>
+				<name>_write *</name>
+			</child>
+			<child>
+				<name>_lseek [s0:(0,0)]</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* _write [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>_trapinstruction [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapbus [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapprotection [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapmmu [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapcontext [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_trapassertion [s0:(0,0)]</name>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_sync_on_halt [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>_sync_on_halt_end [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>__INDIRECT__ [s0:(0,232)]</name>
+			<child>
+				<name>kernel.src:syscall_trap_handler [s0:(0,0)]</name>
+				<child>
+					<name>kernel.src:.cocofun_6 *</name>
+				</child>
+				<child>
+					<name>set_running_component *</name>
+				</child>
+			</child>
+			<child>
+				<name>user_main.src:func_high [s0:(232,232)]</name>
+				<child>
+					<name>CAN_vGetMsgObj *</name>
+				</child>
+				<child>
+					<name>CAN_vLoadData *</name>
+				</child>
+				<child>
+					<name>CAN_vReleaseObj *</name>
+				</child>
+				<child>
+					<name>get_running_component *</name>
+				</child>
+				<child>
+					<name>set_delayed_output *</name>
+				</child>
+				<child>
+					<name>work_area_start [s0:(0,0)]</name>
+				</child>
+				<child>
+					<name>work_area_end [s0:(0,0)]</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_7 *</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_6 *</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_8 [s0:(0,0)]</name>
+					<child>
+						<name>user_main.src:.cocofun_9 *</name>
+					</child>
+				</child>
+				<child>
+					<name>memcpy *</name>
+				</child>
+			</child>
+			<child>
+				<name>user_main.src:func_high2 [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>user_main.src:func_trust [s0:(232,232)]</name>
+				<child>
+					<name>CAN_vGetMsgObj *</name>
+				</child>
+				<child>
+					<name>CAN_vLoadData *</name>
+				</child>
+				<child>
+					<name>CAN_vReleaseObj *</name>
+				</child>
+				<child>
+					<name>get_running_component *</name>
+				</child>
+				<child>
+					<name>set_delayed_output *</name>
+				</child>
+				<child>
+					<name>check_high_finished [s0:(0,0)]</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_7 *</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_6 *</name>
+				</child>
+				<child>
+					<name>user_main.src:.cocofun_9 *</name>
+				</child>
+				<child>
+					<name>memcpy *</name>
+				</child>
+			</child>
+			<child>
+				<name>user_main.src:func_idle [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>user_main.src:func_idle2 [s0:(0,0)]</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* memcpy [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* user_main.src:.cocofun_9 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* user_main.src:.cocofun_6 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* user_main.src:.cocofun_7 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* set_delayed_output [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* get_running_component [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* CAN_vReleaseObj [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* CAN_vLoadData [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* CAN_vGetMsgObj [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* set_running_component [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>* kernel.src:.cocofun_6 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>cancom_timer_interrupt [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>schedule_timer_interrupt [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>cancom_timer_interrupt_handler [s0:(0,0)]</name>
+			<child>
+				<name>CAN_vTransmit [s0:(0,0)]</name>
+			</child>
+		</tree>
+		<tree>
+			<name>schedule_event_driven_ISR [s0:(0,0)]</name>
+			<child>
+				<name>config_timer [s0:(0,0)]</name>
+				<child>
+					<name>__rt_udivmod [s0:(0,0)]</name>
+				</child>
+			</child>
+		</tree>
+		<tree>
+			<name>syscall_trap [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>_start [s0:(8,32)]</name>
+			<child>
+				<name>main [s0:(0,24)]</name>
+				<child>
+					<name>init_hardware [s0:(0,24)]</name>
+					<child>
+						<name>initSInfoPool [s0:(0,0)]</name>
+						<child>
+							<name>memset *</name>
+						</child>
+					</child>
+					<child>
+						<name>can_init [s0:(0,0)]</name>
+						<child>
+							<name>CAN_vInit [s0:(0,0)]</name>
+							<child>
+								<name>MAIN_vWriteWDTCON0 [s0:(0,0)]</name>
+							</child>
+						</child>
+						<child>
+							<name>memset *</name>
+						</child>
+					</child>
+					<child>
+						<name>pll_init [s0:(0,0)]</name>
+					</child>
+					<child>
+						<name>printf *</name>
+					</child>
+				</child>
+				<child>
+					<name>user_main [s0:(0,24)]</name>
+					<child>
+						<name>addScheduleInfo [s0:(0,0)]</name>
+						<child>
+							<name>getSInfoFromPool [s0:(0,0)]</name>
+						</child>
+					</child>
+					<child>
+						<name>set_running_component *</name>
+					</child>
+					<child>
+						<name>create_component [s0:(0,0)]</name>
+						<child>
+							<name>memset *</name>
+						</child>
+					</child>
+					<child>
+						<name>create_task [s0:(16,16)]</name>
+					</child>
+					<child>
+						<name>init_timer_interrupt [s0:(0,0)]</name>
+					</child>
+					<child>
+						<name>schedule [s0:(0,0)]</name>
+						<child>
+							<name>kernel.src:.cocofun_6 *</name>
+						</child>
+					</child>
+					<child>
+						<name>link [s0:(0,0)]</name>
+					</child>
+					<child>
+						<name>printf *</name>
+					</child>
+				</child>
+			</child>
+			<child>
+				<name>_c_init [s0:(0,0)]</name>
+				<child>
+					<name>_c_init_entry [s0:(0,0)]</name>
+					<child>
+						<name>cinit.src:_ldmst_copy_byte [s0:(0,0)]</name>
+					</child>
+					<child>
+						<name>cinit.src:_ldmst_clear_byte [s0:(0,0)]</name>
+					</child>
+				</child>
+			</child>
+			<child>
+				<name>exit *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>* printf [s0:(16,24)]</name>
+			<child>
+				<name>_doprint [s0:(0,8)]</name>
+				<child>
+					<name>_io_putc [s0:(0,8)]</name>
+					<child>
+						<name>fputc [s0:(0,8)]</name>
+						<child>
+							<name>_flsbuf [s0:(8,8)]</name>
+							<child>
+								<name>_fflush *</name>
+							</child>
+							<child>
+								<name>_write *</name>
+							</child>
+						</child>
+					</child>
+				</child>
+			</child>
+		</tree>
+		<tree>
+			<name>* memset [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>__init_sp [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN9 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN8 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN7 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN6 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN5 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN4 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN3 [s0:(32,32)]</name>
+			<child>
+				<name>CAN_vGetMsgObj *</name>
+			</child>
+			<child>
+				<name>CAN_vReleaseObj *</name>
+			</child>
+			<child>
+				<name>get_jiffies [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>callback [s0:(0,0)]</name>
+			</child>
+			<child>
+				<name>memcpy *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>CAN_viSRN2 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN1 [s0:(0,0)]</name>
+		</tree>
+		<tree>
+			<name>CAN_viSRN0 [s0:(0,0)]</name>
+		</tree>
+		<footNote></footNote>
+		<table>
+			<row>*;the function has a separate tree since it has 2 or more callers</row>
+			<row>[s&lt;n&gt;:(&lt;s&gt;,&lt;a&gt;), ...];for stack &lt;n&gt; : (stack usage by the function itself, stack usage by the function and all its callees)</row>
+		</table>
+	</part>
+	<part>
+		<name>Locate Result</name>
+		<part>
+			<name>Task entry address</name>
+			<table>
+				<row>symbol;_START</row>
+				<row>absolute address;0xa0000000</row>
+			</table>
+		</part>
+		<part>
+			<name>Sections</name>
+			<table>
+				<name>Space spe:tc:linear (MAU = 8bit)</name>
+				<column>
+					<name>Chip</name>
+				</column>
+				<column>
+					<name>Group</name>
+				</column>
+				<column>
+					<name>Section</name>
+				</column>
+				<column>
+					<name>Size (MAU)</name>
+				</column>
+				<column>
+					<name>Space addr</name>
+				</column>
+				<column>
+					<name>Chip addr</name>
+				</column>
+				<column>
+					<name>Alignment</name>
+				</column>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN0 (1239);0x00000002;0x8000013a;0x0000013a;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.func_idle (1240);0x00000004;0x8000013c;0x0000013c;0x00000002</row>
+				<row>spe:pflash0;;[.data.user_main._gnd_task] (1264);0x00000228;0x80000140;0x00000140;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._ground_component] (1257);0x0000007c;0x80000368;0x00000368;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._hwc_high_1] (1254);0x0000007c;0x800003e8;0x000003e8;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._hwc_high_2] (1255);0x0000007c;0x80000468;0x00000468;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._hwc_trust_1] (1256);0x0000007c;0x800004e8;0x000004e8;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_high_1] (1258);0x00000228;0x80000568;0x00000568;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_high_2] (1260);0x00000228;0x80000790;0x00000790;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_high_idle_1] (1259);0x00000228;0x800009b8;0x000009b8;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_high_idle_2] (1261);0x00000228;0x80000be0;0x00000be0;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_trust_1] (1262);0x00000228;0x80000e08;0x00000e08;0x00000008</row>
+				<row>spe:pflash0;;[.data.user_main._swc_trust_idle_1] (1263);0x00000228;0x80001030;0x00001030;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.gnd_task] (1280);0x00000004;0x80001258;0x00001258;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.ground_component] (1273);0x00000004;0x80001260;0x00001260;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.hwc_high_1] (1270);0x00000004;0x80001268;0x00001268;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.hwc_high_2] (1271);0x00000004;0x80001270;0x00001270;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.hwc_trust_1] (1272);0x00000004;0x80001278;0x00001278;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_high_1] (1274);0x00000004;0x80001280;0x00001280;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_high_2] (1276);0x00000004;0x80001288;0x00001288;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_high_idle_1] (1275);0x00000004;0x80001290;0x00001290;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_high_idle_2] (1277);0x00000004;0x80001298;0x00001298;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_trust_1] (1278);0x00000004;0x800012a0;0x000012a0;0x00000008</row>
+				<row>spe:pflash0;;[.zdata.user_main.swc_trust_idle_1] (1279);0x00000004;0x800012a8;0x000012a8;0x00000008</row>
+				<row>spe:pflash0;;[.data._iob.libcs_fpu] (1265);0x000000c8;0x800012ac;0x000012ac;0x00000004</row>
+				<row>spe:pflash0;;[.zdata.cstart.argcv] (1266);0x00000004;0x80001374;0x00001374;0x00000004</row>
+				<row>spe:pflash0;;[.zdata.kernel.running_component] (1269);0x00000004;0x80001378;0x00001378;0x00000004</row>
+				<row>spe:pflash0;;[.data.kernel.delayed_output_pending] (1253);0x00000050;0x8000137c;0x0000137c;0x00000002</row>
+				<row>spe:pflash0;;[.zdata.kernel.jiffies] (1268);0x00000004;0x800013cc;0x000013cc;0x00000002</row>
+				<row>spe:pflash0;;[.zdata.kernel.n_components] (1267);0x00000004;0x800013d0;0x000013d0;0x00000002</row>
+				<row>spe:pflash0;;.rodata.kernel..5.ini (356);0x0000000c;0x800013d4;0x000013d4;0x00000004</row>
+				<row>spe:pflash0;;table (1252);0x00000170;0x800013e0;0x000013e0;0x00000004</row>
+				<row>spe:pflash0;;.text.CAN.CAN_vGetMsgObj (74);0x0000008c;0x80001550;0x00001550;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_vInit (73);0x000007c0;0x800015dc;0x000015dc;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_vLoadData (79);0x00000040;0x80001d9c;0x00001d9c;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_vReleaseObj (82);0x00000010;0x80001ddc;0x00001ddc;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_vTransmit (77);0x00000012;0x80001dec;0x00001dec;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN2 (91);0x0000005e;0x80001dfe;0x00001dfe;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN3 (93);0x000000ea;0x80001e5c;0x00001e5c;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN4 (95);0x00000060;0x80001f46;0x00001f46;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN5 (97);0x00000060;0x80001fa6;0x00001fa6;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN6 (99);0x00000060;0x80002006;0x00002006;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN7 (101);0x00000060;0x80002066;0x00002066;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN8 (103);0x00000064;0x800020c6;0x000020c6;0x00000002</row>
+				<row>spe:pflash0;;.text.CAN.CAN_viSRN9 (105);0x00000064;0x8000212a;0x0000212a;0x00000002</row>
+				<row>spe:pflash0;;.text.MAIN.MAIN_vWriteWDTCON0 (583);0x0000003a;0x8000218e;0x0000218e;0x00000002</row>
+				<row>spe:pflash0;;.text.MAIN.main (584);0x00000008;0x800021c8;0x000021c8;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel..cocofun_6 (321);0x0000001e;0x800021d0;0x000021d0;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.addScheduleInfo (307);0x00000074;0x800021ee;0x000021ee;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.can_init (310);0x00000046;0x80002262;0x00002262;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.cancom_timer_interrupt (335);0x00000012;0x800022a8;0x000022a8;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.cancom_timer_interrupt_handler (331);0x0000007e;0x800022ba;0x000022ba;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.check_high_finished (328);0x0000000a;0x80002338;0x00002338;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.config_timer (308);0x00000042;0x80002342;0x00002342;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.create_component (314);0x0000004a;0x80002384;0x00002384;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.create_task (315);0x000000a6;0x800023ce;0x000023ce;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.getSInfoFromPool (305);0x0000002a;0x80002474;0x00002474;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.get_jiffies (317);0x00000006;0x8000249e;0x0000249e;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.get_running_component (312);0x00000006;0x800024a4;0x000024a4;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.initSInfoPool (304);0x00000040;0x800024aa;0x000024aa;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.init_hardware (309);0x00000056;0x800024ea;0x000024ea;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.init_timer_interrupt (318);0x00000076;0x80002540;0x00002540;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.link (325);0x00000012;0x800025b6;0x000025b6;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.schedule (320);0x00000022;0x800025c8;0x000025c8;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.schedule_event_driven_ISR (329);0x0000007c;0x800025ea;0x000025ea;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.schedule_timer_interrupt (333);0x00000012;0x80002666;0x00002666;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.set_delayed_output (324);0x00000010;0x80002678;0x00002678;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.set_running_component (313);0x00000006;0x80002688;0x00002688;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.syscall_trap_handler (322);0x0000007a;0x8000268e;0x0000268e;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.work_area_end (327);0x0000000a;0x80002708;0x00002708;0x00000002</row>
+				<row>spe:pflash0;;.text.kernel.work_area_start (326);0x0000000a;0x80002712;0x00002712;0x00000002</row>
+				<row>spe:pflash0;;.text.pll_init.pll_init (611);0x00000112;0x8000271c;0x0000271c;0x00000002</row>
+				<row>spe:pflash0;;.text.sync_on_halt._sync_on_halt (625);0x00000074;0x8000282e;0x0000282e;0x00000002</row>
+				<row>spe:pflash0;;.text.sync_on_halt._sync_on_halt_end (624);0x00000006;0x800028a2;0x000028a2;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main..cocofun_6 (654);0x0000004e;0x800028a8;0x000028a8;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main..cocofun_7 (653);0x0000003c;0x800028f6;0x000028f6;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main..cocofun_8 (652);0x00000016;0x80002932;0x00002932;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main..cocofun_9 (656);0x00000016;0x80002948;0x00002948;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.callback (649);0x00000018;0x8000295e;0x0000295e;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.func_high (651);0x000000dc;0x80002976;0x00002976;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.func_high2 (657);0x0000002e;0x80002a52;0x00002a52;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.func_trust (655);0x000000a6;0x80002a80;0x00002a80;0x00000002</row>
+				<row>spe:pflash0;;.text.user_main.user_main (650);0x0000013c;0x80002b26;0x00002b26;0x00000002</row>
+				<row>spe:pflash0;;.rodata.kernel..1.str (352);0x0000001a;0x80002c62;0x00002c62;0x00000001</row>
+				<row>spe:pflash0;;.rodata.kernel..2.str (353);0x00000015;0x80002c7c;0x00002c7c;0x00000001</row>
+				<row>spe:pflash0;;.rodata.kernel..3.str (354);0x00000015;0x80002c91;0x00002c91;0x00000001</row>
+				<row>spe:pflash0;;.rodata.kernel..4.str (355);0x00000015;0x80002ca6;0x00002ca6;0x00000001</row>
+				<row>spe:pflash0;;.rodata.user_main..1.str (682);0x0000001e;0x80002cbb;0x00002cbb;0x00000001</row>
+				<row>spe:pflash0;;.rodata.user_main..2.str (683);0x00000018;0x80002cd9;0x00002cd9;0x00000001</row>
+				<row>spe:pflash0;;.rodata.user_main..3.str (684);0x00000021;0x80002cf1;0x00002cf1;0x00000001</row>
+				<row>spe:pflash0;;.rodata.user_main..4.str (685);0x0000001b;0x80002d12;0x00002d12;0x00000001</row>
+				<row>spe:pflash0;;.rodata.user_main..5.ini (686);0x00000010;0x80002d2d;0x00002d2d;0x00000001</row>
+				<row>spe:pflash0;libraries;.text._c_init_entry.libcs_fpu (810);0x00000136;0x80004000;0x00004000;0x00000020</row>
+				<row>spe:pflash0;libraries;.text._dbg_cacheawi.libcs_fpu (1215);0x0000001c;0x80004140;0x00004140;0x00000020</row>
+				<row>spe:pflash0;libraries;.text.memcpy.libcs_fpu (976);0x0000006c;0x80004160;0x00004160;0x00000020</row>
+				<row>spe:pflash0;libraries;.text.memset.libcs_fpu (966);0x00000060;0x800041e0;0x000041e0;0x00000020</row>
+				<row>spe:pflash0;libraries;.text._Exit.libc (1211);0x00000004;0x80004240;0x00004240;0x00000008</row>
+				<row>spe:pflash0;libraries;.text.librt (1233);0x00000016;0x80004248;0x00004248;0x00000008</row>
+				<row>spe:pflash0;libraries;.text._c_init.libcs_fpu (811);0x0000000c;0x8000425e;0x0000425e;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._dbg_trap.libcs_fpu (1213);0x00000002;0x8000426a;0x0000426a;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._dbg_trap_tc.libcs_fpu (1214);0x00000088;0x8000426c;0x0000426c;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._doclose.libcs_fpu (1016);0x0000001e;0x800042f4;0x000042f4;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._doprint.libcs_fpu (996);0x0000002c;0x80004312;0x00004312;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._exit.libcs_fpu (1191);0x00000012;0x8000433e;0x0000433e;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._fflush.libcs_fpu (1095);0x0000006a;0x80004350;0x00004350;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._flsbuf.libcs_fpu (1075);0x000000a8;0x800043ba;0x000043ba;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._host_close.libcs_fpu (1143);0x00000018;0x80004462;0x00004462;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._host_lseek.libcs_fpu (1142);0x0000001c;0x8000447a;0x0000447a;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._host_write.libcs_fpu (1141);0x0000001a;0x80004496;0x00004496;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._io_putc.libcs_fpu (1110);0x0000001e;0x800044b0;0x000044b0;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._ldmst_clear_byte.libcs_fpu (808);0x0000002e;0x800044ce;0x000044ce;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._ldmst_copy_byte.libcs_fpu (809);0x00000044;0x800044fc;0x000044fc;0x00000002</row>
+				<row>spe:pflash0;libraries;.text._weakstub.libcs_fpu (1201);0x00000002;0x80004540;0x00004540;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.exit.libcs_fpu (1120);0x00000016;0x80004542;0x00004542;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.fclose.libcs_fpu (1085);0x0000002a;0x80004558;0x00004558;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.fputc.libcs_fpu (1045);0x00000024;0x80004582;0x00004582;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.libc (259);0x00000016;0x800045a6;0x000045a6;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.libc (260);0x00000166;0x800045bc;0x000045bc;0x00000002</row>
+				<row>spe:pflash0;libraries;.text.printf.libcs_fpu (1006);0x00000026;0x80004722;0x00004722;0x00000002</row>
+				<row>spe:pflash0;;.text.libc.reset (258);0x0000000a;0xa0000000;0x0;0x00000004</row>
+				<row>spe:pflash0;int_tab;.text.intvec.001 (88);0x0000000a;0xa00f0020;0x000f0020;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.003 (86);0x0000000a;0xa00f0060;0x000f0060;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.004 (90);0x0000000a;0xa00f0080;0x000f0080;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.005 (92);0x0000000a;0xa00f00a0;0x000f00a0;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.006 (94);0x0000000a;0xa00f00c0;0x000f00c0;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.007 (96);0x0000000a;0xa00f00e0;0x000f00e0;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.008 (98);0x0000000a;0xa00f0100;0x000f0100;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.009 (100);0x0000000a;0xa00f0120;0x000f0120;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.00a (102);0x0000000a;0xa00f0140;0x000f0140;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.00b (104);0x0000000a;0xa00f0160;0x000f0160;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.00f (334);0x0000000a;0xa00f01e0;0x000f01e0;0x00000001</row>
+				<row>spe:pflash0;int_tab;.text.intvec.010 (332);0x0000000a;0xa00f0200;0x000f0200;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.000 (906);0x00000012;0xa00f2000;0x000f2000;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.001 (916);0x00000016;0xa00f2020;0x000f2020;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.002 (936);0x00000016;0xa00f2040;0x000f2040;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.003 (896);0x00000016;0xa00f2060;0x000f2060;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.004 (926);0x00000016;0xa00f2080;0x000f2080;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.005 (886);0x00000016;0xa00f20a0;0x000f20a0;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.006 (323);0x0000001a;0xa00f20c0;0x000f20c0;0x00000001</row>
+				<row>spe:pflash0;trap_tab;.text.trapvec.007 (946);0x00000016;0xa00f20e0;0x000f20e0;0x00000001</row>
+				<row>spe:ldram;;.data.user_main._gnd_task (680);0x00000228;0xd0000120;0x00000120;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._ground_component (666);0x0000007c;0xd0000348;0x00000348;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1294);0x00000004;0xd00003c4;0x000003c4;0x00000001</row>
+				<row>spe:ldram;;.data.user_main._hwc_high_1 (660);0x0000007c;0xd00003c8;0x000003c8;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1295);0x00000004;0xd0000444;0x00000444;0x00000001</row>
+				<row>spe:ldram;;.data.user_main._hwc_high_2 (662);0x0000007c;0xd0000448;0x00000448;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1296);0x00000004;0xd00004c4;0x000004c4;0x00000001</row>
+				<row>spe:ldram;;.data.user_main._hwc_trust_1 (664);0x0000007c;0xd00004c8;0x000004c8;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1297);0x00000004;0xd0000544;0x00000544;0x00000001</row>
+				<row>spe:ldram;;.data.user_main._swc_high_1 (668);0x00000228;0xd0000548;0x00000548;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._swc_high_2 (672);0x00000228;0xd0000770;0x00000770;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._swc_high_idle_1 (670);0x00000228;0xd0000998;0x00000998;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._swc_high_idle_2 (674);0x00000228;0xd0000bc0;0x00000bc0;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._swc_trust_1 (676);0x00000228;0xd0000de8;0x00000de8;0x00000008</row>
+				<row>spe:ldram;;.data.user_main._swc_trust_idle_1 (678);0x00000228;0xd0001010;0x00001010;0x00000008</row>
+				<row>spe:ldram;;.data._iob.libcs_fpu (1019);0x000000c8;0xd0001238;0x00001238;0x00000004</row>
+				<row>spe:ldram;;.data.kernel.delayed_output_pending (336);0x00000050;0xd0001300;0x00001300;0x00000002</row>
+				<row>spe:ldram;;.bss._dbg_request.libcs_fpu (1145);0x00000014;0xd0001350;0x00001350;0x00000004</row>
+				<row>spe:ldram;;.bss.kernel.components (337);0x00000014;0xd0001364;0x00001364;0x00000004</row>
+				<row>spe:ldram;;.bss.kernel.sInfoPool (350);0x000001e0;0xd0001378;0x00001378;0x00000004</row>
+				<row>spe:ldram;;.bss.CAN.aubFIFOReadPtr (107);0x00000080;0xd0001558;0x00001558;0x00000001</row>
+				<row>spe:ldram;;.bss.CAN.aubFIFOWritePtr (106);0x00000080;0xd00015d8;0x000015d8;0x00000001</row>
+				<row>spe:ldram;;.bss.kernel.canMsgValidbit (342);0x0000001e;0xd0001658;0x00001658;0x00000001</row>
+				<row>spe:ldram;;.bss.kernel.canTdmMap (343);0x00000032;0xd0001676;0x00001676;0x00000001</row>
+				<row>spe:ldram;;.bss.kernel.sInfoDirtybit (351);0x00000014;0xd00016a8;0x000016a8;0x00000001</row>
+				<row>spe:ldram;;.bss.stdin_buf.libcs_fpu (1017);0x00000050;0xd00016bc;0x000016bc;0x00000001</row>
+				<row>spe:ldram;;.bss.stdout_buf.libcs_fpu (1018);0x00000050;0xd000170c;0x0000170c;0x00000001</row>
+				<row>spe:ldram;;istack (1249);0x00000400;0xd0001760;0x00001760;0x00000008</row>
+				<row>spe:ldram;;ustack (1248);0x00004000;0xd0005000;0x00005000;0x00000008</row>
+			</table>
+			<table>
+				<name>Space spe:tc:abs18 (MAU = 8bit)</name>
+				<column>
+					<name>Chip</name>
+				</column>
+				<column>
+					<name>Group</name>
+				</column>
+				<column>
+					<name>Section</name>
+				</column>
+				<column>
+					<name>Size (MAU)</name>
+				</column>
+				<column>
+					<name>Space addr</name>
+				</column>
+				<column>
+					<name>Chip addr</name>
+				</column>
+				<column>
+					<name>Alignment</name>
+				</column>
+				<row>spe:pflash0;;.zrodata.CAN.__const_00200040 (69);0x00000004;0x8000000a;0x0000000a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02000002 (5);0x00000004;0x8000000e;0x0000000e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02010002 (6);0x00000004;0x80000012;0x00000012;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02020002 (7);0x00000004;0x80000016;0x00000016;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02030002 (8);0x00000004;0x8000001a;0x0000001a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02040002 (9);0x00000004;0x8000001e;0x0000001e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02050002 (10);0x00000004;0x80000022;0x00000022;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02060002 (11);0x00000004;0x80000026;0x00000026;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02070002 (12);0x00000004;0x8000002a;0x0000002a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02080002 (13);0x00000004;0x8000002e;0x0000002e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02090002 (14);0x00000004;0x80000032;0x00000032;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020a0002 (15);0x00000004;0x80000036;0x00000036;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020b0002 (16);0x00000004;0x8000003a;0x0000003a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020c0002 (17);0x00000004;0x8000003e;0x0000003e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020d0002 (18);0x00000004;0x80000042;0x00000042;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020e0002 (19);0x00000004;0x80000046;0x00000046;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_020f0002 (20);0x00000004;0x8000004a;0x0000004a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02100002 (21);0x00000004;0x8000004e;0x0000004e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02110002 (22);0x00000004;0x80000052;0x00000052;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02120002 (23);0x00000004;0x80000056;0x00000056;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02130002 (24);0x00000004;0x8000005a;0x0000005a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02140002 (25);0x00000004;0x8000005e;0x0000005e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02150002 (26);0x00000004;0x80000062;0x00000062;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02160002 (27);0x00000004;0x80000066;0x00000066;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02170002 (28);0x00000004;0x8000006a;0x0000006a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02180002 (29);0x00000004;0x8000006e;0x0000006e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_02190002 (30);0x00000004;0x80000072;0x00000072;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_021a0002 (31);0x00000004;0x80000076;0x00000076;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_021b0002 (32);0x00000004;0x8000007a;0x0000007a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_021c0002 (33);0x00000004;0x8000007e;0x0000007e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_021d0002 (34);0x00000004;0x80000082;0x00000082;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_20000008 (71);0x00000004;0x80000086;0x00000086;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_3fffffff (36);0x00000004;0x8000008a;0x0000008a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_dfffffff (72);0x00000004;0x8000008e;0x0000008e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f0004000 (1);0x00000004;0x80000092;0x00000092;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f0004180 (70);0x00000004;0x80000096;0x00000096;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00041c4 (4);0x00000004;0x8000009a;0x0000009a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00041c5 (2);0x00000004;0x8000009e;0x0000009e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f0004300 (3);0x00000004;0x800000a2;0x000000a2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f0005000 (66);0x00000004;0x800000a6;0x000000a6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000501c (35);0x00000004;0x800000aa;0x000000aa;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000503c (37);0x00000004;0x800000ae;0x000000ae;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000505c (38);0x00000004;0x800000b2;0x000000b2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000507c (39);0x00000004;0x800000b6;0x000000b6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000509c (40);0x00000004;0x800000ba;0x000000ba;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00050bc (41);0x00000004;0x800000be;0x000000be;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00050dc (42);0x00000004;0x800000c2;0x000000c2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00050fc (43);0x00000004;0x800000c6;0x000000c6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000511c (44);0x00000004;0x800000ca;0x000000ca;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000513c (45);0x00000004;0x800000ce;0x000000ce;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000515c (46);0x00000004;0x800000d2;0x000000d2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000517c (47);0x00000004;0x800000d6;0x000000d6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000519c (48);0x00000004;0x800000da;0x000000da;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00051bc (49);0x00000004;0x800000de;0x000000de;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00051dc (50);0x00000004;0x800000e2;0x000000e2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00051fc (51);0x00000004;0x800000e6;0x000000e6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000521c (52);0x00000004;0x800000ea;0x000000ea;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000523c (53);0x00000004;0x800000ee;0x000000ee;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000525c (54);0x00000004;0x800000f2;0x000000f2;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000527c (55);0x00000004;0x800000f6;0x000000f6;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000529c (56);0x00000004;0x800000fa;0x000000fa;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00052bc (57);0x00000004;0x800000fe;0x000000fe;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00052dc (58);0x00000004;0x80000102;0x00000102;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00052fc (59);0x00000004;0x80000106;0x00000106;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000531c (60);0x00000004;0x8000010a;0x0000010a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000533c (61);0x00000004;0x8000010e;0x0000010e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000535c (62);0x00000004;0x80000112;0x00000112;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000537c (63);0x00000004;0x80000116;0x00000116;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f000539c (64);0x00000004;0x8000011a;0x0000011a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.CAN.__const_f00053bc (65);0x00000004;0x8000011e;0x0000011e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.cstart.__const_02840284 (255);0x00000004;0x80000122;0x00000122;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.cstart.__const_82000a53 (257);0x00000004;0x80000126;0x00000126;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.cstart.__const_a1000a51 (256);0x00000004;0x8000012a;0x0000012a;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.kernel.__const_000186a0 (302);0x00000004;0x8000012e;0x0000012e;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.led.__const_80808080 (301);0x00000004;0x80000132;0x00000132;0x00000002</row>
+				<row>spe:pflash0;;.zrodata.sync_on_halt.__const_f87ffd14 (623);0x00000004;0x80000136;0x00000136;0x00000002</row>
+				<row>spe:ldram;;.zdata.user_main.gnd_task (681);0x00000004;0xd0000000;0x0;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1284);0x00000004;0xd0000004;0x00000004;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.ground_component (667);0x00000004;0xd0000008;0x00000008;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1285);0x00000004;0xd000000c;0x0000000c;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.hwc_high_1 (661);0x00000004;0xd0000010;0x00000010;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1286);0x00000004;0xd0000014;0x00000014;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.hwc_high_2 (663);0x00000004;0xd0000018;0x00000018;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1287);0x00000004;0xd000001c;0x0000001c;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.hwc_trust_1 (665);0x00000004;0xd0000020;0x00000020;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1288);0x00000004;0xd0000024;0x00000024;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_high_1 (669);0x00000004;0xd0000028;0x00000028;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1289);0x00000004;0xd000002c;0x0000002c;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_high_2 (673);0x00000004;0xd0000030;0x00000030;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1290);0x00000004;0xd0000034;0x00000034;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_high_idle_1 (671);0x00000004;0xd0000038;0x00000038;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1291);0x00000004;0xd000003c;0x0000003c;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_high_idle_2 (675);0x00000004;0xd0000040;0x00000040;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1292);0x00000004;0xd0000044;0x00000044;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_trust_1 (677);0x00000004;0xd0000048;0x00000048;0x00000008</row>
+				<row>spe:ldram;;.alignment_protection (1293);0x00000004;0xd000004c;0x0000004c;0x00000001</row>
+				<row>spe:ldram;;.zdata.user_main.swc_trust_idle_1 (679);0x00000004;0xd0000050;0x00000050;0x00000008</row>
+				<row>spe:ldram;;.zdata.cstart.argcv (263);0x00000004;0xd0000054;0x00000054;0x00000004</row>
+				<row>spe:ldram;;.zdata.kernel.running_component (340);0x00000004;0xd0000058;0x00000058;0x00000004</row>
+				<row>spe:ldram;;.zdata.kernel.jiffies (339);0x00000004;0xd000005c;0x0000005c;0x00000002</row>
+				<row>spe:ldram;;.zdata.kernel.n_components (338);0x00000004;0xd0000060;0x00000060;0x00000002</row>
+				<row>spe:ldram;;.zbss.sync_on_halt._sync_on_halt_lcx (626);0x00000040;0xd0000080;0x00000080;0x00000040</row>
+				<row>spe:ldram;;.zbss.sync_on_halt._sync_on_halt_ucx (627);0x00000040;0xd00000c0;0x000000c0;0x00000040</row>
+				<row>spe:ldram;;.zbss.kernel.running_task (341);0x00000004;0xd0000100;0x00000100;0x00000004</row>
+				<row>spe:ldram;;.zbss.kernel.sHead (347);0x00000004;0xd0000104;0x00000104;0x00000004</row>
+				<row>spe:ldram;;.zbss.kernel.sTail (348);0x00000004;0xd0000108;0x00000108;0x00000004</row>
+				<row>spe:ldram;;.zbss.kernel.sWalker (349);0x00000004;0xd000010c;0x0000010c;0x00000004</row>
+				<row>spe:ldram;;.zbss.kernel.canSlotWalker (344);0x00000004;0xd0000110;0x00000110;0x00000002</row>
+				<row>spe:ldram;;.zbss.kernel.sHyperPeriod (346);0x00000004;0xd0000114;0x00000114;0x00000002</row>
+				<row>spe:ldram;;.zbss.kernel.sIsFirstCycle (345);0x00000001;0xd0000118;0x00000118;0x00000001</row>
+			</table>
+			<table>
+				<name>Space spe:tc:csa (MAU = 8bit)</name>
+				<column>
+					<name>Chip</name>
+				</column>
+				<column>
+					<name>Group</name>
+				</column>
+				<column>
+					<name>Section</name>
+				</column>
+				<column>
+					<name>Size (MAU)</name>
+				</column>
+				<column>
+					<name>Space addr</name>
+				</column>
+				<column>
+					<name>Chip addr</name>
+				</column>
+				<column>
+					<name>Alignment</name>
+				</column>
+				<row>spe:ldram;;csa.01 (1281);0x00001000;0xd0004000;0x00004000;0x00000040</row>
+			</table>
+			<table>
+				<name>Space spe:tc:pcp_data (MAU = 32bit)</name>
+				<column>
+					<name>Chip</name>
+				</column>
+				<column>
+					<name>Group</name>
+				</column>
+				<column>
+					<name>Section</name>
+				</column>
+				<column>
+					<name>Size (MAU)</name>
+				</column>
+				<column>
+					<name>Space addr</name>
+				</column>
+				<column>
+					<name>Chip addr</name>
+				</column>
+				<column>
+					<name>Alignment</name>
+				</column>
+				<row>spe:pram;;null_pointer_protection (1283);0x00000001;0x0;0x0;0x00000001</row>
+			</table>
+		</part>
+		<part>
+			<name>Symbols</name>
+			<table>
+				<column>
+					<name>Space addr</name>
+				</column>
+				<column>
+					<name>Name</name>
+				</column>
+				<column>
+					<name>Space</name>
+				</column>
+				<row>0x0;__INDIRECT__;-</row>
+				<row>0x0;_SMALL_DATA_;spe:tc:linear</row>
+				<row>0x0;_LITERAL_DATA_;spe:tc:linear</row>
+				<row>0x0;_A8_DATA_;spe:tc:linear</row>
+				<row>0x0;_A9_DATA_;spe:tc:linear</row>
+				<row>0x0;_lc_gb_a0;spe:tc:linear</row>
+				<row>0x0;_lc_ge_a0;spe:tc:linear</row>
+				<row>0x0;_lc_gb_a1;spe:tc:linear</row>
+				<row>0x0;_lc_ge_a1;spe:tc:linear</row>
+				<row>0x0;_lc_gb_a8;spe:tc:linear</row>
+				<row>0x0;_lc_ge_a8;spe:tc:linear</row>
+				<row>0x0;_lc_gb_a9;spe:tc:linear</row>
+				<row>0x0;_lc_ge_a9;spe:tc:linear</row>
+				<row>0x0;_lc_gb_pcp_linear_ram;spe:tc:linear</row>
+				<row>0x0;_lc_ge_pcp_linear_ram;spe:tc:linear</row>
+				<row>0x0;_lc_gb_pcp_linear_rom;spe:tc:linear</row>
+				<row>0x0;_lc_ge_pcp_linear_rom;spe:tc:linear</row>
+				<row>0x8000013a;CAN_viSRN0;spe:tc:linear</row>
+				<row>0x8000013a;CAN_viSRN1;spe:tc:linear</row>
+				<row>0x800013e0;_lc_ub_table;spe:tc:linear</row>
+				<row>0x80001550;CAN_vGetMsgObj;spe:tc:linear</row>
+				<row>0x800015dc;CAN_vInit;spe:tc:linear</row>
+				<row>0x80001d9c;CAN_vLoadData;spe:tc:linear</row>
+				<row>0x80001ddc;CAN_vReleaseObj;spe:tc:linear</row>
+				<row>0x80001dec;CAN_vTransmit;spe:tc:linear</row>
+				<row>0x80001dfe;CAN_viSRN2;spe:tc:linear</row>
+				<row>0x80001e5c;CAN_viSRN3;spe:tc:linear</row>
+				<row>0x80001f46;CAN_viSRN4;spe:tc:linear</row>
+				<row>0x80001fa6;CAN_viSRN5;spe:tc:linear</row>
+				<row>0x80002006;CAN_viSRN6;spe:tc:linear</row>
+				<row>0x80002066;CAN_viSRN7;spe:tc:linear</row>
+				<row>0x800020c6;CAN_viSRN8;spe:tc:linear</row>
+				<row>0x8000212a;CAN_viSRN9;spe:tc:linear</row>
+				<row>0x8000218e;MAIN_vWriteWDTCON0;spe:tc:linear</row>
+				<row>0x800021c8;main;spe:tc:linear</row>
+				<row>0x800021ee;addScheduleInfo;spe:tc:linear</row>
+				<row>0x80002262;can_init;spe:tc:linear</row>
+				<row>0x800022a8;cancom_timer_interrupt;spe:tc:linear</row>
+				<row>0x800022ba;cancom_timer_interrupt_handler;spe:tc:linear</row>
+				<row>0x80002338;check_high_finished;spe:tc:linear</row>
+				<row>0x80002342;config_timer;spe:tc:linear</row>
+				<row>0x80002384;create_component;spe:tc:linear</row>
+				<row>0x800023ce;create_task;spe:tc:linear</row>
+				<row>0x80002474;getSInfoFromPool;spe:tc:linear</row>
+				<row>0x8000249e;get_jiffies;spe:tc:linear</row>
+				<row>0x800024a4;get_running_component;spe:tc:linear</row>
+				<row>0x800024aa;initSInfoPool;spe:tc:linear</row>
+				<row>0x800024ea;init_hardware;spe:tc:linear</row>
+				<row>0x80002540;init_timer_interrupt;spe:tc:linear</row>
+				<row>0x800025b6;link;spe:tc:linear</row>
+				<row>0x800025c8;schedule;spe:tc:linear</row>
+				<row>0x800025ea;schedule_event_driven_ISR;spe:tc:linear</row>
+				<row>0x80002666;schedule_timer_interrupt;spe:tc:linear</row>
+				<row>0x80002678;set_delayed_output;spe:tc:linear</row>
+				<row>0x80002688;set_running_component;spe:tc:linear</row>
+				<row>0x80002708;work_area_end;spe:tc:linear</row>
+				<row>0x80002712;work_area_start;spe:tc:linear</row>
+				<row>0x8000271c;pll_init;spe:tc:linear</row>
+				<row>0x8000282e;_sync_on_halt;spe:tc:linear</row>
+				<row>0x800028a2;_sync_on_halt_end;spe:tc:linear</row>
+				<row>0x8000295e;callback;spe:tc:linear</row>
+				<row>0x80002b26;user_main;spe:tc:linear</row>
+				<row>0x80004000;_c_init_entry;spe:tc:linear</row>
+				<row>0x80004000;_lc_gb_libraries;spe:tc:linear</row>
+				<row>0x80004160;memcpy;spe:tc:linear</row>
+				<row>0x800041e0;memset;spe:tc:linear</row>
+				<row>0x80004240;_Exit;spe:tc:linear</row>
+				<row>0x80004248;__rt_udivmod;spe:tc:linear</row>
+				<row>0x8000425e;_c_init;spe:tc:linear</row>
+				<row>0x8000426a;_dbg_trap;spe:tc:linear</row>
+				<row>0x8000426c;_dbg_trap_tc;spe:tc:linear</row>
+				<row>0x800042f4;_doclose;spe:tc:linear</row>
+				<row>0x80004312;_doprint;spe:tc:linear</row>
+				<row>0x80004312;__printf_noarg2;spe:tc:linear</row>
+				<row>0x8000433e;_exit;spe:tc:linear</row>
+				<row>0x80004350;_fflush;spe:tc:linear</row>
+				<row>0x800043ba;_flsbuf;spe:tc:linear</row>
+				<row>0x80004462;_host_close;spe:tc:linear</row>
+				<row>0x80004462;_close;spe:tc:linear</row>
+				<row>0x8000447a;_host_lseek;spe:tc:linear</row>
+				<row>0x8000447a;_lseek;spe:tc:linear</row>
+				<row>0x80004496;_host_write;spe:tc:linear</row>
+				<row>0x80004496;_write;spe:tc:linear</row>
+				<row>0x800044b0;_io_putc;spe:tc:linear</row>
+				<row>0x80004540;_weakstub;spe:tc:linear</row>
+				<row>0x80004540;_doexit;spe:tc:linear</row>
+				<row>0x80004540;_dofree;spe:tc:linear</row>
+				<row>0x80004542;exit;spe:tc:linear</row>
+				<row>0x80004558;fclose;spe:tc:linear</row>
+				<row>0x80004582;fputc;spe:tc:linear</row>
+				<row>0x800045a6;__init_sp;spe:tc:linear</row>
+				<row>0x800045bc;_start;spe:tc:linear</row>
+				<row>0x80004722;printf;spe:tc:linear</row>
+				<row>0x80004748;_lc_ge_libraries;spe:tc:linear</row>
+				<row>0xa0000000;_START;spe:tc:linear</row>
+				<row>0xa00f0000;_lc_u_int_tab;spe:tc:linear</row>
+				<row>0xa00f0020;_lc_gb_int_tab;spe:tc:linear</row>
+				<row>0xa00f020a;_lc_ge_int_tab;spe:tc:linear</row>
+				<row>0xa00f2000;_lc_u_trap_tab;spe:tc:linear</row>
+				<row>0xa00f2000;_trapmmu;spe:tc:linear</row>
+				<row>0xa00f2000;_lc_gb_trap_tab;spe:tc:linear</row>
+				<row>0xa00f2020;_trapprotection;spe:tc:linear</row>
+				<row>0xa00f2040;_trapinstruction;spe:tc:linear</row>
+				<row>0xa00f2060;_trapcontext;spe:tc:linear</row>
+				<row>0xa00f2080;_trapbus;spe:tc:linear</row>
+				<row>0xa00f20a0;_trapassertion;spe:tc:linear</row>
+				<row>0xa00f20c0;syscall_trap;spe:tc:linear</row>
+				<row>0xa00f20e0;_trapnmi;spe:tc:linear</row>
+				<row>0xa00f20f6;_lc_ge_trap_tab;spe:tc:linear</row>
+				<row>0xd0001238;_iob;spe:tc:linear</row>
+				<row>0xd0001300;delayed_output_pending;spe:tc:linear</row>
+				<row>0xd0001350;_dbg_request;spe:tc:linear</row>
+				<row>0xd0001350;errno;spe:tc:linear</row>
+				<row>0xd0001364;components;spe:tc:linear</row>
+				<row>0xd0001378;sInfoPool;spe:tc:linear</row>
+				<row>0xd0001658;canMsgValidbit;spe:tc:linear</row>
+				<row>0xd0001676;canTdmMap;spe:tc:linear</row>
+				<row>0xd00016a8;sInfoDirtybit;spe:tc:linear</row>
+				<row>0xd0001b60;_lc_ue_istack;spe:tc:linear</row>
+				<row>0xd0009000;_lc_ue_ustack;spe:tc:linear</row>
+				<row>0xd0000000;gnd_task;spe:tc:abs18</row>
+				<row>0xd0000008;ground_component;spe:tc:abs18</row>
+				<row>0xd0000010;hwc_high_1;spe:tc:abs18</row>
+				<row>0xd0000018;hwc_high_2;spe:tc:abs18</row>
+				<row>0xd0000020;hwc_trust_1;spe:tc:abs18</row>
+				<row>0xd0000028;swc_high_1;spe:tc:abs18</row>
+				<row>0xd0000030;swc_high_2;spe:tc:abs18</row>
+				<row>0xd0000038;swc_high_idle_1;spe:tc:abs18</row>
+				<row>0xd0000040;swc_high_idle_2;spe:tc:abs18</row>
+				<row>0xd0000048;swc_trust_1;spe:tc:abs18</row>
+				<row>0xd0000050;swc_trust_idle_1;spe:tc:abs18</row>
+				<row>0xd0000058;running_component;spe:tc:abs18</row>
+				<row>0xd000005c;jiffies;spe:tc:abs18</row>
+				<row>0xd0000060;n_components;spe:tc:abs18</row>
+				<row>0xd0000080;_sync_on_halt_lcx;spe:tc:abs18</row>
+				<row>0xd00000c0;_sync_on_halt_ucx;spe:tc:abs18</row>
+				<row>0xd0000100;running_task;spe:tc:abs18</row>
+				<row>0xd0000104;sHead;spe:tc:abs18</row>
+				<row>0xd0000108;sTail;spe:tc:abs18</row>
+				<row>0xd000010c;sWalker;spe:tc:abs18</row>
+				<row>0xd0000110;canSlotWalker;spe:tc:abs18</row>
+				<row>0xd0000114;sHyperPeriod;spe:tc:abs18</row>
+				<row>0xd0000118;sIsFirstCycle;spe:tc:abs18</row>
+				<row>0xd0004000;_lc_ub_csa_01;spe:tc:csa</row>
+				<row>0xd0005000;_lc_ue_csa_01;spe:tc:csa</row>
+			</table>
+		</part>
+	</part>
+	<part>
+		<name>Locate Rules</name>
+		<table>
+			<column>
+				<name>Address space</name>
+			</column>
+			<column>
+				<name>Type</name>
+			</column>
+			<column>
+				<name>Properties</name>
+			</column>
+			<column>
+				<name>Prio</name>
+				<alignment>right</alignment>
+			</column>
+			<column>
+				<name>Sections</name>
+			</column>
+			<row>spe:tc:csa;absolute;0xd0004000;1;csa.01 (1281)</row>
+			<row>spe:tc:pcp_data;absolute;0x00000000;1;null_pointer_protection (1283)</row>
+			<row>spe:tc:linear;absolute;0xa00f20c0;1;.text.trapvec.006 (323)</row>
+			<row>spe:tc:linear;absolute;0xa00f2020;1;.text.trapvec.001 (916)</row>
+			<row>spe:tc:linear;absolute;0xa00f2040;1;.text.trapvec.002 (936)</row>
+			<row>spe:tc:linear;absolute;0xa00f2060;1;.text.trapvec.003 (896)</row>
+			<row>spe:tc:linear;absolute;0xa00f2080;1;.text.trapvec.004 (926)</row>
+			<row>spe:tc:linear;absolute;0xa00f20a0;1;.text.trapvec.005 (886)</row>
+			<row>spe:tc:linear;absolute;0xa00f20e0;1;.text.trapvec.007 (946)</row>
+			<row>spe:tc:linear;absolute;0xa00f2000;1;.text.trapvec.000 (906)</row>
+			<row>spe:tc:linear;absolute;0xa0000000;1;.text.libc.reset (258)</row>
+			<row>spe:tc:linear;absolute;0xa00f0020;1;.text.intvec.001 (88)</row>
+			<row>spe:tc:linear;absolute;0xa00f0060;1;.text.intvec.003 (86)</row>
+			<row>spe:tc:linear;absolute;0xa00f0080;1;.text.intvec.004 (90)</row>
+			<row>spe:tc:linear;absolute;0xa00f00a0;1;.text.intvec.005 (92)</row>
+			<row>spe:tc:linear;absolute;0xa00f00c0;1;.text.intvec.006 (94)</row>
+			<row>spe:tc:linear;absolute;0xa00f00e0;1;.text.intvec.007 (96)</row>
+			<row>spe:tc:linear;absolute;0xa00f0100;1;.text.intvec.008 (98)</row>
+			<row>spe:tc:linear;absolute;0xa00f0120;1;.text.intvec.009 (100)</row>
+			<row>spe:tc:linear;absolute;0xa00f0140;1;.text.intvec.00a (102)</row>
+			<row>spe:tc:linear;absolute;0xa00f0160;1;.text.intvec.00b (104)</row>
+			<row>spe:tc:linear;absolute;0xa00f01e0;1;.text.intvec.00f (334)</row>
+			<row>spe:tc:linear;absolute;0xa00f0200;1;.text.intvec.010 (332)</row>
+			<row>spe:tc:linear;ranged;0x00004000..0x00200000 0x10004000..0x10200000 0x20004000..0x20200000 0x30004000..0x30200000 0x40004000..0x40200000 0x50004000..0x50200000 0x60004000..0x60200000 0x70004000..0x70200000 0x80004000..0x80200000 0x90004000..0x90200000 0xa0004000..0xa0200000 0xb0004000..0xb0200000 0xc0004000..0xc0200000 0xd0004000..0xd0200000 0xe0004000..0xe0200000 0xf0004000..0xf0200000;1;.text._c_init_entry.libcs_fpu (810) | .text._dbg_cacheawi.libcs_fpu (1215) | .text.memcpy.libcs_fpu (976) | .text.memset.libcs_fpu (966) | .text._Exit.libc (1211) | .text.librt (1233) | .text._c_init.libcs_fpu (811) | .text._dbg_trap.libcs_fpu (1213) | .text._dbg_trap_tc.libcs_fpu (1214) | .text._doclose.libcs_fpu (1016) | .text._doprint.libcs_fpu (996) | .text._exit.libcs_fpu (1191) | .text._fflush.libcs_fpu (1095) | .text._flsbuf.libcs_fpu (1075) | .text._host_close.libcs_fpu (1143) | .text._host_lseek.libcs_fpu (1142) | .text._host_write.libcs_fpu (1141) | .text._io_putc.libcs_fpu (1110) | .text._ldmst_clear_byte.libcs_fpu (808) | .text._ldmst_copy_byte.libcs_fpu (809) | .text._weakstub.libcs_fpu (1201) | .text.exit.libcs_fpu (1120) | .text.fclose.libcs_fpu (1085) | .text.fputc.libcs_fpu (1045) | .text.libc (259) | .text.libc (260) | .text.printf.libcs_fpu (1006)</row>
+			<row>spe:tc:abs18;clustered;;1;.zdata.user_main.gnd_task (681) + .zdata.user_main.ground_component (667) + .zdata.user_main.hwc_high_1 (661) + .zdata.user_main.hwc_high_2 (663) + .zdata.user_main.hwc_trust_1 (665) + .zdata.user_main.swc_high_1 (669) + .zdata.user_main.swc_high_2 (673) + .zdata.user_main.swc_high_idle_1 (671) + .zdata.user_main.swc_high_idle_2 (675) + .zdata.user_main.swc_trust_1 (677) + .zdata.user_main.swc_trust_idle_1 (679) + .zdata.cstart.argcv (263) + .zdata.kernel.running_component (340) + .zdata.kernel.jiffies (339) + .zdata.kernel.n_components (338)</row>
+			<row>spe:tc:abs18;clustered;;1;.zbss.sync_on_halt._sync_on_halt_lcx (626) + .zbss.sync_on_halt._sync_on_halt_ucx (627) + .zbss.kernel.running_task (341) + .zbss.kernel.sHead (347) + .zbss.kernel.sTail (348) + .zbss.kernel.sWalker (349) + .zbss.kernel.canSlotWalker (344) + .zbss.kernel.sHyperPeriod (346) + .zbss.kernel.sIsFirstCycle (345)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.zrodata.CAN.__const_00200040 (69) , .zrodata.CAN.__const_02000002 (5) , .zrodata.CAN.__const_02010002 (6) , .zrodata.CAN.__const_02020002 (7) , .zrodata.CAN.__const_02030002 (8) , .zrodata.CAN.__const_02040002 (9) , .zrodata.CAN.__const_02050002 (10) , .zrodata.CAN.__const_02060002 (11) , .zrodata.CAN.__const_02070002 (12) , .zrodata.CAN.__const_02080002 (13) , .zrodata.CAN.__const_02090002 (14) , .zrodata.CAN.__const_020a0002 (15) , .zrodata.CAN.__const_020b0002 (16) , .zrodata.CAN.__const_020c0002 (17) , .zrodata.CAN.__const_020d0002 (18) , .zrodata.CAN.__const_020e0002 (19) , .zrodata.CAN.__const_020f0002 (20) , .zrodata.CAN.__const_02100002 (21) , .zrodata.CAN.__const_02110002 (22) , .zrodata.CAN.__const_02120002 (23) , .zrodata.CAN.__const_02130002 (24) , .zrodata.CAN.__const_02140002 (25) , .zrodata.CAN.__const_02150002 (26) , .zrodata.CAN.__const_02160002 (27) , .zrodata.CAN.__const_02170002 (28) , .zrodata.CAN.__const_02180002 (29) , .zrodata.CAN.__const_02190002 (30) , .zrodata.CAN.__const_021a0002 (31) , .zrodata.CAN.__const_021b0002 (32) , .zrodata.CAN.__const_021c0002 (33) , .zrodata.CAN.__const_021d0002 (34) , .zrodata.CAN.__const_20000008 (71) , .zrodata.CAN.__const_3fffffff (36) , .zrodata.CAN.__const_dfffffff (72) , .zrodata.CAN.__const_f0004000 (1) , .zrodata.CAN.__const_f0004180 (70) , .zrodata.CAN.__const_f00041c4 (4) , .zrodata.CAN.__const_f00041c5 (2) , .zrodata.CAN.__const_f0004300 (3) , .zrodata.CAN.__const_f0005000 (66) , .zrodata.CAN.__const_f000501c (35) , .zrodata.CAN.__const_f000503c (37) , .zrodata.CAN.__const_f000505c (38) , .zrodata.CAN.__const_f000507c (39) , .zrodata.CAN.__const_f000509c (40) , .zrodata.CAN.__const_f00050bc (41) , .zrodata.CAN.__const_f00050dc (42) , .zrodata.CAN.__const_f00050fc (43) , .zrodata.CAN.__const_f000511c (44) , .zrodata.CAN.__const_f000513c (45) , .zrodata.CAN.__const_f000515c (46) , .zrodata.CAN.__const_f000517c (47) , .zrodata.CAN.__const_f000519c (48) , .zrodata.CAN.__const_f00051bc (49) , .zrodata.CAN.__const_f00051dc (50) , .zrodata.CAN.__const_f00051fc (51) , .zrodata.CAN.__const_f000521c (52) , .zrodata.CAN.__const_f000523c (53) , .zrodata.CAN.__const_f000525c (54) , .zrodata.CAN.__const_f000527c (55) , .zrodata.CAN.__const_f000529c (56) , .zrodata.CAN.__const_f00052bc (57) , .zrodata.CAN.__const_f00052dc (58) , .zrodata.CAN.__const_f00052fc (59) , .zrodata.CAN.__const_f000531c (60) , .zrodata.CAN.__const_f000533c (61) , .zrodata.CAN.__const_f000535c (62) , .zrodata.CAN.__const_f000537c (63) , .zrodata.CAN.__const_f000539c (64) , .zrodata.CAN.__const_f00053bc (65) , .zrodata.cstart.__const_02840284 (255) , .zrodata.cstart.__const_82000a53 (257) , .zrodata.cstart.__const_a1000a51 (256) , .zrodata.kernel.__const_000186a0 (302) , .zrodata.led.__const_80808080 (301) , .zrodata.sync_on_halt.__const_f87ffd14 (623)</row>
+			<row>spe:tc:linear;clustered;;1;.data.user_main._gnd_task (680) + .data.user_main._ground_component (666) + .data.user_main._hwc_high_1 (660) + .data.user_main._hwc_high_2 (662) + .data.user_main._hwc_trust_1 (664) + .data.user_main._swc_high_1 (668) + .data.user_main._swc_high_2 (672) + .data.user_main._swc_high_idle_1 (670) + .data.user_main._swc_high_idle_2 (674) + .data.user_main._swc_trust_1 (676) + .data.user_main._swc_trust_idle_1 (678) + .data._iob.libcs_fpu (1019) + .data.kernel.delayed_output_pending (336)</row>
+			<row>spe:tc:linear;clustered;;1;.bss._dbg_request.libcs_fpu (1145) + .bss.kernel.components (337) + .bss.kernel.sInfoPool (350) + .bss.CAN.aubFIFOReadPtr (107) + .bss.CAN.aubFIFOWritePtr (106) + .bss.kernel.canMsgValidbit (342) + .bss.kernel.canTdmMap (343) + .bss.kernel.sInfoDirtybit (351) + .bss.stdin_buf.libcs_fpu (1017) + .bss.stdout_buf.libcs_fpu (1018)</row>
+			<row>spe:tc:linear;clustered;;1;[.data.user_main._gnd_task] (1264) + [.data.user_main._ground_component] (1257) + [.data.user_main._hwc_high_1] (1254) + [.data.user_main._hwc_high_2] (1255) + [.data.user_main._hwc_trust_1] (1256) + [.data.user_main._swc_high_1] (1258) + [.data.user_main._swc_high_2] (1260) + [.data.user_main._swc_high_idle_1] (1259) + [.data.user_main._swc_high_idle_2] (1261) + [.data.user_main._swc_trust_1] (1262) + [.data.user_main._swc_trust_idle_1] (1263) + [.zdata.user_main.gnd_task] (1280) + [.zdata.user_main.ground_component] (1273) + [.zdata.user_main.hwc_high_1] (1270) + [.zdata.user_main.hwc_high_2] (1271) + [.zdata.user_main.hwc_trust_1] (1272) + [.zdata.user_main.swc_high_1] (1274) + [.zdata.user_main.swc_high_2] (1276) + [.zdata.user_main.swc_high_idle_1] (1275) + [.zdata.user_main.swc_high_idle_2] (1277) + [.zdata.user_main.swc_trust_1] (1278) + [.zdata.user_main.swc_trust_idle_1] (1279) + [.data._iob.libcs_fpu] (1265) + [.zdata.cstart.argcv] (1266) + [.zdata.kernel.running_component] (1269) + [.data.kernel.delayed_output_pending] (1253) + [.zdata.kernel.jiffies] (1268) + [.zdata.kernel.n_components] (1267)</row>
+			<row>spe:tc:linear;ordered;;1;.text.intvec.001 (88) &lt; .text.intvec.003 (86) &lt; .text.intvec.004 (90) &lt; .text.intvec.005 (92) &lt; .text.intvec.006 (94) &lt; .text.intvec.007 (96) &lt; .text.intvec.008 (98) &lt; .text.intvec.009 (100) &lt; .text.intvec.00a (102) &lt; .text.intvec.00b (104) &lt; .text.intvec.00f (334) &lt; .text.intvec.010 (332)</row>
+			<row>spe:tc:linear;ordered;;1;.text.trapvec.000 (906) &lt; .text.trapvec.001 (916) &lt; .text.trapvec.002 (936) &lt; .text.trapvec.003 (896) &lt; .text.trapvec.004 (926) &lt; .text.trapvec.005 (886) &lt; .text.trapvec.006 (323) &lt; .text.trapvec.007 (946)</row>
+			<row>spe:tc:linear;unrestricted;;1;.rodata.kernel..5.ini (356) , table (1252) , .text.CAN.CAN_vGetMsgObj (74) , .text.CAN.CAN_vInit (73) , .text.CAN.CAN_vLoadData (79) , .text.CAN.CAN_vReleaseObj (82) , .text.CAN.CAN_vTransmit (77) , .text.CAN.CAN_viSRN0 (1239) , .text.CAN.CAN_viSRN2 (91) , .text.CAN.CAN_viSRN3 (93) , .text.CAN.CAN_viSRN4 (95) , .text.CAN.CAN_viSRN5 (97) , .text.CAN.CAN_viSRN6 (99) , .text.CAN.CAN_viSRN7 (101) , .text.CAN.CAN_viSRN8 (103) , .text.CAN.CAN_viSRN9 (105) , .text.MAIN.MAIN_vWriteWDTCON0 (583) , .text.MAIN.main (584) , .text.kernel..cocofun_6 (321) , .text.kernel.addScheduleInfo (307) , .text.kernel.can_init (310) , .text.kernel.cancom_timer_interrupt (335) , .text.kernel.cancom_timer_interrupt_handler (331) , .text.kernel.check_high_finished (328) , .text.kernel.config_timer (308) , .text.kernel.create_component (314) , .text.kernel.create_task (315) , .text.kernel.getSInfoFromPool (305) , .text.kernel.get_jiffies (317) , .text.kernel.get_running_component (312) , .text.kernel.initSInfoPool (304) , .text.kernel.init_hardware (309) , .text.kernel.init_timer_interrupt (318) , .text.kernel.link (325) , .text.kernel.schedule (320) , .text.kernel.schedule_event_driven_ISR (329) , .text.kernel.schedule_timer_interrupt (333) , .text.kernel.set_delayed_output (324) , .text.kernel.set_running_component (313) , .text.kernel.syscall_trap_handler (322) , .text.kernel.work_area_end (327) , .text.kernel.work_area_start (326) , .text.pll_init.pll_init (611) , .text.sync_on_halt._sync_on_halt (625) , .text.sync_on_halt._sync_on_halt_end (624) , .text.user_main..cocofun_6 (654) , .text.user_main..cocofun_7 (653) , .text.user_main..cocofun_8 (652) , .text.user_main..cocofun_9 (656) , .text.user_main.callback (649) , .text.user_main.func_high (651) , .text.user_main.func_high2 (657) , .text.user_main.func_idle (1240) , .text.user_main.func_trust (655) , .text.user_main.user_main (650) , .rodata.kernel..1.str (352) , .rodata.kernel..2.str (353) , .rodata.kernel..3.str (354) , .rodata.kernel..4.str (355) , .rodata.user_main..1.str (682) , .rodata.user_main..2.str (683) , .rodata.user_main..3.str (684) , .rodata.user_main..4.str (685) , .rodata.user_main..5.ini (686)</row>
+			<row>spe:tc:linear;unrestricted;;1;ustack (1248)</row>
+			<row>spe:tc:linear;unrestricted;;1;istack (1249)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1284)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1285)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1286)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1287)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1288)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1289)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1290)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1291)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1292)</row>
+			<row>spe:tc:abs18;unrestricted;;1;.alignment_protection (1293)</row>
+			<row>spe:tc:linear;unrestricted;;1;.alignment_protection (1294)</row>
+			<row>spe:tc:linear;unrestricted;;1;.alignment_protection (1295)</row>
+			<row>spe:tc:linear;unrestricted;;1;.alignment_protection (1296)</row>
+			<row>spe:tc:linear;unrestricted;;1;.alignment_protection (1297)</row>
+		</table>
+	</part>
+	<part>
+		<name>Removed Sections</name>
+		<table>
+			<column>
+				<name>Section</name>
+			</column>
+			<column>
+				<name>File</name>
+			</column>
+			<column>
+				<name>Library</name>
+			</column>
+			<column>
+				<name>Symbol</name>
+			</column>
+			<column>
+				<name>Reason</name>
+			</column>
+			<row>.text.CAN.CAN_ubMsgLost (80);CAN.o;;CAN_ubMsgLost;unreferenced</row>
+			<row>.text.CAN.CAN_ubDelMsgObj (81);CAN.o;;CAN_ubDelMsgObj;unreferenced</row>
+			<row>.text.CAN.CAN_vSetMSGVAL (83);CAN.o;;CAN_vSetMSGVAL;unreferenced</row>
+			<row>.text.CAN.CAN_ubWriteFIFO (84);CAN.o;;CAN_ubWriteFIFO;unreferenced</row>
+			<row>.text.CAN.CAN_ubReadFIFO (85);CAN.o;;CAN_ubReadFIFO;unreferenced</row>
+			<row>.text.libc (261);cstart.o;;_endinit_clear;unreferenced</row>
+			<row>.text.libc (262);cstart.o;;_endinit_set;unreferenced</row>
+			<row>.text.kernel.freeSInfo (306);kernel.o;;freeSInfo;unreferenced</row>
+			<row>.text.kernel.request (311);kernel.o;;request;unreferenced</row>
+			<row>.text.kernel.get_running_task (316);kernel.o;;get_running_task;unreferenced</row>
+			<row>.text.kernel.start_kernel (319);kernel.o;;start_kernel;unreferenced</row>
+			<row>.text.fflush.libcs_fpu (1096);fflush.o;libcs_fpu.a;fflush;unreferenced</row>
+			<row>.bss._Errno.libcs_fpu (1130);errno.o;libcs_fpu.a;_Errno;unreferenced</row>
+			<row>.text._host_open.libcs_fpu (1139);dbg.o;libcs_fpu.a;_host_open;unreferenced</row>
+			<row>.text._host_read.libcs_fpu (1140);dbg.o;libcs_fpu.a;_host_read;unreferenced</row>
+			<row>.text._argcv.libcs_fpu (1144);dbg.o;libcs_fpu.a;_argcv;unreferenced</row>
+			<row>.text.CAN.CAN_ubRequestMsgObj (75);CAN.o;;CAN_ubRequestMsgObj;unreferenced</row>
+			<row>.text.CAN.CAN_ubNewData (76);CAN.o;;CAN_ubNewData;unreferenced</row>
+			<row>.text.CAN.CAN_vConfigMsgObj (78);CAN.o;;CAN_vConfigMsgObj;unreferenced</row>
+			<row>.text.kernel.schedule_EDF_ISR (330);kernel.o;;schedule_EDF_ISR;unreferenced</row>
+			<row>.zdata.kernel._999001_is_first_time (357);kernel.o;;;unreferenced</row>
+			<row>.text.MAIN.MAIN_vInit (582);MAIN.o;;MAIN_vInit;unreferenced</row>
+			<row>.zbss.MAIN.DummyToForceRead (585);MAIN.o;;DummyToForceRead;unreferenced</row>
+			<row>.zrodata.CAN.__const_1fffffff (67);CAN.o;;;unreferenced</row>
+			<row>.zrodata.CAN.__const_06280040 (68);CAN.o;;;unreferenced</row>
+			<row>.zrodata.kernel.__const_7fffffff (303);kernel.o;;;unreferenced</row>
+			<row>.zrodata.MAIN.__const_01058e21 (580);MAIN.o;;;unreferenced</row>
+			<row>.zrodata.MAIN.__const_00020003 (581);MAIN.o;;;unreferenced</row>
+			<row>.text.setfoschz.libcs_fpu (833);clock.o;libcs_fpu.a;setfoschz;unreferenced</row>
+			<row>.text.setfosc.libcs_fpu (834);clock.o;libcs_fpu.a;setfosc;unreferenced</row>
+			<row>.text.getfosc.libcs_fpu (835);clock.o;libcs_fpu.a;getfosc;unreferenced</row>
+			<row>.text.clock_msec.libcs_fpu (836);clock.o;libcs_fpu.a;clock_msec;unreferenced</row>
+			<row>.text.clock_usec.libcs_fpu (837);clock.o;libcs_fpu.a;clock_usec;unreferenced</row>
+			<row>.text..cocofun_1.libcs_fpu (838);clock.o;libcs_fpu.a;.cocofun_1;unreferenced</row>
+			<row>.text.clock_usec_fast.libcs_fpu (839);clock.o;libcs_fpu.a;clock_usec_fast;unreferenced</row>
+			<row>.text.clock.libcs_fpu (840);clock.o;libcs_fpu.a;clock;unreferenced</row>
+			<row>.data.__clocks_per_sec.libcs_fpu (879);clockspersec.o;libcs_fpu.a;__clocks_per_sec;unreferenced</row>
+			<row>.text.trapvec.006 (956);trapsys.o;libcs_fpu.a;_trapsystem;unreferenced</row>
+			<row>.text.dummy.libcs_fpu (986);printf_noarg.o;libcs_fpu.a;dummy;unreferenced</row>
+			<row>.text.fgetc.libcs_fpu (1035);fgetc.o;libcs_fpu.a;fgetc;unreferenced</row>
+			<row>.text.ungetc.libcs_fpu (1055);ungetc.o;libcs_fpu.a;ungetc;unreferenced</row>
+			<row>.text._filbuf.libcs_fpu (1065);_filbuf.o;libcs_fpu.a;_filbuf;unreferenced</row>
+			<row>.text.librt (1235);ui64_div.o;librt.a;__ll_udiv64;unreferenced</row>
+			<row>.text.librt (1237);ui64_mul.o;librt.a;__ll_mul64;unreferenced</row>
+		</table>
+	</part>
+</mapfile>

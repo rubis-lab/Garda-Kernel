@@ -1,0 +1,3011 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc1364a -H sfr/regtc1797.sfr -c99 --dep-file=.pll_init.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=pll_init.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o pll_init.src ..\\pll_init.c"
+	.compiler_name		"ctc"
+	.name	"pll_init"
+
+	
+$TC131
+	
+	.sdecl	'.text.pll_init.pll_init',code,cluster('pll_init')
+	.sect	'.text.pll_init.pll_init'
+	.align	2
+	
+	.global	pll_init
+
+; ..\pll_init.c	     1  /*
+; ..\pll_init.c	     2   * pll_init.c
+; ..\pll_init.c	     3   *
+; ..\pll_init.c	     4   *  Created on: 22.09.2009
+; ..\pll_init.c	     5   *      Author: schrape
+; ..\pll_init.c	     6   */
+; ..\pll_init.c	     7  #include <stdint.h>
+; ..\pll_init.c	     8  #pragma optimize O3
+; ..\pll_init.c	     9  #pragma tradeoff 0
+; ..\pll_init.c	    10  #pragma immediate_in_code
+; ..\pll_init.c	    11  #include "intrinsic.h"
+; ..\pll_init.c	    12  
+; ..\pll_init.c	    13  int pll_init(void)
+; Function pll_init
+.L11:
+pll_init:	.type	func
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+	mov	d2,#249
+	lea	a15,0xf00005f0
+.L51:
+	addih	d2,d2,#65532
+	st.w	[a15],d2
+.L52:
+
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+	mov	d4,#242
+
+; ..\pll_init.c	    14  {
+; ..\pll_init.c	    15  #if defined(__TC1797__)	// 20MHz/2*72/4 = 180MHz
+; ..\pll_init.c	    16      ///  -----------------------------------------------------------------------
+; ..\pll_init.c	    17      ///  Clock System:
+; ..\pll_init.c	    18      ///  -----------------------------------------------------------------------
+; ..\pll_init.c	    19      ///  - external clock frequency: 20,00 MHz
+; ..\pll_init.c	    20      ///  - input divider (P): 2
+; ..\pll_init.c	    21      ///  - PLL operation (VCOBYP = 0)
+; ..\pll_init.c	    22      ///  - VCO range: 700 MHz - 800 MHz
+; ..\pll_init.c	    23      ///  - feedback divider (N): 72
+; ..\pll_init.c	    24      ///  - the VCO output frequency is: 720,00 MHz
+; ..\pll_init.c	    25      ///  - output divider (K): 4
+; ..\pll_init.c	    26      ///  - LMB clock: 180,00 MHz
+; ..\pll_init.c	    27      ///  - the ratio fcpu /ffpi is  2 / 1
+; ..\pll_init.c	    28      ///  - the ratio fcpu /flmb is  1 / 1
+; ..\pll_init.c	    29      ///  - the ratio fcpu /fpcp is  1 / 1
+; ..\pll_init.c	    30      ///  - system clock: 90,00 MHz
+; ..\pll_init.c	    31  
+; ..\pll_init.c	    32      const int fOSC=20;   /* external clock frequency: (default = 20MHz) */
+; ..\pll_init.c	    33      const int N=72; 	/* PLL N-Divider (default = 72)*/
+; ..\pll_init.c	    34      const int P=2; 	    /* PLL P-Divider Selection (default = 2) */
+; ..\pll_init.c	    35      const int K1=3; 	/* PLL K-Divider Selection (default = 3) */
+; ..\pll_init.c	    36      const int K2=4; 	/* PLL K-Divider Selection (default = 4) */
+; ..\pll_init.c	    37      const int FPIDIV=1; /* FPI Bus Frequency Select (default = Ratio fCPU/fFPI is 2/1) */
+; ..\pll_init.c	    38      const int LMBDIV=0; /* LMB Frequency Select (default = Ratio fCPU/fLMB is 1/1) */
+; ..\pll_init.c	    39      const int PCPDIV=0; /* PCP Frequency Select (default = Ratio fCPU/fPCP is 1/1) */
+; ..\pll_init.c	    40  
+; ..\pll_init.c	    41      endinit_clear(ENDINIT_DEFAULT);
+; ..\pll_init.c	    42      SCU_OSCCON.B.OSCVAL = fOSC/2.5 - 1;	 // configure watchDog timer to run at about 2.5MHz
+; ..\pll_init.c	    43      SCU_OSCCON.B.OSCRES = 1;			 // reset the watchdog
+	lea	a2,0xf0000510
+.L53:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+	addih	d4,d4,#65532
+	st.w	[a15],d4
+.L24:
+	ld.bu	d15,0xf0000512
+.L54:
+	insert	d15,d15,#7,#0,#5
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+	ld.w	d0,[a15]
+.L55:
+	st.b	0xf0000512,d15
+.L29:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+	mov	d5,#-32737
+	ld.bu	d15,[a2]
+.L30:
+	or	d15,#4
+	st.b	[a2],d15
+.L35:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+	sh	d5,#3
+	st.w	[a15],d5
+.L56:
+
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+	mov	d3,#243
+.L57:
+	addih	d3,d3,#65532
+	st.w	[a15],d3
+
+; ..\pll_init.c	    44      endinit_set(ENDINIT_DEFAULT);
+; ..\pll_init.c	    45      while (SCU_OSCCON.B.PLLLV && SCU_OSCCON.B.PLLHV);  // or wait about 200 clocks 32*10MHz/2.5MHz
+.L2:
+	ld.bu	d15,[a2]
+.L58:
+	jz32.t	d15:1,.L3				; predicted not taken
+.L59:
+	ld.bu	d15,0xf0000511
+	jnz.t	d15:0,.L2				; predicted taken
+.L3:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+	st.w	[a15],d2
+.L38:
+
+; ..\pll_init.c	    46  
+; ..\pll_init.c	    47      unsigned k2div = __min(129, N*K1/P)-1;
+	mov	d15,#129
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+	st.w	[a15],d4
+.L60:
+
+; ..\pll_init.c	    48      endinit_clear(ENDINIT_DEFAULT);
+; ..\pll_init.c	    49      SCU_CCUCON0.U         = PCPDIV<<24 | LMBDIV<<8 | FPIDIV;
+	mov	d0,#1
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+	ld.w	d1,[a15]
+.L61:
+	min	d15,d15,#108
+	st.w	0xf0000530,d0
+.L62:
+
+; ..\pll_init.c	    50      SCU_PLLCON1.B.K1DIV   = (K1-1);
+	add	d6,d15,#-1
+	ld.bu	d0,0xf000051e
+.L42:
+	insert	d0,d0,#2,#0,#7
+	st.b	0xf000051e,d0
+.L63:
+
+; ..\pll_init.c	    51      while (!SCU_PLLSTAT.B.K1RDY);
+	lea	a2,0xf0000514
+.L4:
+	ld.bu	d0,[a2]
+.L64:
+	jz.t	d0:4,.L4				; predicted taken
+.L65:
+
+; ..\pll_init.c	    52      SCU_PLLCON0.B.VCOBYP  = 1;  	 // set VCO bypass => enter Prescaler mode K1 f=fOSC/K1  ; __storebit(SCU_PLLCON0,0,1)
+	lea	a4,0xf0000518
+	ld.bu	d15,[a4]
+.L66:
+	or	d15,#1
+	st.b	[a4],d15
+
+; ..\pll_init.c	    53      while (!SCU_PLLSTAT.B.VCOBYST);
+.L5:
+	ld.bu	d0,[a2]
+.L67:
+	jz.t	d0:0,.L5				; predicted taken
+.L68:
+
+; ..\pll_init.c	    54  
+; ..\pll_init.c	    55      SCU_TRAPDIS.B.SYSVCOLCKT = 1;	 // NMI trap generation for the VCO Lock should be disabled.
+; ..\pll_init.c	    56      SCU_PLLCON0.U =  0x00050021 | (N-1)<<9 | (P-1)<<24;;  // set P,N divider, connect OSC
+	mov.u	d0,#36385
+	lea	a5,0xf0000631
+.L69:
+	addih	d0,d0,#261
+	ld.bu	d15,[a5]
+.L70:
+	or	d15,#1
+	st.b	[a5],d15
+.L71:
+
+; ..\pll_init.c	    57      SCU_PLLCON1.B.K2DIV = k2div; // The first target frequency of the Normal Mode should beselected in a way that it matches or is only slightly higher as the one used in the Prescaler Mode.
+	extr.u	d1,d6,#0,#8
+	st.w	0xf0000518,d0
+.L72:
+	lea	a6,0xf000051c
+	ld.bu	d0,[a6]
+.L73:
+	insert	d15,d0,d1,#0,#7
+	st.b	[a6],d15
+.L39:
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+	st.w	[a15],d5
+.L74:
+
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+	st.w	[a15],d3
+
+; ..\pll_init.c	    58      endinit_set(ENDINIT_DEFAULT);
+; ..\pll_init.c	    59      while (SCU_PLLSTAT.B.VCOLOCK == 0);     // wait for LOCK
+.L6:
+	ld.bu	d15,[a2]
+.L75:
+	jz.t	d15:2,.L6				; predicted taken
+.L76:
+
+; ..\pll_init.c	    60  
+; ..\pll_init.c	    61      endinit_clear(ENDINIT_DEFAULT);
+; ..\pll_init.c	    62  
+; ..\pll_init.c	    63      for (k2div -= __max(k2div/2,1); k2div > (K2-1); k2div -= __max(k2div/2,1)) {
+	sh	d15,d6,#-1
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+	st.w	[a15],d2
+.L77:
+	max	d15,d15,#1
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+	st.w	[a15],d4
+.L78:
+	sub	d6,d15
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+	ld.w	d15,[a15]
+.L79:
+	jlt32.u	d6,#4,.L7				; predicted not taken
+.L8:
+
+; ..\pll_init.c	    64          __nop();
+	nop
+.L80:
+
+; ..\pll_init.c	    65          __nop();
+	nop
+.L81:
+
+; ..\pll_init.c	    66          __nop();  // Between the update of two K2-Divider
+	nop
+.L82:
+
+; ..\pll_init.c	    67          __nop();
+	nop
+.L83:
+
+; ..\pll_init.c	    68          __nop();
+	nop
+.L84:
+
+; ..\pll_init.c	    69          __nop();  // values 6 cycles of fPLL should be waited.
+	nop
+.L85:
+
+; ..\pll_init.c	    70          SCU_PLLCON1.B.K2DIV = k2div;
+	sh	d15,d6,#-1
+	ld.bu	d0,[a6]
+.L86:
+	max	d15,d15,#1
+.L87:
+	extr.u	d1,d6,#0,#8
+.L88:
+	sub	d6,d15
+.L89:
+	insert	d15,d0,d1,#0,#7
+	st.b	[a6],d15
+.L90:
+	jge.u	d6,#4,.L8				; predicted taken
+.L7:
+
+; ..\pll_init.c	    71      }
+; ..\pll_init.c	    72      SCU_PLLCON1.B.K2DIV = K2-1;
+	ld.bu	d15,[a6]
+.L91:
+	insert	d15,d15,#3,#0,#7
+	st.b	[a6],d15
+.L92:
+
+; ..\pll_init.c	    73  
+; ..\pll_init.c	    74      SCU_TRAPDIS.B.SYSVCOLCKT = 1;	// enable again NMI trap generation
+	ld.bu	d15,[a5]
+.L93:
+	or	d15,#1
+	st.b	[a5],d15
+.L94:
+
+; ..\pll_init.c	    75      SCU_PLLCON0.B.VCOBYP  =  0;     // reset VCO bypass
+	ld.bu	d15,[a4]
+.L95:
+	insert	d15,d15,#0,#0,#1
+	st.b	[a4],d15
+.L96:
+
+; ..\pll_init.c	    76      endinit_set(ENDINIT_DEFAULT);
+; ..\pll_init.c	    77  
+; ..\pll_init.c	    78  #else
+; ..\pll_init.c	    79  #error "__<Derivative>__ not yet implemented"
+; ..\pll_init.c	    80  #endif
+; ..\pll_init.c	    81     return 0;
+	mov	d2,#0
+
+; ..\intrinsic.h	     1  /*!
+; ..\intrinsic.h	     2   \verbatim
+; ..\intrinsic.h	     3   ******************************************************************************
+; ..\intrinsic.h	     4   Copyright (c) Infineon Technologies AG 2010.
+; ..\intrinsic.h	     5   ******************************************************************************
+; ..\intrinsic.h	     6   Infineon Technologies
+; ..\intrinsic.h	     7   Am Campeon 1-12
+; ..\intrinsic.h	     8   85579 Neubiberg
+; ..\intrinsic.h	     9   Germany
+; ..\intrinsic.h	    10   Tel.   : 0 800 951 951 951 (Germany)
+; ..\intrinsic.h	    11   E-mail : support@infineon.com
+; ..\intrinsic.h	    12   Website: http://www.infineon.com/support
+; ..\intrinsic.h	    13   ******************************************************************************
+; ..\intrinsic.h	    14   \endverbatim
+; ..\intrinsic.h	    15   ******************************************************************************
+; ..\intrinsic.h	    16   */
+; ..\intrinsic.h	    17  /*!
+; ..\intrinsic.h	    18   ******************************************************************************
+; ..\intrinsic.h	    19   \file     intrinsic.h
+; ..\intrinsic.h	    20   \brief    Implementation and Declaration of intrinsic functions
+; ..\intrinsic.h	    21   \author   Martin Schrape
+; ..\intrinsic.h	    22   \version  0.2
+; ..\intrinsic.h	    23   \date     2010-03-18
+; ..\intrinsic.h	    24   ******************************************************************************
+; ..\intrinsic.h	    25   */
+; ..\intrinsic.h	    26  #ifndef INTRINSIC_H_
+; ..\intrinsic.h	    27  #define INTRINSIC_H_
+; ..\intrinsic.h	    28  
+; ..\intrinsic.h	    29  #include <sfr/regtc1797.sfr>
+; ..\intrinsic.h	    30  
+; ..\intrinsic.h	    31  /* To define number of interrupt sources
+; ..\intrinsic.h	    32   * The number of of arbitration cycle depends on the number of interrupt
+; ..\intrinsic.h	    33   * sources that are used. The interrupt latency can be reduced when the
+; ..\intrinsic.h	    34   * arbitration cycle, i.e. the number of sources, are reduced
+; ..\intrinsic.h	    35   * \code __mtcr(ICR, INTERRUPT_SOURCES_63);
+; ..\intrinsic.h	    36   */
+; ..\intrinsic.h	    37  #define INTERRUPT_SOURCES_255 (0<<24)
+; ..\intrinsic.h	    38  #define INTERRUPT_SOURCES_63 (1<<24)
+; ..\intrinsic.h	    39  #define INTERRUPT_SOURCES_15 (2<<24)
+; ..\intrinsic.h	    40  #define INTERRUPT_SOURCES_3 (3<<24)
+; ..\intrinsic.h	    41  
+; ..\intrinsic.h	    42  #ifndef NDEBUG
+; ..\intrinsic.h	    43  #if defined(__CTC__)
+; ..\intrinsic.h	    44  #define INITIO(port)    {port##_IOCR0.U = 0x80808080; \ 
+; ..\intrinsic.h	    45      port##_IOCR4.U = 0x80808080; \ 
+; ..\intrinsic.h	    46      port##_OMR.U = 0xFF;}
+; ..\intrinsic.h	    47  #define SETIO(port,pin)   port##_OMR.U = 1<<(pin)
+; ..\intrinsic.h	    48  #define RESETIO(port,pin) SETIO(port,(pin)+16)
+; ..\intrinsic.h	    49  #define TOGGLEIO(port,pin) port##_OMR.U = (0x10001)<<(pin)
+; ..\intrinsic.h	    50  #elif defined(__CPCP__)
+; ..\intrinsic.h	    51  #define SETIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    52      "ldl.iu r0,@HI(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    53      "ldl.il r0,@LO(1<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    54      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    55      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    56      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    57    :::"r1","r0");
+; ..\intrinsic.h	    58  #define RESETIO(port,pin) SETIO(port,pin+16)
+; ..\intrinsic.h	    59  #define TOGGLEIO(port,pin)  __asm(".include 'regtc1797.def'     \n\t"  \ 
+; ..\intrinsic.h	    60      "ldl.iu r0,@HI(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    61      "ldl.il r0,@LO(0x10001<<" #pin ")   \n\t"  \ 
+; ..\intrinsic.h	    62      "ldl.iu r1,@HI(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    63      "ldl.il r1,@LO(" #port "_OMR) \n\t"  \ 
+; ..\intrinsic.h	    64      "st.if  [r1],0,size=32"      \ 
+; ..\intrinsic.h	    65    :::"r1","r0");
+; ..\intrinsic.h	    66  #endif
+; ..\intrinsic.h	    67  #else
+; ..\intrinsic.h	    68  #define INITIO(port)     ((void) 0)
+; ..\intrinsic.h	    69  #define SETIO(port,pin)   ((void) 0)
+; ..\intrinsic.h	    70  #define RESETIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    71  #define TOGGLEIO(port,pin) ((void) 0)
+; ..\intrinsic.h	    72  #endif
+; ..\intrinsic.h	    73  
+; ..\intrinsic.h	    74  //!  TriCore context structure
+; ..\intrinsic.h	    75  typedef union {
+; ..\intrinsic.h	    76      struct {
+; ..\intrinsic.h	    77          uint32_t pcxi; //!< upper context PCXI
+; ..\intrinsic.h	    78          uint32_t psw; //!< upper context PSW
+; ..\intrinsic.h	    79          void * a10; //!< upper context A10 (SP)
+; ..\intrinsic.h	    80          void * a11; //!< upper context A11 (RA)
+; ..\intrinsic.h	    81          uint32_t d8; //!< upper context D8
+; ..\intrinsic.h	    82          uint32_t d9; //!< upper context D9
+; ..\intrinsic.h	    83          uint32_t d10; //!< upper context D10
+; ..\intrinsic.h	    84          uint32_t d11; //!< upper context D11
+; ..\intrinsic.h	    85          uint32_t a12; //!< upper context A12
+; ..\intrinsic.h	    86          uint32_t a13; //!< upper context A13
+; ..\intrinsic.h	    87          uint32_t a14; //!< upper context A14
+; ..\intrinsic.h	    88          uint32_t a15; //!< upper context A15
+; ..\intrinsic.h	    89          uint32_t d12; //!< upper context D12
+; ..\intrinsic.h	    90          uint32_t d13; //!< upper context D13
+; ..\intrinsic.h	    91          uint32_t d14; //!< upper context D14
+; ..\intrinsic.h	    92          uint32_t d15; //!< upper context D15
+; ..\intrinsic.h	    93      } u; //!< upper context
+; ..\intrinsic.h	    94      struct {
+; ..\intrinsic.h	    95          uint32_t pcxi; //!< lower context PCXI
+; ..\intrinsic.h	    96          void (*pc)(void*); //!< lower context saved PC
+; ..\intrinsic.h	    97          uint32_t a2; //!< lower context A2
+; ..\intrinsic.h	    98          uint32_t a3; //!< lower context A3
+; ..\intrinsic.h	    99          uint32_t d0; //!< lower context D0
+; ..\intrinsic.h	   100          uint32_t d1; //!< lower context D1
+; ..\intrinsic.h	   101          uint32_t d2; //!< lower context D2
+; ..\intrinsic.h	   102          uint32_t d3; //!< lower context D3
+; ..\intrinsic.h	   103          void * a4; //!< lower context A4
+; ..\intrinsic.h	   104          uint32_t a5; //!< lower context A5
+; ..\intrinsic.h	   105          uint32_t a6; //!< lower context A6
+; ..\intrinsic.h	   106          uint32_t a7; //!< lower context A7
+; ..\intrinsic.h	   107          uint32_t d4; //!< lower context D4
+; ..\intrinsic.h	   108          uint32_t d5; //!< lower context D5
+; ..\intrinsic.h	   109          uint32_t d6; //!< lower context D6
+; ..\intrinsic.h	   110          uint32_t d7; //!< lower context D7
+; ..\intrinsic.h	   111      } l; //!< lower context
+; ..\intrinsic.h	   112  } context_t;
+; ..\intrinsic.h	   113  
+; ..\intrinsic.h	   114  #if defined(__GNU__)
+; ..\intrinsic.h	   115  #define __asm(x) __asm__ volatile(x)
+; ..\intrinsic.h	   116  #endif
+; ..\intrinsic.h	   117  
+; ..\intrinsic.h	   118  
+; ..\intrinsic.h	   119  #define STOREBIT(addr,bpos,b)   __asm("st.t "  #addr "+(" #bpos "/8):" #bpos "%%8,#" #b)
+; ..\intrinsic.h	   120  #define __STOREBIT(addr,bpos,b)   __asm("st.t %0:%1,#%2":"i"(addr),"i"(bpos),"i"(b))
+; ..\intrinsic.h	   121  
+; ..\intrinsic.h	   122  
+; ..\intrinsic.h	   123  #if defined(__TC131__)
+; ..\intrinsic.h	   124  /*! Save ICR register and disable interrupts
+; ..\intrinsic.h	   125   \return ICR register
+; ..\intrinsic.h	   126   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   127   */
+; ..\intrinsic.h	   128  inline uint32_t disable_and_save(void) {
+; ..\intrinsic.h	   129      uint32_t result;
+; ..\intrinsic.h	   130      result = __mfcr(ICR);
+; ..\intrinsic.h	   131      __disable();
+; ..\intrinsic.h	   132      return result; // compliant to CPU_TC.083
+; ..\intrinsic.h	   133  }
+; ..\intrinsic.h	   134  /*! Restore ICR register
+; ..\intrinsic.h	   135   \param[in] ie ICR register
+; ..\intrinsic.h	   136   \note This function is compatible to an instruction in the TC1.6 core
+; ..\intrinsic.h	   137   */
+; ..\intrinsic.h	   138  inline void restore(uint32_t ie) {
+; ..\intrinsic.h	   139      __mtcr(ICR, ie);
+; ..\intrinsic.h	   140  }
+; ..\intrinsic.h	   141  #endif
+; ..\intrinsic.h	   142  
+; ..\intrinsic.h	   143  /*
+; ..\intrinsic.h	   144   * __endinit endinit
+; ..\intrinsic.h	   145   * A fast __endinit_clear implementation
+; ..\intrinsic.h	   146   * After cstart WDT_CON0.U = 0xFFFC0003
+; ..\intrinsic.h	   147   * WDT_CON1.U = 0x00000008
+; ..\intrinsic.h	   148   */
+; ..\intrinsic.h	   149  //! extern declaration of _endinit_clear(void) implemented in cstart.c
+; ..\intrinsic.h	   150  extern void _endinit_clear(void);
+; ..\intrinsic.h	   151  
+; ..\intrinsic.h	   152  //! extern declaration of _endinit_set(void) implemented in cstart.c
+; ..\intrinsic.h	   153  extern void _endinit_set(void);
+; ..\intrinsic.h	   154  
+; ..\intrinsic.h	   155  // default after power on
+; ..\intrinsic.h	   156  #define ENDINIT_DEFAULT  (0xFFFC<<16|0x00<<8|0xF<<4|0x2<<2|1)
+; ..\intrinsic.h	   157  
+; ..\intrinsic.h	   158  //! Fast implementation of to clear the endinit bit
+; ..\intrinsic.h	   159  inline void endinit_clear(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   160  {
+; ..\intrinsic.h	   161      WDT_CON0.U = x;
+; ..\intrinsic.h	   162      x &= -16L;
+; ..\intrinsic.h	   163      x |= 2;
+; ..\intrinsic.h	   164      WDT_CON0.U = x;
+; ..\intrinsic.h	   165      WDT_CON0.U; // dummy read required;
+; ..\intrinsic.h	   166  }
+; ..\intrinsic.h	   167  
+; ..\intrinsic.h	   168  //! Fast implementation of to set the endinit bit
+; ..\intrinsic.h	   169  inline void endinit_set(int x) //!< [in] e.g. ENDINIT_DEFAULT
+; ..\intrinsic.h	   170  {
+; ..\intrinsic.h	   171      x -= 1;
+; ..\intrinsic.h	   172      WDT_CON0.U = x;
+	st.w	[a15],d5
+.L40:
+
+; ..\intrinsic.h	   173      x &= -16L;
+; ..\intrinsic.h	   174      x |= 3;
+; ..\intrinsic.h	   175      WDT_CON0.U = x;
+	st.w	[a15],d3
+.L41:
+
+; ..\pll_init.c	    82  }
+	ret
+.L22:
+	
+__pll_init_function_end:
+	.size	pll_init,__pll_init_function_end-pll_init
+.L20:
+	; End of function
+	
+	.calls	'pll_init','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L13:
+	.word	1333
+	.half	3
+	.word	.L14
+	.byte	4
+.L12:
+	.byte	1
+	.byte	'..\\pll_init.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L15
+.L23:
+	.byte	2
+	.byte	'endinit_clear',0,3,1,159,1,13,1,1
+.L21:
+	.byte	3
+	.byte	'int',0,4,5
+.L25:
+	.byte	4
+	.byte	'x',0,1,159,1,31
+	.word	181
+.L27:
+	.byte	5,0
+.L28:
+	.byte	2
+	.byte	'endinit_set',0,3,1,169,1,13,1,1
+.L31:
+	.byte	4
+	.byte	'x',0,1,169,1,29
+	.word	181
+.L33:
+	.byte	5,0,2
+	.byte	'nops',0,3,1,143,2,13,1,1,6
+	.byte	'void',0,7
+	.word	247
+	.byte	4
+	.byte	'cnt',0,1,143,2,24
+	.word	253
+	.byte	5,0,8
+	.byte	'__max',0
+	.word	181
+	.byte	1,1,1,1,9
+	.word	181
+	.byte	9
+	.word	181
+	.byte	0,8
+	.byte	'__min',0
+	.word	181
+	.byte	1,1,1,1,9
+	.word	181
+	.byte	9
+	.word	181
+	.byte	0,10
+	.byte	'__nop',0,1,1,1,1,11
+	.word	159
+	.byte	12
+	.word	188
+	.byte	5,0,11
+	.word	201
+	.byte	12
+	.word	221
+	.byte	5,0,11
+	.word	234
+	.byte	12
+	.word	258
+	.byte	5,0
+.L36:
+	.byte	3
+	.byte	'unsigned int',0,4,7,13
+	.byte	'__prof_adm',0,2,1,1
+	.word	253
+	.byte	14,1,7
+	.word	407
+	.byte	13
+	.byte	'__codeptr',0,2,1,1
+	.word	409
+	.byte	15,3,145,19,18,4,16,3,147,19,2,4,3
+	.byte	'unsigned int',0,4,7,17
+	.byte	'CNT1',0,4
+	.word	444
+	.byte	12,20,2,35,0,18,4
+	.word	444
+	.byte	2,18,2,35,0,17
+	.byte	'TOS',0,4
+	.word	444
+	.byte	2,16,2,35,0,17
+	.byte	'SRPN',0,4
+	.word	444
+	.byte	8,8,2,35,0,17
+	.byte	'CPPN',0,4
+	.word	444
+	.byte	8,0,2,35,0,0,19
+	.byte	'B',0,4
+	.word	438
+	.byte	2,35,0,19
+	.byte	'I',0,4
+	.word	181
+	.byte	2,35,0,19
+	.byte	'U',0,4
+	.word	372
+	.byte	2,35,0,0,20
+	.word	432
+	.byte	13
+	.byte	'PCP_GPR6_type',0,3,158,19,3
+	.word	569
+	.byte	15,3,160,19,18,4,16,3,162,19,2,4,17
+	.byte	'Z',0,4
+	.word	444
+	.byte	1,31,2,35,0,17
+	.byte	'N',0,4
+	.word	444
+	.byte	1,30,2,35,0,17
+	.byte	'C',0,4
+	.word	444
+	.byte	1,29,2,35,0,17
+	.byte	'V',0,4
+	.word	444
+	.byte	1,28,2,35,0,17
+	.byte	'CNZ',0,4
+	.word	444
+	.byte	1,27,2,35,0,17
+	.byte	'IEN',0,4
+	.word	444
+	.byte	1,26,2,35,0,17
+	.byte	'CEN',0,4
+	.word	444
+	.byte	1,25,2,35,0,18,4
+	.word	444
+	.byte	1,24,2,35,0,17
+	.byte	'DPTR',0,4
+	.word	444
+	.byte	8,16,2,35,0,18,4
+	.word	444
+	.byte	16,0,2,35,0,0,19
+	.byte	'B',0,4
+	.word	603
+	.byte	2,35,0,19
+	.byte	'I',0,4
+	.word	181
+	.byte	2,35,0,19
+	.byte	'U',0,4
+	.word	372
+	.byte	2,35,0,0,20
+	.word	597
+	.byte	13
+	.byte	'PCP_GPR7_type',0,3,178,19,3
+	.word	779
+	.byte	3
+	.byte	'unsigned short int',0,2,7,13
+	.byte	'uint16_t',0,4,24,33
+	.word	807
+	.byte	13
+	.byte	'uint32_t',0,4,26,33
+	.word	372
+	.byte	15,1,75,9,64,16,1,76,5,64,19
+	.byte	'pcxi',0,4
+	.word	372
+	.byte	2,35,0,19
+	.byte	'psw',0,4
+	.word	372
+	.byte	2,35,4,19
+	.byte	'a10',0,4
+	.word	253
+	.byte	2,35,8,19
+	.byte	'a11',0,4
+	.word	253
+	.byte	2,35,12,19
+	.byte	'd8',0,4
+	.word	372
+	.byte	2,35,16,19
+	.byte	'd9',0,4
+	.word	372
+	.byte	2,35,20,19
+	.byte	'd10',0,4
+	.word	372
+	.byte	2,35,24,19
+	.byte	'd11',0,4
+	.word	372
+	.byte	2,35,28,19
+	.byte	'a12',0,4
+	.word	372
+	.byte	2,35,32,19
+	.byte	'a13',0,4
+	.word	372
+	.byte	2,35,36,19
+	.byte	'a14',0,4
+	.word	372
+	.byte	2,35,40,19
+	.byte	'a15',0,4
+	.word	372
+	.byte	2,35,44,19
+	.byte	'd12',0,4
+	.word	372
+	.byte	2,35,48,19
+	.byte	'd13',0,4
+	.word	372
+	.byte	2,35,52,19
+	.byte	'd14',0,4
+	.word	372
+	.byte	2,35,56,19
+	.byte	'd15',0,4
+	.word	372
+	.byte	2,35,60,0,19
+	.byte	'u',0,64
+	.word	868
+	.byte	2,35,0,16,1,94,5,64,19
+	.byte	'pcxi',0,4
+	.word	372
+	.byte	2,35,0,21,1,1,9
+	.word	253
+	.byte	0,7
+	.word	1111
+	.byte	19
+	.byte	'pc',0,4
+	.word	1120
+	.byte	2,35,4,19
+	.byte	'a2',0,4
+	.word	372
+	.byte	2,35,8,19
+	.byte	'a3',0,4
+	.word	372
+	.byte	2,35,12,19
+	.byte	'd0',0,4
+	.word	372
+	.byte	2,35,16,19
+	.byte	'd1',0,4
+	.word	372
+	.byte	2,35,20,19
+	.byte	'd2',0,4
+	.word	372
+	.byte	2,35,24,19
+	.byte	'd3',0,4
+	.word	372
+	.byte	2,35,28,19
+	.byte	'a4',0,4
+	.word	253
+	.byte	2,35,32,19
+	.byte	'a5',0,4
+	.word	372
+	.byte	2,35,36,19
+	.byte	'a6',0,4
+	.word	372
+	.byte	2,35,40,19
+	.byte	'a7',0,4
+	.word	372
+	.byte	2,35,44,19
+	.byte	'd4',0,4
+	.word	372
+	.byte	2,35,48,19
+	.byte	'd5',0,4
+	.word	372
+	.byte	2,35,52,19
+	.byte	'd6',0,4
+	.word	372
+	.byte	2,35,56,19
+	.byte	'd7',0,4
+	.word	372
+	.byte	2,35,60,0,19
+	.byte	'l',0,64
+	.word	1092
+	.byte	2,35,0,0,13
+	.byte	'context_t',0,1,112,3
+	.word	863
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L14:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,1,3,8,32,13,58,15,59,15,57,15,54,15,39,12,0,0,3,36
+	.byte	0,3,8,11,15,62,15,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,11,0,0,0,6,59,0,3,8,0,0,7,15,0,73,19,0,0
+	.byte	8,46,1,3,8,73,19,54,15,39,12,63,12,60,12,0,0,9,5,0,73,19,0,0,10,46,0,3,8,54,15,39,12,63,12,60,12,0,0,11
+	.byte	46,1,49,19,0,0,12,5,0,49,19,0,0,13,22,0,3,8,58,15,59,15,57,15,73,19,0,0,14,21,0,54,15,0,0,15,23,1,58,15
+	.byte	59,15,57,15,11,15,0,0,16,19,1,58,15,59,15,57,15,11,15,0,0,17,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0
+	.byte	18,13,0,11,15,73,19,13,15,12,15,56,9,0,0,19,13,0,3,8,11,15,73,19,56,9,0,0,20,53,0,73,19,0,0,21,21,1,54
+	.byte	15,39,12,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L15:
+	.word	.L44-.L43
+.L43:
+	.half	3
+	.word	.L46-.L45
+.L45:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\intrinsic.h',0,0,0,0
+	.byte	'..\\pll_init.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdint.h',0,1,0,0,0
+.L46:
+.L44:
+	.sdecl	'.debug_info',debug,cluster('pll_init')
+	.sect	'.debug_info'
+.L16:
+	.word	435
+	.half	3
+	.word	.L17
+	.byte	4,1
+	.byte	'..\\pll_init.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L19,.L18
+	.byte	2
+	.word	.L12
+	.byte	3
+	.byte	'pll_init',0,1,13,5
+	.word	.L21
+	.byte	1,1,1
+	.word	.L11,.L22,.L10
+	.byte	4
+	.word	.L11,.L22
+	.byte	5
+	.word	.L23,.L11,.L24
+	.byte	6
+	.word	.L25,.L26
+	.byte	7
+	.word	.L27,.L11,.L24
+	.byte	0,5
+	.word	.L28,.L29,.L30
+	.byte	6
+	.word	.L31,.L32
+	.byte	8
+	.word	.L33,.L34
+	.byte	0,5
+	.word	.L28,.L35,.L2
+	.byte	6
+	.word	.L31,.L32
+	.byte	0,4
+	.word	.L3,.L22
+	.byte	9
+	.byte	'k2div',0,1,47,14
+	.word	.L36,.L37
+	.byte	5
+	.word	.L23,.L3,.L38
+	.byte	6
+	.word	.L25,.L26
+	.byte	7
+	.word	.L27,.L3,.L38
+	.byte	0,5
+	.word	.L28,.L39,.L6
+	.byte	6
+	.word	.L31,.L32
+	.byte	7
+	.word	.L33,.L39,.L6
+	.byte	0,5
+	.word	.L28,.L40,.L41
+	.byte	6
+	.word	.L31,.L32
+	.byte	7
+	.word	.L33,.L40,.L41
+	.byte	0,0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('pll_init')
+	.sect	'.debug_abbrev'
+.L17:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,29,1,49,16,17,1,18,1,0,0,6,5,0,49,16,2,6,0
+	.byte	0,7,11,0,49,16,17,1,18,1,0,0,8,11,0,49,16,85,6,0,0,9,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('pll_init')
+	.sect	'.debug_line'
+.L18:
+	.word	.L48-.L47
+.L47:
+	.half	3
+	.word	.L50-.L49
+.L49:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\pll_init.c',0,0,0,0
+	.byte	'..\\intrinsic.h',0,0,0,0,0
+.L50:
+	.byte	4,2,5,18,7,0,5,2
+	.word	.L11
+	.byte	3,160,1,1,5,13,1,5,18,9
+	.half	.L51-.L11
+	.byte	1,5,16,1,5,18,9
+	.half	.L52-.L51
+	.byte	3,3,1,4,1,5,17,3,135,127,1,4,2,5,18,9
+	.half	.L53-.L52
+	.byte	3,249,0,1,5,16,1,4,1,5,17,9
+	.half	.L24-.L53
+	.byte	3,134,127,1,5,25,9
+	.half	.L54-.L24
+	.byte	1,4,2,5,13,3,251,0,1,4,1,5,25,9
+	.half	.L55-.L54
+	.byte	3,133,127,1,4,2,5,18,9
+	.half	.L29-.L55
+	.byte	3,130,1,1,4,1,5,17,3,255,126,1,5,25,9
+	.half	.L30-.L29
+	.byte	1,4,2,5,18,9
+	.half	.L35-.L30
+	.byte	3,129,1,1,5,16,1,5,18,9
+	.half	.L56-.L35
+	.byte	3,3,1,5,16,9
+	.half	.L57-.L56
+	.byte	1,4,1,5,24,9
+	.half	.L2-.L57
+	.byte	3,254,126,1,5,12,9
+	.half	.L58-.L2
+	.byte	1,5,46,7,9
+	.half	.L59-.L58
+	.byte	1,4,2,5,16,9
+	.half	.L3-.L59
+	.byte	3,244,0,1,4,1,5,28,9
+	.half	.L38-.L3
+	.byte	3,142,127,1,4,2,5,16,3,245,0,1,4,1,5,52,9
+	.half	.L60-.L38
+	.byte	3,141,127,1,4,2,5,13,3,244,0,1,4,1,5,27,9
+	.half	.L61-.L60
+	.byte	3,138,127,1,3,2,1,5,40,9
+	.half	.L62-.L61
+	.byte	3,126,1,5,18,3,3,1,5,27,9
+	.half	.L42-.L62
+	.byte	1,5,26,9
+	.half	.L63-.L42
+	.byte	3,1,1,5,13,9
+	.half	.L64-.L63
+	.byte	1,5,18,7,9
+	.half	.L65-.L64
+	.byte	3,1,1,5,27,9
+	.half	.L66-.L65
+	.byte	1,5,26,9
+	.half	.L5-.L66
+	.byte	3,1,1,5,13,9
+	.half	.L67-.L5
+	.byte	1,5,44,7,9
+	.half	.L68-.L67
+	.byte	3,3,1,5,18,3,127,1,5,44,9
+	.half	.L69-.L68
+	.byte	3,1,1,5,18,3,127,1,5,30,9
+	.half	.L70-.L69
+	.byte	1,5,27,9
+	.half	.L71-.L70
+	.byte	3,2,1,5,19,3,127,1,5,18,9
+	.half	.L72-.L71
+	.byte	3,1,1,5,25,9
+	.half	.L73-.L72
+	.byte	1,4,2,5,16,9
+	.half	.L39-.L73
+	.byte	3,243,0,1,9
+	.half	.L74-.L39
+	.byte	3,3,1,4,1,5,25,9
+	.half	.L6-.L74
+	.byte	3,140,127,1,5,38,9
+	.half	.L75-.L6
+	.byte	1,5,68,7,9
+	.half	.L76-.L75
+	.byte	3,4,1,4,2,5,16,3,226,0,1,4,1,5,67,9
+	.half	.L77-.L76
+	.byte	3,158,127,1,4,2,5,16,3,229,0,1,4,1,5,59,9
+	.half	.L78-.L77
+	.byte	3,155,127,1,4,2,5,13,3,230,0,1,4,1,5,51,9
+	.half	.L79-.L78
+	.byte	3,154,127,1,5,14,7,9
+	.half	.L8-.L79
+	.byte	3,1,1,9
+	.half	.L80-.L8
+	.byte	3,1,1,9
+	.half	.L81-.L80
+	.byte	3,1,1,9
+	.half	.L82-.L81
+	.byte	3,1,1,9
+	.half	.L83-.L82
+	.byte	3,1,1,9
+	.half	.L84-.L83
+	.byte	3,1,1,5,68,9
+	.half	.L85-.L84
+	.byte	3,122,1,5,22,3,7,1,5,67,9
+	.half	.L86-.L85
+	.byte	3,121,1,5,31,9
+	.half	.L87-.L86
+	.byte	3,7,1,5,59,9
+	.half	.L88-.L87
+	.byte	3,121,1,5,29,9
+	.half	.L89-.L88
+	.byte	3,7,1,5,51,9
+	.half	.L90-.L89
+	.byte	3,121,1,5,18,7,9
+	.half	.L7-.L90
+	.byte	3,9,1,5,25,9
+	.half	.L91-.L7
+	.byte	1,5,18,9
+	.half	.L92-.L91
+	.byte	3,2,1,5,30,9
+	.half	.L93-.L92
+	.byte	1,5,18,9
+	.half	.L94-.L93
+	.byte	3,1,1,5,27,9
+	.half	.L95-.L94
+	.byte	1,5,11,9
+	.half	.L96-.L95
+	.byte	3,6,1,4,2,5,16,3,219,0,1,9
+	.half	.L40-.L96
+	.byte	3,3,1,4,1,5,1,9
+	.half	.L41-.L40
+	.byte	3,163,127,1,7,9
+	.half	.L20-.L41
+	.byte	0,1,1
+.L48:
+	.sdecl	'.debug_ranges',debug,cluster('pll_init')
+	.sect	'.debug_ranges'
+.L19:
+	.word	-1,.L11,0,.L20-.L11,0,0
+.L34:
+	.word	-1,.L11,.L29-.L11,.L30-.L11,.L35-.L11,.L2-.L11,0,0
+	.sdecl	'.debug_loc',debug,cluster('pll_init')
+	.sect	'.debug_loc'
+.L37:
+	.word	-1,.L11,.L42-.L11,.L22-.L11
+	.half	5
+	.byte	144,35,157,32,0
+	.word	0,0
+.L10:
+	.word	-1,.L11,0,.L22-.L11
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L32:
+	.word	0,0
+.L26:
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L97:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('pll_init')
+	.sect	'.debug_frame'
+	.word	16
+	.word	.L97,.L11,.L22-.L11
+	.byte	8,19,8,23
+
+
+	; Module end

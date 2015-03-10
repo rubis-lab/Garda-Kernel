@@ -1,0 +1,1782 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fnil MS Sans Serif;}{\f1\fnil\fcharset2 Symbol;}{\f2\fswiss\fprq2 System;}{\f3\fnil Times New Roman;}{\f4\fswiss\fprq2 Arial;}}
+{\colortbl\red0\green0\blue0;\red0\green0\blue128;\red255\green0\blue0;}
+\deflang1031\pard\plain\f4\fs28\cf0 DAvE's Project Documentation
+\par \plain\f4\fs22\cf0
+\par \plain\f4\fs22\cf0 Project: \tab\tab\b DAVE_SG.dav
+\par 
+\par \plain\f4\fs22\cf0 Controller: \tab\tab\b TC1797
+\par \plain\f4\fs22\cf0 Compiler: \tab\tab\b Tasking 3.1
+\par 
+\par \plain\f4\fs22\cf0 Date: \tab\tab\tab\b 2013-11-20 13:40:31
+\par 
+\par 
+\par \plain\f4\fs22\cf2\b Please read this document carefully and note
+\par \plain\f4\fs22\cf2\b the red-colored hints.
+\par 
+\par \plain\f4\fs22\cf2\b If you miss a file in the generated files list
+\par \plain\f4\fs22\cf2\b maybe you have forgotten to select the
+\par \plain\f4\fs22\cf2\b initialisation function of the related module.
+\par 
+\par \plain\f4\fs22\cf0 Generated Files:
+\plain\f4\fs20\cf0\b
+\par \tab\tab\tab MAIN.H
+\par \tab\tab\tab MAIN.C
+\par \tab\tab\tab CAN.H
+\par \tab\tab\tab CAN.C
+\par 
+\par 
+\par \plain\f4\fs20\cf0
+\par \plain\f4\fs28\cf0\ul Project Settings
+\par
+\par \plain\f4\fs24\cf0 Macros:\f4\fs20\cf0
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab MAIN_vSetENDINIT()\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro sets the EndInit bit, which controls access to
+
+\par \tab \tab system critical registers. Setting the EndInit bit locks
+
+\par \tab \tab all EndInit protected registers.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab MAIN_vResetENDINIT()\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro clears the EndInit bit, which controls access to
+
+\par \tab \tab system critical registers. Clearing the EndInit bit unlocks
+
+\par \tab \tab all EndInit protected registers. Modifications of the
+
+\par \tab \tab EndInit bit are monitored by the watchdog timer such that
+
+\par \tab \tab after clearing EndInit, the watchdog timer enters a defined
+
+\par \tab \tab time-out mode; EndInit must be set again before the
+
+\par \tab \tab time-out expires.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par \plain\f4\fs24\cf0 Functions:\f4\fs20\cf0
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void MAIN_vInit(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function initializes the microcontroller.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void MAIN_vWriteWDTCON0(uword uwValue)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function writes the parameter uwValue to the WDT_CON0
+
+\par \tab \tab register which is password protected.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab uwValue:
+
+\par \tab \tab Value for the WDTCON0 register
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab sword main(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the main function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b Returns an sword value\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs24\cf0 Initialization:
+\par \plain\f4\fs20\cf0\b
+\par
+\tab \cf2Begin of Important Settings for the Start-Up File\cf0\par 
+\tab All following settings must be set in the start-up file. You can use\par 
+\tab DAvE's project file (*.dpt) to include this register values into your\par 
+\tab compiler EDE.\par 
+\par 
+\tab System Peripheral Bus Control Unit (SBCU):\par 
+\tab SBCU starvation protection is enabled\par 
+\tab the debug trace is enabled. Error information is captured in\par 
+\tab register SBCU_EADD, SBCU_EDAT and SBCU_ECON\par 
+\tab sample period of request for starvation protection: 64\par 
+\tab SBCU bus time-out value: 65536 cycles\par 
+\par 
+\tab \cf2this register must be set in the start-up file\cf0\par 
+\tab \cf2SBCU_CON.U  = 0x4009FFFF;\cf0\par 
+\par 
+\tab LMB External Bus Unit (EBU):\par 
+\tab - enable the EBU module clock\par 
+\tab - disable EndInit Protection of the CLC Register\par 
+\tab - request EBU to run off input clock divided by 1\par 
+\par 
+\tab \cf2this register must be set in the start-up file\cf0\par 
+\tab \cf2EBU_CLC.U  = 0x00010000;\cf0\par 
+\par 
+\tab External Arbitration:\par 
+\tab - EBU is disabled\par 
+\par 
+\tab \cf2this register must be set in the start-up file\cf0\par 
+\tab \cf2EBU_MODCON.U  = 0x00000000;\cf0\par 
+\par 
+\tab Data Memory Interface (DMI):\par 
+\tab - No Data Cache\par 
+\tab - 128 Kbyte Data Memory\par 
+\par 
+\tab \cf2this register must be set in the start-up file\cf0\par 
+\tab \cf2DMI_CON.U  = 0x08000802;\cf0\par 
+\par 
+\tab Program Memory Interface (PMI):\par 
+\tab - No Instruction Cache\par 
+\tab - 40 Kbyte Program Memory\par 
+\par 
+\tab \cf2this register must be set in the start-up file\cf0\par 
+\tab \cf2PMI_CON2.U  = 0x02800284;\cf0\par 
+\par 
+\tab \cf2End of Important Settings for the Start-Up File\cf0\par 
+\par 
+\tab Clock System:\par 
+\tab - external clock frequency: 20.00 MHz\par 
+\tab - input divider (PDIV): 2\par 
+\tab - PLL operation (VCOBYP = 0)\par 
+\tab - VCO range: 700 MHz - 800 MHz\par 
+\tab - feedback divider (NDIV): 72\par 
+\tab - the VCO output frequency is: 720.00 MHz\par 
+\tab - output divider (KDIV): 4\par 
+\tab - CPU clock: 180.00 MHz\par 
+\tab - the ratio fcpu /ffpi is  2 / 1\par 
+\tab - the ratio fcpu /flmb is  1 / 1\par 
+\tab - the ratio fcpu /fpcp is  1 / 1\par 
+\tab - system clock: 90.00 MHz\par 
+\par 
+\tab Interrupt System:\par 
+\tab - four arbitration cycles (max. 255 interrupt sources)\par 
+\tab - two clocks per arbitration cycle\par 
+\par 
+\tab Peripheral Control Processor (PCP):\par 
+\tab - stop the PCP internal clock when PCP is idle\par 
+\par 
+\tab - use Full Context save area (R[0] - R[7])\par 
+\tab - start progam counter as left by last invocation\par 
+\tab - channel watchdog is disabled\par 
+\tab - maximum channel number checking is disabled\par 
+\par 
+\tab - four arbitration cycles (max. 255 PCP channels)\par 
+\tab - two clocks per arbitration cycle\par 
+\par 
+\tab - the PCP warning mechanism is disabled\par 
+\par 
+\tab - type of service of PCP node 4 is CPU interrupt\par 
+\par 
+\tab - type of service of PCP node 5 is CPU interrupt\par 
+\par 
+\tab - type of service of PCP node 6 is CPU interrupt\par 
+\par 
+\tab - type of service of PCP node 7 is CPU interrupt\par 
+\par 
+\tab - type of service of PCP node 8 is CPU interrupt\par 
+\par 
+\tab Configuration of the DMA Module Clock:\par 
+\tab - enable the DMA module\par 
+\par 
+\tab System Start Conditions:\par 
+\par 
+\tab \cf2- the CPU interrupt system is globally disabled\cf0\par 
+\par 
+\tab \cf2- the PCP interrupt system is globally disabled\cf0\par 
+\par 
+
+\par \plain\f4\fs20\cf0
+\par \plain\f4\fs28\cf0\ul MultiCAN Controller
+\par
+\par \plain\f4\fs24\cf0 Macros:\f4\fs20\cf0
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab CAN_ubGetTxErrorCounter(NODE_NAME)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro returns the current value of the transmit error
+
+\par \tab \tab counter of the selected node.
+
+\par \tab \tab The following definitions for NODE_NAME are available:
+
+\par \tab \tab CAN_NODE0        (node 0)
+
+\par \tab \tab CAN_NODE1        (node 1)
+
+\par \tab \tab CAN_NODE2        (node 2)
+
+\par \tab \tab CAN_NODE3        (node 3)
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b Value of the transmit error counter\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab NODE_NAME:
+
+\par \tab \tab Name of the node
+
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab CAN_ubGetRxErrorCounter(NODE_NAME)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro returns the current value of the receive error
+
+\par \tab \tab counter of the selected node.
+
+\par \tab \tab The following definitions for NODE_NAME are available:
+
+\par \tab \tab CAN_NODE0        (node 0)
+
+\par \tab \tab CAN_NODE1        (node 1)
+
+\par \tab \tab CAN_NODE2        (node 2)
+
+\par \tab \tab CAN_NODE3        (node 3)
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b Value of the receive error counter\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab NODE_NAME:
+
+\par \tab \tab Name of the node
+
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab CAN_ubGetErrorTransferDirection(NODE_NAME)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro returns the current value of the Last Error
+
+\par \tab \tab Transfer Direction flag. 0 indicates that the last error
+
+\par \tab \tab occurred while the selected CAN node was receiving a
+
+\par \tab \tab message. The receive error counter has been incremented. 1
+
+\par \tab \tab indicates that the last error occurred while the selected
+
+\par \tab \tab CAN node was transmitting a message. The transmit error
+
+\par \tab \tab counter has been incremented.
+
+\par \tab \tab The following definitions for NODE_NAME are available:
+
+\par \tab \tab CAN_NODE0        (node 0)
+
+\par \tab \tab CAN_NODE1        (node 1)
+
+\par \tab \tab CAN_NODE2        (node 2)
+
+\par \tab \tab CAN_NODE3        (node 3)
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 0 receive error, else transmit error\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab NODE_NAME:
+
+\par \tab \tab Name of the node
+
+\par
+\par
+\par \plain\f4\fs20\cf0 \tab Macro:
+\par \plain\f4\fs20\cf0\b \tab \tab CAN_ubGetErrorIncrement(NODE_NAME)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This macro returns the current value of the Last Error
+
+\par \tab \tab Increment flag. If the Bit Stream Processor itself detects
+
+\par \tab \tab an error while a transmit operation is running, the
+
+\par \tab \tab Transmit Error Counter is incremented by 8. An increment of
+
+\par \tab \tab 1 is used, when the error condition was reported by an
+
+\par \tab \tab external CAN node via an error frame generation.
+
+\par \tab \tab The following definitions for NODE_NAME are available:
+
+\par \tab \tab CAN_NODE0        (node 0)
+
+\par \tab \tab CAN_NODE1        (node 1)
+
+\par \tab \tab CAN_NODE2        (node 2)
+
+\par \tab \tab CAN_NODE3        (node 3)
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 0 counter is incrementd by 1, counter is incremented by 8\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab NODE_NAME:
+
+\par \tab \tab Name of the node
+
+\par \plain\f4\fs24\cf0 Functions:\f4\fs20\cf0
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vInit(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the initialization function of the CAN function
+
+\par \tab \tab library. It is assumed that the SFRs used by this library
+
+\par \tab \tab are in their reset state.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vGetMsgObj(ubyte ubObjNr, CAN_SWObj *pstObj)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function fills the forwarded SW message object with
+
+\par \tab \tab the content of the chosen HW message object.
+
+\par \tab \tab The structure of the SW message object is defined in the
+
+\par \tab \tab header file CAN.h (see CAN_SWObj).
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object to be read (0-127)
+
+\par \tab \tab *pstObj:
+
+\par \tab \tab Pointer on a message object to be filled by this function
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubRequestMsgObj(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab If a TRANSMIT OBJECT is to be reconfigured it must first be
+
+\par \tab \tab accessed. The access to the transmit object is exclusive.
+
+\par \tab \tab This function checks whether the choosen message object is
+
+\par \tab \tab still executing a transmit request, or if the object can be
+
+\par \tab \tab accessed exclusively.
+
+\par \tab \tab After the message object is reserved, it can be
+
+\par \tab \tab reconfigured by using the function CAN_vConfigMsgObj or
+
+\par \tab \tab CAN_vLoadData.
+
+\par \tab \tab Both functions enable access to the object for the CAN
+
+\par \tab \tab controller.
+
+\par \tab \tab By calling the function CAN_vTransmit transfering of data
+
+\par \tab \tab is started.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 0 message object is busy (a transfer is active), else 1\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubNewData(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function checks whether the selected RECEIVE OBJECT
+
+\par \tab \tab has received a new message. If so the function returns the
+
+\par \tab \tab value '1'.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 1 the message object has received a new message, else 0\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vTransmit(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function triggers the CAN controller to send the
+
+\par \tab \tab selected message.
+
+\par \tab \tab If the selected message object is a TRANSMIT OBJECT then
+
+\par \tab \tab this function triggers the sending of a data frame. If
+
+\par \tab \tab however the selected message object is a RECEIVE OBJECT
+
+\par \tab \tab this function triggers the sending of a remote frame.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vConfigMsgObj(ubyte ubObjNr, CAN_SWObj *pstObj)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function sets up the message objects. This includes
+
+\par \tab \tab the 8 data bytes, the identifier (11- or 29-bit), the
+
+\par \tab \tab acceptance mask (11- or 29-bit), the data number (0-8
+
+\par \tab \tab bytes), the frame counter value and the EDE-bit (standard
+
+\par \tab \tab or extended identifier).  The direction bit (DIR) can not
+
+\par \tab \tab be changed.
+
+\par \tab \tab The message is not sent; for this the function
+
+\par \tab \tab CAN_vTransmit must be called.
+
+\par \tab \tab The structure of the SW message object is defined in the
+
+\par \tab \tab header file CAN.h (see CAN_SWObj).
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object to be configured (0-127)
+
+\par \tab \tab *pstObj:
+
+\par \tab \tab Pointer on a message object
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vLoadData(ubyte ubObjNr, ubyte *pubData)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab If a hardware TRANSMIT OBJECT has to be loaded with data
+
+\par \tab \tab but not with a new identifier, this function may be used
+
+\par \tab \tab instead of the function CAN_vConfigMsgObj. The message
+
+\par \tab \tab object should be accessed by calling the function
+
+\par \tab \tab CAN_ubRequestMsgObj before calling this function. This
+
+\par \tab \tab prevents the CAN controller from working with invalid data.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object to be configured (0-127)
+
+\par \tab \tab *pubData:
+
+\par \tab \tab Pointer on a data buffer
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubMsgLost(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab If a RECEIVE OBJECT receives new data before the old object
+
+\par \tab \tab has been read, the old object is lost. The CAN controller
+
+\par \tab \tab indicates this by setting the message lost bit (MSGLST).
+
+\par \tab \tab This function returns the status of this bit.
+
+\par \tab \tab Note:
+
+\par \tab \tab This function resets the message lost bit (MSGLST).
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 1 the message object has lost a message, else 0\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubDelMsgObj(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function marks the selected message object as not
+
+\par \tab \tab valid. This means that this object cannot be sent or
+
+\par \tab \tab receive data. If the selected object is busy (meaning the
+
+\par \tab \tab object is transmitting a message or has received a new
+
+\par \tab \tab message) this function returns the value "0" and the object
+
+\par \tab \tab is not deleted.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 1 the message object was deleted, else 0\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vReleaseObj(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function resets the NEWDAT flag of the selected
+
+\par \tab \tab RECEIVE OBJECT, so that the CAN controller have access to
+
+\par \tab \tab it. This function must be called if the function
+
+\par \tab \tab CAN_ubNewData detects, that new data are present in the
+
+\par \tab \tab message object and the actual data have been read by
+
+\par \tab \tab calling the function CAN_vGetMsgObj.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_vSetMSGVAL(ubyte ubObjNr)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function sets the MSGVAL flag of the selected object.
+
+\par \tab \tab This is only necessary if the single data transfer mode
+
+\par \tab \tab (SDT) for the selected object is enabled. If SDT is set to
+
+\par \tab \tab '1', the CAN controller automatically resets bit MSGVAL
+
+\par \tab \tab after receiving or tranmission of a frame.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the message object (0-127)
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubWriteFIFO(ubyte ubObjNr, CAN_SWObj *pstObj)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function sets up the next free TRANSMIT message object
+
+\par \tab \tab which is part of a FIFO. This includes the 8 data bytes,
+
+\par \tab \tab the identifier (11- or 29-bit) and the data number (0-8
+
+\par \tab \tab bytes). The direction bit (DIR) and the EDE-bit can not be
+
+\par \tab \tab changed. The acceptance mask register and the Frame Counter
+
+\par \tab \tab remains unchanged. This function checks whether the choosen
+
+\par \tab \tab message object is still executing a transmit request, or if
+
+\par \tab \tab the object can be accessed exclusively.
+
+\par \tab \tab The structure of the SW message object is defined in the
+
+\par \tab \tab header file CAN.h (see CAN_SWObj).
+
+\par \tab \tab Note:
+
+\par \tab \tab This function can only used for TRANSMIT objects which are
+
+\par \tab \tab configured for FIFO base functionality.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 0: message object is busy (a transfer is active); 1: the\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the FIFO base object
+
+\par \tab \tab *pstObj:
+
+\par \tab \tab Pointer on a message object
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab ubyte CAN_ubReadFIFO(ubyte ubObjNr, CAN_SWObj *pstObj)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This function reads the next RECEIVE message object which
+
+\par \tab \tab is part of a FIFO. It checks whether the selected RECEIVE
+
+\par \tab \tab OBJECT has received a new message. If so the forwarded SW
+
+\par \tab \tab message object is filled with the content of the HW message
+
+\par \tab \tab object and the functions returns the value "1". The
+
+\par \tab \tab structure of the SW message object is defined in the header
+
+\par \tab \tab file CAN.h (see CAN_SWObj).
+
+\par \tab \tab Note:
+
+\par \tab \tab This function can only used for RECEIVE objects which are
+
+\par \tab \tab configured for FIFO base functionality.
+
+\par \tab \tab Be sure that no interrupt is enabled for the FIFO objects.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b 0: the message object has not received a new message; 1:\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab ubObjNr:
+
+\par \tab \tab Number of the FIFO base object
+
+\par \tab \tab *pstObj:
+
+\par \tab \tab Pointer on a message object to be filled by this function
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN0(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 0 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN1(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 1 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN2(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 2 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN3(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 3 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN4(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 4 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN5(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 5 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN6(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 6 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN7(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 7 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN8(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 8 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs20\cf0 \tab Function:
+\par \plain\f4\fs20\cf0\b \tab \tab void CAN_viSRN9(void)\plain\f4\fs20\cf0
+\par \tab Description:
+\par \plain\f4\fs20\cf0\i
+\tab \tab This is the interrupt service routine for the Service
+
+\par \tab \tab Request Node 9 of the MultiCAN module.
+
+\par \tab \tab Please note that you have to add application specific code
+
+\par \tab \tab to this function.
+
+\par \plain\f4\fs20\cf0 \tab Returnvalue:
+\par \tab \tab \plain\f4\fs20\cf0\b None\plain\f4\fs20\cf0
+\par \plain\f4\fs20\cf0 \tab Parameters:
+\par \plain\f4\fs20\cf0\b 
+\tab \tab None
+
+\par
+\par \plain\f4\fs24\cf0 Initialization:
+\par \plain\f4\fs20\cf0\b
+\par
+\tab Configuration of the Module Clock:\par 
+\par 
+\tab - the CAN module is stopped during sleep mode\par 
+\tab - normal divider mode is selected\par 
+\tab - required CAN module clock is 90.00 MHz\par 
+\tab - real CAN module clock is 90.00 MHz\par 
+\par 
+\tab Configuration of CAN Node 0:\par 
+\par 
+\tab General Configuration of the Node 0:\par 
+\tab - set INIT and CCE\par 
+\par 
+\tab Configuration of CAN Node 1:\par 
+\par 
+\tab General Configuration of the Node 1:\par 
+\tab - set INIT and CCE\par 
+\par 
+\tab Configuration of the Node 1 Error Counter:\par 
+\tab - the error warning threshold value (warning level) is 96\par 
+\par 
+\tab Configuration of the used CAN Port Pins:\par 
+\tab - P6.10 is used as  CAN node 1 input signal 1 ( RXDCAN1)\par 
+\tab - the pull-up device is assigned\par 
+\tab - output driver characteristic: strong driver, sharp edge\par 
+\par 
+\tab - P6.11 is used as  CAN node 1 output signal 1 ( TXDCAN1)\par 
+\tab - the push/pull function is activated\par 
+\tab - output driver characteristic: strong driver, sharp edge\par 
+\par 
+\tab Configuration of the Node 1 Baud Rate:\par 
+\tab - required baud rate = 1000000 baud\par 
+\tab - real baud rate     = 1000000 baud\par 
+\tab - sample point       = 80.00 %\par 
+\tab - there are 11 time quanta before sample point\par 
+\tab - there are 3 time quanta after sample point\par 
+\tab - the (re)synchronization jump width is 1 time quanta\par 
+\par 
+\tab Configuration of the Frame Counter:\par 
+\tab - Frame Counter Mode: the counter is incremented upon the reception\par 
+\tab and transmission of frames\par 
+\tab - frame counter: 0x0000\par 
+\par 
+\tab Configuration of CAN Node 2:\par 
+\par 
+\tab General Configuration of the Node 2:\par 
+\tab - set INIT and CCE\par 
+\par 
+\tab Configuration of CAN Node 3:\par 
+\par 
+\tab General Configuration of the Node 3:\par 
+\tab - set INIT and CCE\par 
+\par 
+\tab Configuration of the CAN Message Object List Structure:\par 
+\tab Allocate MOs for list 2:\par 
+\par 
+\tab Configuration of the CAN Message Objects 0 - 127:\par 
+\tab Configuration of Message Object 0:\par 
+\tab - message object 0 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FF\par 
+\par 
+\tab - use message pending register 0 bit position 0\par 
+\par 
+\tab Configuration of Message Object 1:\par 
+\tab - message object 1 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FE\par 
+\par 
+\tab - use message pending register 0 bit position 1\par 
+\par 
+\tab Configuration of Message Object 2:\par 
+\tab - message object 2 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FD\par 
+\par 
+\tab - use message pending register 0 bit position 2\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 2\par 
+\par 
+\tab Configuration of Message Object 3:\par 
+\tab - message object 3 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FC\par 
+\par 
+\tab - use message pending register 0 bit position 3\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 3\par 
+\par 
+\tab Configuration of Message Object 4:\par 
+\tab - message object 4 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FB\par 
+\par 
+\tab - use message pending register 0 bit position 4\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 4\par 
+\par 
+\tab Configuration of Message Object 5:\par 
+\tab - message object 5 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7FA\par 
+\par 
+\tab - use message pending register 0 bit position 5\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 5\par 
+\par 
+\tab Configuration of Message Object 6:\par 
+\tab - message object 6 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F9\par 
+\par 
+\tab - use message pending register 0 bit position 6\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 6\par 
+\par 
+\tab Configuration of Message Object 7:\par 
+\tab - message object 7 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F8\par 
+\par 
+\tab - use message pending register 0 bit position 7\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 7\par 
+\par 
+\tab Configuration of Message Object 8:\par 
+\tab - message object 8 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F7\par 
+\par 
+\tab - use message pending register 0 bit position 8\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 8\par 
+\par 
+\tab Configuration of Message Object 9:\par 
+\tab - message object 9 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F6\par 
+\par 
+\tab - use message pending register 0 bit position 9\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 9\par 
+\par 
+\tab Configuration of Message Object 10:\par 
+\tab - message object 10 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F5\par 
+\par 
+\tab - use message pending register 0 bit position 10\par 
+\par 
+\tab Configuration of Message Object 11:\par 
+\tab - message object 11 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F4\par 
+\par 
+\tab - use message pending register 0 bit position 11\par 
+\par 
+\tab Configuration of Message Object 12:\par 
+\tab - message object 12 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F3\par 
+\par 
+\tab - use message pending register 0 bit position 12\par 
+\par 
+\tab Configuration of Message Object 13:\par 
+\tab - message object 13 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F2\par 
+\par 
+\tab - use message pending register 0 bit position 13\par 
+\par 
+\tab Configuration of Message Object 14:\par 
+\tab - message object 14 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F1\par 
+\par 
+\tab - use message pending register 0 bit position 14\par 
+\par 
+\tab Configuration of Message Object 15:\par 
+\tab - message object 15 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7F0\par 
+\par 
+\tab - use message pending register 0 bit position 15\par 
+\par 
+\tab Configuration of Message Object 16:\par 
+\tab - message object 16 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7EF\par 
+\par 
+\tab - use message pending register 0 bit position 16\par 
+\par 
+\tab Configuration of Message Object 17:\par 
+\tab - message object 17 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7EE\par 
+\par 
+\tab - use message pending register 0 bit position 17\par 
+\par 
+\tab Configuration of Message Object 18:\par 
+\tab - message object 18 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7ED\par 
+\par 
+\tab - use message pending register 0 bit position 18\par 
+\par 
+\tab Configuration of Message Object 19:\par 
+\tab - message object 19 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7EC\par 
+\par 
+\tab - use message pending register 0 bit position 19\par 
+\par 
+\tab Configuration of Message Object 20:\par 
+\tab - message object 20 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7EB\par 
+\par 
+\tab - use message pending register 0 bit position 20\par 
+\par 
+\tab Configuration of Message Object 21:\par 
+\tab - message object 21 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7EA\par 
+\par 
+\tab - use message pending register 0 bit position 21\par 
+\par 
+\tab Configuration of Message Object 22:\par 
+\tab - message object 22 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E9\par 
+\par 
+\tab - use message pending register 0 bit position 22\par 
+\par 
+\tab Configuration of Message Object 23:\par 
+\tab - message object 23 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E8\par 
+\par 
+\tab - use message pending register 0 bit position 23\par 
+\par 
+\tab Configuration of Message Object 24:\par 
+\tab - message object 24 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E7\par 
+\par 
+\tab - use message pending register 0 bit position 24\par 
+\par 
+\tab Configuration of Message Object 25:\par 
+\tab - message object 25 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E6\par 
+\par 
+\tab - use message pending register 0 bit position 25\par 
+\par 
+\tab Configuration of Message Object 26:\par 
+\tab - message object 26 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E5\par 
+\par 
+\tab - use message pending register 0 bit position 26\par 
+\par 
+\tab Configuration of Message Object 27:\par 
+\tab - message object 27 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E4\par 
+\par 
+\tab - use message pending register 0 bit position 27\par 
+\par 
+\tab Configuration of Message Object 28:\par 
+\tab - message object 28 is valid\par 
+\tab - message object is used as transmit object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E3\par 
+\par 
+\tab - use message pending register 0 bit position 28\par 
+\par 
+\tab Configuration of Message Object 29:\par 
+\tab - message object 29 is valid\par 
+\tab - message object is used as receive object\par 
+\tab - this message object is assigned to list 2 (node 1)\par 
+\par 
+\tab - this object is a STANDARD MESSAGE OBJECT\par 
+\tab - 8 valid data bytes\par 
+\tab - enable receive interrupt; bit RXPND is set after successful\par 
+\tab reception of a frame\par 
+\par 
+\tab - only accept receive frames with matching IDE bit\par 
+\tab - acceptance mask 11-bit: 0x7FF\par 
+\par 
+\tab - priority class 3; transmit acceptance filtering is based on the list\par 
+\tab order (like class 1)\par 
+\tab - standard 11-bit identifier\par 
+\tab - identifier 11-bit:      0x7E2\par 
+\par 
+\tab - use message pending register 0 bit position 29\par 
+\tab - receive interrupt node pointer: MultiCAN SRN 3\par 
+\par 
+\tab Configuration of Message Object 30:\par 
+\tab - message object 30 is not valid\par 
+\tab Configuration of Message Object 31:\par 
+\tab - message object 31 is not valid\par 
+\tab Configuration of Message Object 32:\par 
+\tab - message object 32 is not valid\par 
+\tab Configuration of Message Object 33:\par 
+\tab - message object 33 is not valid\par 
+\tab Configuration of Message Object 34:\par 
+\tab - message object 34 is not valid\par 
+\tab Configuration of Message Object 35:\par 
+\tab - message object 35 is not valid\par 
+\tab Configuration of Message Object 36:\par 
+\tab - message object 36 is not valid\par 
+\tab Configuration of Message Object 37:\par 
+\tab - message object 37 is not valid\par 
+\tab Configuration of Message Object 38:\par 
+\tab - message object 38 is not valid\par 
+\tab Configuration of Message Object 39:\par 
+\tab - message object 39 is not valid\par 
+\tab Configuration of Message Object 40:\par 
+\tab - message object 40 is not valid\par 
+\tab Configuration of Message Object 41:\par 
+\tab - message object 41 is not valid\par 
+\tab Configuration of Message Object 42:\par 
+\tab - message object 42 is not valid\par 
+\tab Configuration of Message Object 43:\par 
+\tab - message object 43 is not valid\par 
+\tab Configuration of Message Object 44:\par 
+\tab - message object 44 is not valid\par 
+\tab Configuration of Message Object 45:\par 
+\tab - message object 45 is not valid\par 
+\tab Configuration of Message Object 46:\par 
+\tab - message object 46 is not valid\par 
+\tab Configuration of Message Object 47:\par 
+\tab - message object 47 is not valid\par 
+\tab Configuration of Message Object 48:\par 
+\tab - message object 48 is not valid\par 
+\tab Configuration of Message Object 49:\par 
+\tab - message object 49 is not valid\par 
+\tab Configuration of Message Object 50:\par 
+\tab - message object 50 is not valid\par 
+\tab Configuration of Message Object 51:\par 
+\tab - message object 51 is not valid\par 
+\tab Configuration of Message Object 52:\par 
+\tab - message object 52 is not valid\par 
+\tab Configuration of Message Object 53:\par 
+\tab - message object 53 is not valid\par 
+\tab Configuration of Message Object 54:\par 
+\tab - message object 54 is not valid\par 
+\tab Configuration of Message Object 55:\par 
+\tab - message object 55 is not valid\par 
+\tab Configuration of Message Object 56:\par 
+\tab - message object 56 is not valid\par 
+\tab Configuration of Message Object 57:\par 
+\tab - message object 57 is not valid\par 
+\tab Configuration of Message Object 58:\par 
+\tab - message object 58 is not valid\par 
+\tab Configuration of Message Object 59:\par 
+\tab - message object 59 is not valid\par 
+\tab Configuration of Message Object 60:\par 
+\tab - message object 60 is not valid\par 
+\tab Configuration of Message Object 61:\par 
+\tab - message object 61 is not valid\par 
+\tab Configuration of Message Object 62:\par 
+\tab - message object 62 is not valid\par 
+\tab Configuration of Message Object 63:\par 
+\tab - message object 63 is not valid\par 
+\tab Configuration of Message Object 64:\par 
+\tab - message object 64 is not valid\par 
+\tab Configuration of Message Object 65:\par 
+\tab - message object 65 is not valid\par 
+\tab Configuration of Message Object 66:\par 
+\tab - message object 66 is not valid\par 
+\tab Configuration of Message Object 67:\par 
+\tab - message object 67 is not valid\par 
+\tab Configuration of Message Object 68:\par 
+\tab - message object 68 is not valid\par 
+\tab Configuration of Message Object 69:\par 
+\tab - message object 69 is not valid\par 
+\tab Configuration of Message Object 70:\par 
+\tab - message object 70 is not valid\par 
+\tab Configuration of Message Object 71:\par 
+\tab - message object 71 is not valid\par 
+\tab Configuration of Message Object 72:\par 
+\tab - message object 72 is not valid\par 
+\tab Configuration of Message Object 73:\par 
+\tab - message object 73 is not valid\par 
+\tab Configuration of Message Object 74:\par 
+\tab - message object 74 is not valid\par 
+\tab Configuration of Message Object 75:\par 
+\tab - message object 75 is not valid\par 
+\tab Configuration of Message Object 76:\par 
+\tab - message object 76 is not valid\par 
+\tab Configuration of Message Object 77:\par 
+\tab - message object 77 is not valid\par 
+\tab Configuration of Message Object 78:\par 
+\tab - message object 78 is not valid\par 
+\tab Configuration of Message Object 79:\par 
+\tab - message object 79 is not valid\par 
+\tab Configuration of Message Object 80:\par 
+\tab - message object 80 is not valid\par 
+\tab Configuration of Message Object 81:\par 
+\tab - message object 81 is not valid\par 
+\tab Configuration of Message Object 82:\par 
+\tab - message object 82 is not valid\par 
+\tab Configuration of Message Object 83:\par 
+\tab - message object 83 is not valid\par 
+\tab Configuration of Message Object 84:\par 
+\tab - message object 84 is not valid\par 
+\tab Configuration of Message Object 85:\par 
+\tab - message object 85 is not valid\par 
+\tab Configuration of Message Object 86:\par 
+\tab - message object 86 is not valid\par 
+\tab Configuration of Message Object 87:\par 
+\tab - message object 87 is not valid\par 
+\tab Configuration of Message Object 88:\par 
+\tab - message object 88 is not valid\par 
+\tab Configuration of Message Object 89:\par 
+\tab - message object 89 is not valid\par 
+\tab Configuration of Message Object 90:\par 
+\tab - message object 90 is not valid\par 
+\tab Configuration of Message Object 91:\par 
+\tab - message object 91 is not valid\par 
+\tab Configuration of Message Object 92:\par 
+\tab - message object 92 is not valid\par 
+\tab Configuration of Message Object 93:\par 
+\tab - message object 93 is not valid\par 
+\tab Configuration of Message Object 94:\par 
+\tab - message object 94 is not valid\par 
+\tab Configuration of Message Object 95:\par 
+\tab - message object 95 is not valid\par 
+\tab Configuration of Message Object 96:\par 
+\tab - message object 96 is not valid\par 
+\tab Configuration of Message Object 97:\par 
+\tab - message object 97 is not valid\par 
+\tab Configuration of Message Object 98:\par 
+\tab - message object 98 is not valid\par 
+\tab Configuration of Message Object 99:\par 
+\tab - message object 99 is not valid\par 
+\tab Configuration of Message Object 100:\par 
+\tab - message object 100 is not valid\par 
+\tab Configuration of Message Object 101:\par 
+\tab - message object 101 is not valid\par 
+\tab Configuration of Message Object 102:\par 
+\tab - message object 102 is not valid\par 
+\tab Configuration of Message Object 103:\par 
+\tab - message object 103 is not valid\par 
+\tab Configuration of Message Object 104:\par 
+\tab - message object 104 is not valid\par 
+\tab Configuration of Message Object 105:\par 
+\tab - message object 105 is not valid\par 
+\tab Configuration of Message Object 106:\par 
+\tab - message object 106 is not valid\par 
+\tab Configuration of Message Object 107:\par 
+\tab - message object 107 is not valid\par 
+\tab Configuration of Message Object 108:\par 
+\tab - message object 108 is not valid\par 
+\tab Configuration of Message Object 109:\par 
+\tab - message object 109 is not valid\par 
+\tab Configuration of Message Object 110:\par 
+\tab - message object 110 is not valid\par 
+\tab Configuration of Message Object 111:\par 
+\tab - message object 111 is not valid\par 
+\tab Configuration of Message Object 112:\par 
+\tab - message object 112 is not valid\par 
+\tab Configuration of Message Object 113:\par 
+\tab - message object 113 is not valid\par 
+\tab Configuration of Message Object 114:\par 
+\tab - message object 114 is not valid\par 
+\tab Configuration of Message Object 115:\par 
+\tab - message object 115 is not valid\par 
+\tab Configuration of Message Object 116:\par 
+\tab - message object 116 is not valid\par 
+\tab Configuration of Message Object 117:\par 
+\tab - message object 117 is not valid\par 
+\tab Configuration of Message Object 118:\par 
+\tab - message object 118 is not valid\par 
+\tab Configuration of Message Object 119:\par 
+\tab - message object 119 is not valid\par 
+\tab Configuration of Message Object 120:\par 
+\tab - message object 120 is not valid\par 
+\tab Configuration of Message Object 121:\par 
+\tab - message object 121 is not valid\par 
+\tab Configuration of Message Object 122:\par 
+\tab - message object 122 is not valid\par 
+\tab Configuration of Message Object 123:\par 
+\tab - message object 123 is not valid\par 
+\tab Configuration of Message Object 124:\par 
+\tab - message object 124 is not valid\par 
+\tab Configuration of Message Object 125:\par 
+\tab - message object 125 is not valid\par 
+\tab Configuration of Message Object 126:\par 
+\tab - message object 126 is not valid\par 
+\tab Configuration of Message Object 127:\par 
+\tab - message object 127 is not valid\par 
+\par 
+\tab Configuration of Service Request Nodes 0 - 15:\par 
+\tab - SRN0 service request node configuration:\par 
+\tab - SRN0 interrupt priority level (SRPN) = 3\par 
+\tab - SRN0 CPU interrupt is selected\par 
+\par 
+\tab - SRN1 service request node configuration:\par 
+\tab - SRN1 interrupt priority level (SRPN) = 1\par 
+\tab - SRN1 CPU interrupt is selected\par 
+\par 
+\tab - SRN2 service request node configuration:\par 
+\tab - SRN2 interrupt priority level (SRPN) = 4\par 
+\tab - SRN2 CPU interrupt is selected\par 
+\par 
+\tab - SRN3 service request node configuration:\par 
+\tab - SRN3 interrupt priority level (SRPN) = 5\par 
+\tab - SRN3 CPU interrupt is selected\par 
+\par 
+\tab - SRN4 service request node configuration:\par 
+\tab - SRN4 interrupt priority level (SRPN) = 6\par 
+\tab - SRN4 CPU interrupt is selected\par 
+\par 
+\tab - SRN5 service request node configuration:\par 
+\tab - SRN5 interrupt priority level (SRPN) = 7\par 
+\tab - SRN5 CPU interrupt is selected\par 
+\par 
+\tab - SRN6 service request node configuration:\par 
+\tab - SRN6 interrupt priority level (SRPN) = 8\par 
+\tab - SRN6 CPU interrupt is selected\par 
+\par 
+\tab - SRN7 service request node configuration:\par 
+\tab - SRN7 interrupt priority level (SRPN) = 9\par 
+\tab - SRN7 CPU interrupt is selected\par 
+\par 
+\tab - SRN8 service request node configuration:\par 
+\tab - SRN8 interrupt priority level (SRPN) = 10\par 
+\tab - SRN8 CPU interrupt is selected\par 
+\par 
+\tab - SRN9 service request node configuration:\par 
+\tab - SRN9 interrupt priority level (SRPN) = 11\par 
+\tab - SRN9 CPU interrupt is selected\par 
+\par 
+\tab Initialization of the FIFO Pointer:\par 
+\par 
+
+}

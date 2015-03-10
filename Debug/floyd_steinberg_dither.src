@@ -1,0 +1,778 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc2808a -H sfr/regtc1797.sfr -c99 --dep-file=.floyd_steinberg_dither.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=floyd_steinberg_dither.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o floyd_steinberg_dither.src ..\\floyd_steinberg_dither.c"
+	.compiler_name		"ctc"
+	.name	"floyd_steinberg_dither"
+
+	
+$TC131
+	
+	.sdecl	'.text.floyd_steinberg_dither.FindNearestColor',code,cluster('FindNearestColor')
+	.sect	'.text.floyd_steinberg_dither.FindNearestColor'
+	.align	2
+	
+
+; ..\floyd_steinberg_dither.c	     1  #include <stdio.h>
+; ..\floyd_steinberg_dither.c	     2  #include <stdlib.h>
+; ..\floyd_steinberg_dither.c	     3  #include "floyd_steinberg_dither.h"
+; ..\floyd_steinberg_dither.c	     4  
+; ..\floyd_steinberg_dither.c	     5  static
+; ..\floyd_steinberg_dither.c	     6  unsigned char FindNearestColor(RGBTriple color, RGBPalette palette) {
+; Function FindNearestColor
+.L13:
+FindNearestColor:	.type	func
+	sub.a	a10,#16
+.L56:
+
+; ..\floyd_steinberg_dither.c	     7      int i, distanceSquared, minDistanceSquared, bestIndex = 0;
+	mov	d0,#0
+	st.b	[a10],d4
+.L57:
+
+; ..\floyd_steinberg_dither.c	     8  	int diff;
+; ..\floyd_steinberg_dither.c	     9      minDistanceSquared = 255*255;
+; ..\floyd_steinberg_dither.c	    10      for (i=0; i<palette.size; i++) {
+	mov	d15,d0
+	st.d	[a10]8,e6
+.L58:
+	mov.u	d1,#65025
+	ld.w	d2,[a10]8
+.L59:
+	j	.L2
+.L3:
+
+; ..\floyd_steinberg_dither.c	    11          diff = ((int)color.P) - palette.table[i].P;
+	ld.bu	d3,[a10]
+.L101:
+	ld.a	a15,[a10]12
+.L102:
+	addsc.a	a15,a15,d15,#0
+.L103:
+	ld.bu	d4,[a15]
+.L60:
+	sub	d3,d4
+.L62:
+
+; ..\floyd_steinberg_dither.c	    12          distanceSquared = diff*diff;
+	mul	d3,d3
+.L61:
+
+; ..\floyd_steinberg_dither.c	    13          if (distanceSquared < minDistanceSquared) {
+	jge	d3,d1,.L4				; predicted not taken
+.L104:
+
+; ..\floyd_steinberg_dither.c	    14              minDistanceSquared = distanceSquared;
+	mov	d1,d3
+.L105:
+
+; ..\floyd_steinberg_dither.c	    15              bestIndex = i;
+	mov	d0,d15
+.L4:
+	add	d15,#1
+.L2:
+	jlt	d15,d2,.L3				; predicted taken
+.L106:
+
+; ..\floyd_steinberg_dither.c	    16          }
+; ..\floyd_steinberg_dither.c	    17      }
+; ..\floyd_steinberg_dither.c	    18      return bestIndex;
+	extr.u	d2,d0,#0,#8
+.L107:
+
+; ..\floyd_steinberg_dither.c	    19  }
+	ret
+.L47:
+	
+__FindNearestColor_function_end:
+	.size	FindNearestColor,__FindNearestColor_function_end-FindNearestColor
+.L29:
+	; End of function
+	
+	.sdecl	'.text.floyd_steinberg_dither.FloydSteinbergDither',code,cluster('FloydSteinbergDither')
+	.sect	'.text.floyd_steinberg_dither.FloydSteinbergDither'
+	.align	2
+	
+	.global	FloydSteinbergDither
+
+; ..\floyd_steinberg_dither.c	    20  
+; ..\floyd_steinberg_dither.c	    21  PalettizedImage FloydSteinbergDither(RGBImage image, RGBPalette palette) {
+; Function FloydSteinbergDither
+.L15:
+FloydSteinbergDither:	.type	func
+	sub.a	a10,#24
+.L63:
+	st.d	[a10]0,e4
+.L64:
+
+; ..\floyd_steinberg_dither.c	    22      PalettizedImage result;
+; ..\floyd_steinberg_dither.c	    23  	int x, y;
+; ..\floyd_steinberg_dither.c	    24  	int error;
+; ..\floyd_steinberg_dither.c	    25  
+; ..\floyd_steinberg_dither.c	    26      result.width = image.width;
+	ld.w	d15,[a10]24
+.L77:
+	st.w	[a10]8,d15
+.L78:
+
+; ..\floyd_steinberg_dither.c	    27  	result.height = image.height;
+	ld.w	d15,[a10]28
+.L79:
+	st.w	[a10]12,d15
+.L80:
+
+; ..\floyd_steinberg_dither.c	    28  	result.pixels = (unsigned char *)malloc(sizeof(unsigned char) * result.width * result.height);
+	ld.w	d15,[a10]28
+.L81:
+	ld.w	d4,[a10]24
+.L82:
+	mul	d4,d15
+	mov.aa	a12,a4
+.L83:
+	call	malloc
+.L84:
+
+; ..\floyd_steinberg_dither.c	    29  	
+; ..\floyd_steinberg_dither.c	    30  	for(y = 0; y < image.height; y++) {
+	mov	d8,#0
+	st.a	[a10]16,a2
+.L65:
+	j	.L6
+.L7:
+
+; ..\floyd_steinberg_dither.c	    31  		for(x = 0; x < image.width; x++) {
+	mov	d9,#0
+.L66:
+	j	.L8
+.L9:
+
+; ..\floyd_steinberg_dither.c	    32  			RGBTriple* currentPixel = &(image.pixels[x + y*image.width]);
+	ld.w	d15,[a10]24
+.L85:
+	madd	d15,d9,d8,d15
+	ld.a	a15,[a10]32
+.L86:
+
+; ..\floyd_steinberg_dither.c	    33  			unsigned char index = FindNearestColor(*currentPixel, palette);
+	ld.d	e6,[a10]0
+.L87:
+	addsc.a	a15,a15,d15,#0
+.L67:
+	ld.bu	d4,[a15]
+.L88:
+	call	FindNearestColor
+.L68:
+
+; ..\floyd_steinberg_dither.c	    34  			result.pixels[x + y*result.width] = index;
+	ld.w	d15,[a10]8
+.L89:
+	madd	d15,d9,d8,d15
+	ld.a	a15,[a10]16
+.L41:
+	add	d9,#1
+.L42:
+	addsc.a	a15,a15,d15,#0
+.L90:
+	st.b	[a15],d2
+.L8:
+	ld.w	d15,[a10]24
+.L91:
+	jlt	d9,d15,.L9				; predicted taken
+.L92:
+	add	d8,#1
+.L6:
+	ld.w	d15,[a10]28
+.L93:
+	jlt	d8,d15,.L7				; predicted taken
+.L94:
+
+; ..\floyd_steinberg_dither.c	    35  		}
+; ..\floyd_steinberg_dither.c	    36  	}
+; ..\floyd_steinberg_dither.c	    37      return result;
+	lea	a15,[a10]8
+.L95:
+	mov.a	a2,#2
+.L10:
+	ld.w	d15,[a15+]
+	st.w	[a12+],d15
+	loop	a2,.L10				; predicted taken
+.L96:
+
+; ..\floyd_steinberg_dither.c	    37  }
+
+	ret
+.L31:
+	
+__FloydSteinbergDither_function_end:
+	.size	FloydSteinbergDither,__FloydSteinbergDither_function_end-FloydSteinbergDither
+.L24:
+	; End of function
+	
+	.calls	'FloydSteinbergDither','malloc'
+	.calls	'FloydSteinbergDither','FindNearestColor'
+	.calls	'FindNearestColor','',16
+	.extern	malloc
+	.calls	'FloydSteinbergDither','',24
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L17:
+	.word	971
+	.half	3
+	.word	.L18
+	.byte	4
+.L16:
+	.byte	1
+	.byte	'..\\floyd_steinberg_dither.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L19
+	.byte	2
+	.byte	'void',0,3
+	.word	173
+	.byte	4
+	.byte	'malloc',0,1,71,33
+	.word	179
+	.byte	1,1,1,1,5
+	.byte	'unsigned int',0,4,7,6,1,71,44
+	.word	203
+	.byte	0
+.L30:
+	.byte	7,2,17,9,12
+.L37:
+	.byte	5
+	.byte	'int',0,4,5,8
+	.byte	'width',0,4
+	.word	233
+	.byte	2,35,0,8
+	.byte	'height',0,4
+	.word	233
+	.byte	2,35,4
+.L45:
+	.byte	5
+	.byte	'unsigned char',0,1,8,3
+	.word	271
+	.byte	8
+	.byte	'pixels',0,4
+	.word	288
+	.byte	2,35,8,0
+.L32:
+	.byte	7,2,12,9,12,8
+	.byte	'width',0,4
+	.word	233
+	.byte	2,35,0,8
+	.byte	'height',0,4
+	.word	233
+	.byte	2,35,4
+.L48:
+	.byte	7,2,3,9,1,8
+	.byte	'P',0,1
+	.word	271
+	.byte	2,35,0,0
+.L43:
+	.byte	3
+	.word	346
+	.byte	8
+	.byte	'pixels',0,4
+	.word	363
+	.byte	2,35,8,0
+.L34:
+	.byte	7,2,7,9,8,8
+	.byte	'size',0,4
+	.word	233
+	.byte	2,35,0,8
+	.byte	'table',0,4
+	.word	363
+	.byte	2,35,4,0,9
+	.byte	'__prof_adm',0,3,1,1
+	.word	179
+	.byte	10,1,3
+	.word	439
+	.byte	9
+	.byte	'__codeptr',0,3,1,1
+	.word	441
+	.byte	11,4,145,19,18,4,7,4,147,19,2,4,5
+	.byte	'unsigned int',0,4,7,12
+	.byte	'CNT1',0,4
+	.word	476
+	.byte	12,20,2,35,0,13,4
+	.word	476
+	.byte	2,18,2,35,0,12
+	.byte	'TOS',0,4
+	.word	476
+	.byte	2,16,2,35,0,12
+	.byte	'SRPN',0,4
+	.word	476
+	.byte	8,8,2,35,0,12
+	.byte	'CPPN',0,4
+	.word	476
+	.byte	8,0,2,35,0,0,8
+	.byte	'B',0,4
+	.word	470
+	.byte	2,35,0,8
+	.byte	'I',0,4
+	.word	233
+	.byte	2,35,0,8
+	.byte	'U',0,4
+	.word	203
+	.byte	2,35,0,0,14
+	.word	464
+	.byte	9
+	.byte	'PCP_GPR6_type',0,4,158,19,3
+	.word	601
+	.byte	11,4,160,19,18,4,7,4,162,19,2,4,12
+	.byte	'Z',0,4
+	.word	476
+	.byte	1,31,2,35,0,12
+	.byte	'N',0,4
+	.word	476
+	.byte	1,30,2,35,0,12
+	.byte	'C',0,4
+	.word	476
+	.byte	1,29,2,35,0,12
+	.byte	'V',0,4
+	.word	476
+	.byte	1,28,2,35,0,12
+	.byte	'CNZ',0,4
+	.word	476
+	.byte	1,27,2,35,0,12
+	.byte	'IEN',0,4
+	.word	476
+	.byte	1,26,2,35,0,12
+	.byte	'CEN',0,4
+	.word	476
+	.byte	1,25,2,35,0,13,4
+	.word	476
+	.byte	1,24,2,35,0,12
+	.byte	'DPTR',0,4
+	.word	476
+	.byte	8,16,2,35,0,13,4
+	.word	476
+	.byte	16,0,2,35,0,0,8
+	.byte	'B',0,4
+	.word	635
+	.byte	2,35,0,8
+	.byte	'I',0,4
+	.word	233
+	.byte	2,35,0,8
+	.byte	'U',0,4
+	.word	203
+	.byte	2,35,0,0,14
+	.word	629
+	.byte	9
+	.byte	'PCP_GPR7_type',0,4,178,19,3
+	.word	811
+	.byte	9
+	.byte	'size_t',0,5,24,25
+	.word	203
+	.byte	5
+	.byte	'unsigned short int',0,2,7,9
+	.byte	'_iob_flag_t',0,5,75,25
+	.word	854
+	.byte	9
+	.byte	'RGBTriple',0,2,5,3
+	.word	346
+	.byte	9
+	.byte	'RGBPalette',0,2,10,3
+	.word	385
+	.byte	9
+	.byte	'RGBImage',0,2,15,3
+	.word	310
+	.byte	9
+	.byte	'PalettizedImage',0,2,20,3
+	.word	228
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L18:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,59,0,3,8,0,0,3,15,0,73,19,0,0,4,46,1,3,8,58,15,59,15,57
+	.byte	15,73,19,54,15,39,12,63,12,60,12,0,0,5,36,0,3,8,11,15,62,15,0,0,6,5,0,58,15,59,15,57,15,73,19,0,0,7,19
+	.byte	1,58,15,59,15,57,15,11,15,0,0,8,13,0,3,8,11,15,73,19,56,9,0,0,9,22,0,3,8,58,15,59,15,57,15,73,19,0,0,10
+	.byte	21,0,54,15,0,0,11,23,1,58,15,59,15,57,15,11,15,0,0,12,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,13,13
+	.byte	0,11,15,73,19,13,15,12,15,56,9,0,0,14,53,0,73,19,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L19:
+	.word	.L70-.L69
+.L69:
+	.half	3
+	.word	.L72-.L71
+.L71:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'stdlib.h',0,1,0,0
+	.byte	'..\\floyd_steinberg_dither.h',0,0,0,0
+	.byte	'..\\floyd_steinberg_dither.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdio.h',0,1,0,0,0
+.L72:
+.L70:
+	.sdecl	'.debug_info',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_info'
+.L20:
+	.word	368
+	.half	3
+	.word	.L21
+	.byte	4,1
+	.byte	'..\\floyd_steinberg_dither.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L23,.L22
+	.byte	2
+	.word	.L16
+	.byte	3
+	.byte	'FloydSteinbergDither',0,1,21,17
+	.word	.L30
+	.byte	1,1,1
+	.word	.L15,.L31,.L14
+	.byte	4
+	.byte	'image',0,1,21,47
+	.word	.L32,.L33
+	.byte	4
+	.byte	'palette',0,1,21,65
+	.word	.L34,.L35
+	.byte	5
+	.word	.L15,.L31
+	.byte	6
+	.byte	'result',0,1,22,21
+	.word	.L30,.L36
+	.byte	6
+	.byte	'x',0,1,23,6
+	.word	.L37,.L38
+	.byte	6
+	.byte	'y',0,1,23,9
+	.word	.L37,.L39
+	.byte	7
+	.word	.L40
+	.byte	6
+	.byte	'currentPixel',0,1,32,15
+	.word	.L43,.L44
+	.byte	6
+	.byte	'index',0,1,33,18
+	.word	.L45,.L46
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_abbrev'
+.L21:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,7,11,1,85,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_line'
+.L22:
+	.word	.L74-.L73
+.L73:
+	.half	3
+	.word	.L76-.L75
+.L75:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\floyd_steinberg_dither.c',0,0,0,0,0
+.L76:
+	.byte	5,17,7,0,5,2
+	.word	.L15
+	.byte	3,20,1,5,25,9
+	.half	.L64-.L15
+	.byte	3,5,1,5,18,9
+	.half	.L77-.L64
+	.byte	1,5,23,9
+	.half	.L78-.L77
+	.byte	3,1,1,5,16,9
+	.half	.L79-.L78
+	.byte	1,5,87,9
+	.half	.L80-.L79
+	.byte	3,1,1,5,72,9
+	.half	.L81-.L80
+	.byte	1,5,79,9
+	.half	.L82-.L81
+	.byte	1,5,17,3,121,1,5,79,9
+	.half	.L83-.L82
+	.byte	3,7,1,5,8,9
+	.half	.L84-.L83
+	.byte	3,2,1,5,16,3,126,1,5,29,9
+	.half	.L65-.L84
+	.byte	3,2,1,5,9,9
+	.half	.L7-.L65
+	.byte	3,1,1,5,29,9
+	.half	.L66-.L7
+	.byte	1,5,56,9
+	.half	.L9-.L66
+	.byte	3,1,1,5,47,9
+	.half	.L85-.L9
+	.byte	1,5,37,1,5,58,9
+	.half	.L86-.L85
+	.byte	3,1,1,5,44,9
+	.half	.L87-.L86
+	.byte	3,127,1,5,43,9
+	.half	.L67-.L87
+	.byte	3,1,1,5,58,9
+	.half	.L88-.L67
+	.byte	1,5,30,9
+	.half	.L68-.L88
+	.byte	3,1,1,5,20,9
+	.half	.L89-.L68
+	.byte	1,5,10,1,5,32,9
+	.half	.L41-.L89
+	.byte	3,125,1,5,17,9
+	.half	.L42-.L41
+	.byte	3,3,1,5,38,9
+	.half	.L90-.L42
+	.byte	1,5,23,9
+	.half	.L8-.L90
+	.byte	3,125,1,5,29,9
+	.half	.L91-.L8
+	.byte	1,5,32,7,9
+	.half	.L92-.L91
+	.byte	3,127,1,5,22,9
+	.half	.L6-.L92
+	.byte	1,5,29,9
+	.half	.L93-.L6
+	.byte	1,5,12,7,9
+	.half	.L94-.L93
+	.byte	3,7,1,5,5,9
+	.half	.L95-.L94
+	.byte	1,5,1,9
+	.half	.L96-.L95
+	.byte	3,1,1,7,9
+	.half	.L24-.L96
+	.byte	0,1,1
+.L74:
+	.sdecl	'.debug_ranges',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_ranges'
+.L23:
+	.word	-1,.L15,0,.L24-.L15,0,0
+.L40:
+	.word	-1,.L15,.L9-.L15,.L41-.L15,.L42-.L15,.L8-.L15,0,0
+	.sdecl	'.debug_info',debug,cluster('FindNearestColor')
+	.sect	'.debug_info'
+.L25:
+	.word	379
+	.half	3
+	.word	.L26
+	.byte	4,1
+	.byte	'..\\floyd_steinberg_dither.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L28,.L27
+	.byte	2
+	.word	.L16
+	.byte	3
+	.byte	'FindNearestColor',0,1,6,15
+	.word	.L45
+	.byte	1,1
+	.word	.L13,.L47,.L12
+	.byte	4
+	.byte	'color',0,1,6,42
+	.word	.L48,.L49
+	.byte	4
+	.byte	'palette',0,1,6,60
+	.word	.L34,.L50
+	.byte	5
+	.word	.L13,.L47
+	.byte	6
+	.byte	'i',0,1,7,9
+	.word	.L37,.L51
+	.byte	6
+	.byte	'distanceSquared',0,1,7,12
+	.word	.L37,.L52
+	.byte	6
+	.byte	'minDistanceSquared',0,1,7,29
+	.word	.L37,.L53
+	.byte	6
+	.byte	'bestIndex',0,1,7,49
+	.word	.L37,.L54
+	.byte	6
+	.byte	'diff',0,1,8,6
+	.word	.L37,.L55
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('FindNearestColor')
+	.sect	'.debug_abbrev'
+.L26:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('FindNearestColor')
+	.sect	'.debug_line'
+.L27:
+	.word	.L98-.L97
+.L97:
+	.half	3
+	.word	.L100-.L99
+.L99:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\floyd_steinberg_dither.c',0,0,0,0,0
+.L100:
+	.byte	5,15,7,0,5,2
+	.word	.L13
+	.byte	3,5,1,5,59,9
+	.half	.L56-.L13
+	.byte	3,1,1,5,15,3,127,1,5,11,9
+	.half	.L57-.L56
+	.byte	3,4,1,5,15,3,124,1,5,24,9
+	.half	.L58-.L57
+	.byte	3,3,1,3,1,1,5,29,9
+	.half	.L59-.L58
+	.byte	1,5,27,9
+	.half	.L3-.L59
+	.byte	3,1,1,5,40,9
+	.half	.L101-.L3
+	.byte	1,5,46,9
+	.half	.L102-.L101
+	.byte	1,5,49,9
+	.half	.L103-.L102
+	.byte	1,5,31,9
+	.half	.L60-.L103
+	.byte	1,9
+	.half	.L62-.L60
+	.byte	3,1,1,5,9,9
+	.half	.L61-.L62
+	.byte	3,1,1,5,32,7,9
+	.half	.L104-.L61
+	.byte	3,1,1,5,23,9
+	.half	.L105-.L104
+	.byte	3,1,1,5,32,9
+	.half	.L4-.L105
+	.byte	3,123,1,5,29,9
+	.half	.L2-.L4
+	.byte	1,5,12,7,9
+	.half	.L106-.L2
+	.byte	3,8,1,5,1,9
+	.half	.L107-.L106
+	.byte	3,1,1,7,9
+	.half	.L29-.L107
+	.byte	0,1,1
+.L98:
+	.sdecl	'.debug_ranges',debug,cluster('FindNearestColor')
+	.sect	'.debug_ranges'
+.L28:
+	.word	-1,.L13,0,.L29-.L13,0,0
+	.sdecl	'.debug_loc',debug,cluster('FindNearestColor')
+	.sect	'.debug_loc'
+.L12:
+	.word	-1,.L13,0,.L56-.L13
+	.half	2
+	.byte	138,0
+	.word	.L56-.L13,.L47-.L13
+	.half	2
+	.byte	138,16
+	.word	.L47-.L13,.L47-.L13
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L54:
+	.word	-1,.L13,.L57-.L13,.L47-.L13
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L49:
+	.word	-1,.L13,0,.L47-.L13
+	.half	2
+	.byte	145,112
+	.word	0,.L3-.L13
+	.half	5
+	.byte	144,34,157,32,0
+	.word	0,0
+.L55:
+	.word	-1,.L13,.L60-.L13,.L61-.L13
+	.half	5
+	.byte	144,33,157,32,32
+	.word	0,0
+.L52:
+	.word	-1,.L13,.L62-.L13,.L2-.L13
+	.half	5
+	.byte	144,33,157,32,32
+	.word	0,0
+.L51:
+	.word	-1,.L13,.L58-.L13,.L47-.L13
+	.half	5
+	.byte	144,39,157,32,32
+	.word	0,0
+.L53:
+	.word	-1,.L13,.L59-.L13,.L47-.L13
+	.half	5
+	.byte	144,32,157,32,32
+	.word	0,0
+.L50:
+	.word	-1,.L13,0,.L47-.L13
+	.half	2
+	.byte	145,120
+	.word	0,.L47-.L13
+	.half	2
+	.byte	144,35
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_loc'
+.L14:
+	.word	-1,.L15,0,.L63-.L15
+	.half	2
+	.byte	138,0
+	.word	.L63-.L15,.L31-.L15
+	.half	2
+	.byte	138,24
+	.word	.L31-.L15,.L31-.L15
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L44:
+	.word	-1,.L15,.L67-.L15,.L41-.L15
+	.half	1
+	.byte	111
+	.word	0,0
+.L33:
+	.word	-1,.L15,0,.L31-.L15
+	.half	2
+	.byte	145,0
+	.word	0,0
+.L46:
+	.word	-1,.L15,.L68-.L15,.L8-.L15
+	.half	5
+	.byte	144,33,157,32,0
+	.word	0,0
+.L35:
+	.word	-1,.L15,0,.L64-.L15
+	.half	2
+	.byte	144,34
+	.word	.L64-.L15,.L31-.L15
+	.half	2
+	.byte	145,104
+	.word	0,0
+.L36:
+	.word	-1,.L15,0,.L31-.L15
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L38:
+	.word	-1,.L15,.L66-.L15,.L6-.L15
+	.half	5
+	.byte	144,36,157,32,32
+	.word	0,0
+.L39:
+	.word	-1,.L15,.L65-.L15,.L31-.L15
+	.half	5
+	.byte	144,36,157,32,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L108:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('FindNearestColor')
+	.sect	'.debug_frame'
+	.word	48
+	.word	.L108,.L13,.L47-.L13
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23,4
+	.word	(.L56-.L13)/2
+	.byte	19,16,22,26,3,19,138,16,4
+	.word	(.L47-.L56)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('FloydSteinbergDither')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L108,.L15,.L31-.L15
+	.byte	4
+	.word	(.L63-.L15)/2
+	.byte	19,24,22,26,3,19,138,24,4
+	.word	(.L31-.L63)/2
+	.byte	19,0,8,26,0,0
+
+
+	; Module end

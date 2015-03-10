@@ -1,0 +1,174 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v4.1r1 Build 669 SN 00581034"
+	.compiler_invocation	"ctc -f cc2724a -H sfr/regtc1797.sfr -c99 --dep-file=.led.o.d -D__CPU__=tc1797 -D__CPU_TC1797__ --core=tc1.3.1 -F -D__TC1797__=1 -DFREQ_CPU_MHZ=180 -IC:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin -g --make-target=led.o -t4 --language=-gcc,-volatile,+strings --default-near-size=8 -O2 --default-a1-size=0 --default-a0-size=0 --source --align=0 --compact-max-size=200 --switch=auto -o led.src ..\\led.c"
+	.compiler_name		"ctc"
+	.name	"led"
+
+	
+$TC131
+	
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L3:
+	.word	646
+	.half	3
+	.word	.L4
+	.byte	4
+.L2:
+	.byte	1
+	.byte	'..\\led.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'C:\\Users\\Rubis\\Desktop\\workspace_garda_CPS_Demo\\workspace_garda\\Garda_origin\\Debug\\',0,12,1
+	.word	.L5
+	.byte	2
+	.byte	'void',0,3
+	.word	154
+	.byte	4
+	.byte	'__prof_adm',0,1,1,1
+	.word	160
+	.byte	5,1,3
+	.word	184
+	.byte	4
+	.byte	'__codeptr',0,1,1,1
+	.word	186
+	.byte	6,2,145,19,18,4,7,2,147,19,2,4,8
+	.byte	'unsigned int',0,4,7,9
+	.byte	'CNT1',0,4
+	.word	221
+	.byte	12,20,2,35,0,10,4
+	.word	221
+	.byte	2,18,2,35,0,9
+	.byte	'TOS',0,4
+	.word	221
+	.byte	2,16,2,35,0,9
+	.byte	'SRPN',0,4
+	.word	221
+	.byte	8,8,2,35,0,9
+	.byte	'CPPN',0,4
+	.word	221
+	.byte	8,0,2,35,0,0,11
+	.byte	'B',0,4
+	.word	215
+	.byte	2,35,0,8
+	.byte	'int',0,4,5,11
+	.byte	'I',0,4
+	.word	323
+	.byte	2,35,0,8
+	.byte	'unsigned int',0,4,7,11
+	.byte	'U',0,4
+	.word	341
+	.byte	2,35,0,0,12
+	.word	209
+	.byte	4
+	.byte	'PCP_GPR6_type',0,2,158,19,3
+	.word	369
+	.byte	6,2,160,19,18,4,7,2,162,19,2,4,9
+	.byte	'Z',0,4
+	.word	221
+	.byte	1,31,2,35,0,9
+	.byte	'N',0,4
+	.word	221
+	.byte	1,30,2,35,0,9
+	.byte	'C',0,4
+	.word	221
+	.byte	1,29,2,35,0,9
+	.byte	'V',0,4
+	.word	221
+	.byte	1,28,2,35,0,9
+	.byte	'CNZ',0,4
+	.word	221
+	.byte	1,27,2,35,0,9
+	.byte	'IEN',0,4
+	.word	221
+	.byte	1,26,2,35,0,9
+	.byte	'CEN',0,4
+	.word	221
+	.byte	1,25,2,35,0,10,4
+	.word	221
+	.byte	1,24,2,35,0,9
+	.byte	'DPTR',0,4
+	.word	221
+	.byte	8,16,2,35,0,10,4
+	.word	221
+	.byte	16,0,2,35,0,0,11
+	.byte	'B',0,4
+	.word	403
+	.byte	2,35,0,11
+	.byte	'I',0,4
+	.word	323
+	.byte	2,35,0,11
+	.byte	'U',0,4
+	.word	341
+	.byte	2,35,0,0,12
+	.word	397
+	.byte	4
+	.byte	'PCP_GPR7_type',0,2,178,19,3
+	.word	579
+	.byte	8
+	.byte	'unsigned short int',0,2,7,4
+	.byte	'_iob_flag_t',0,3,75,25
+	.word	607
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L4:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,59,0,3,8,0,0,3,15,0,73,19,0,0,4,22,0,3,8,58,15,59,15,57
+	.byte	15,73,19,0,0,5,21,0,54,15,0,0,6,23,1,58,15,59,15,57,15,11,15,0,0,7,19,1,58,15,59,15,57,15,11,15,0,0,8
+	.byte	36,0,3,8,11,15,62,15,0,0,9,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,10,13,0,11,15,73,19,13,15,12,15,56
+	.byte	9,0,0,11,13,0,3,8,11,15,73,19,56,9,0,0,12,53,0,73,19,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L5:
+	.word	.L7-.L6
+.L6:
+	.half	3
+	.word	.L9-.L8
+.L8:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\',0,0
+	.byte	'..\\led.c',0,0,0,0
+	.byte	'C:\\Program Files (x86)\\TASKING\\TriCore v4.1r1\\ctc\\include\\sfr\\regtc1797.sfr',0,0,0,0
+	.byte	'stdio.h',0,1,0,0,0
+.L9:
+.L7:
+
+; ..\led.c	     1  #include "led.h"
+; ..\led.c	     2  #include <stdio.h>
+; ..\led.c	     3  #include <stdlib.h>
+; ..\led.c	     4  #include <stdint.h>
+; ..\led.c	     5  #include <stdbool.h>
+; ..\led.c	     6  #include <sfr/regtc1797.sfr>
+; ..\led.c	     7  #if 0
+; ..\led.c	     8  void led_init(void)
+; ..\led.c	     9  {
+; ..\led.c	    10      P3_IOCR0.U = 0x80808080;
+; ..\led.c	    11      P3_IOCR4.U = 0x80808080;
+; ..\led.c	    12  }
+; ..\led.c	    13  
+; ..\led.c	    14  void led_on_all(void)
+; ..\led.c	    15  {
+; ..\led.c	    16      P3_OUT.U &= ~(0xFF);
+; ..\led.c	    17  }
+; ..\led.c	    18  
+; ..\led.c	    19  void led_off_all(void)
+; ..\led.c	    20  {
+; ..\led.c	    21      P3_OUT.U |= (0xFF);
+; ..\led.c	    22  }
+; ..\led.c	    23  
+; ..\led.c	    24  void led_on(int led_no)
+; ..\led.c	    25  {
+; ..\led.c	    26      P3_OUT.U &= ~(1 << led_no);
+; ..\led.c	    27  }
+; ..\led.c	    28  
+; ..\led.c	    29  void led_off(int led_no)
+; ..\led.c	    30  {
+; ..\led.c	    31      P3_OUT.U |= (1 << led_no);
+; ..\led.c	    32  }
+; ..\led.c	    33  
+; ..\led.c	    34  void led_toggle(int led_no)
+; ..\led.c	    35  {
+; ..\led.c	    36      P3_OUT.U ^= (1 << led_no);
+; ..\led.c	    37  }
+; ..\led.c	    38  #endif
+
+	; Module end
